@@ -1,37 +1,37 @@
-package it.unisa.studenti.nc8.gametalk.dao.thread;
+package it.unisa.studenti.nc8.gametalk.dao.comment;
 
 import it.unisa.studenti.nc8.gametalk.dao.DAO;
 import it.unisa.studenti.nc8.gametalk.dao.DatabaseDAO;
 import it.unisa.studenti.nc8.gametalk.dao.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.persistence.mappers.ResultSetMapper;
-import it.unisa.studenti.nc8.gametalk.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.post.comment.Comment;
 
 import java.util.List;
 
-public class ThreadDAO extends DatabaseDAO<Thread> implements DAO<Thread> {
+public class CommentDAO extends DatabaseDAO<Comment> implements DAO<Comment> {
 
-    public ThreadDAO(Database db, ResultSetMapper<Thread> mapper) {
+    public CommentDAO(Database db, ResultSetMapper<Comment> mapper) {
         super(db, mapper);
     }
 
     @Override
-    public Thread get(long id) throws DAOException {
+    public Comment get(long id) throws DAOException {
         return null;
     }
 
     @Override
-    public List<Thread> getAll() throws DAOException {
+    public List<Comment> getAll() throws DAOException {
         return List.of();
     }
 
     @Override
-    public boolean save(Thread entity) throws DAOException {
+    public boolean save(Comment entity) throws DAOException {
         return false;
     }
 
     @Override
-    public boolean update(Thread entity) throws DAOException {
+    public boolean update(Comment entity) throws DAOException {
         return false;
     }
 

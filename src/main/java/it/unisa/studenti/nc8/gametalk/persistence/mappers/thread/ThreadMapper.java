@@ -2,7 +2,7 @@ package it.unisa.studenti.nc8.gametalk.persistence.mappers.thread;
 
 import it.unisa.studenti.nc8.gametalk.enums.Category;
 import it.unisa.studenti.nc8.gametalk.persistence.mappers.ResultSetMapper;
-import it.unisa.studenti.nc8.gametalk.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.post.thread.Thread;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
