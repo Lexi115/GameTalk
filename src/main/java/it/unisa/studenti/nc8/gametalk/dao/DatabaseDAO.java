@@ -1,9 +1,14 @@
 package it.unisa.studenti.nc8.gametalk.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
+import it.unisa.studenti.nc8.gametalk.persistence.Database;
+import it.unisa.studenti.nc8.gametalk.persistence.mappers.ResultSetMapper;
 
-public interface DatabaseDAO<T> extends DAO<T> {
-    List<T> fetch(ResultSet rs) throws SQLException;
+public abstract class DatabaseDAO<T> {
+    protected Database db;
+    protected ResultSetMapper<T> mapper;
+
+    public DatabaseDAO(Database db, ResultSetMapper<T> mapper) {
+        this.db = db;
+        this.mapper = mapper;
+    }
 }
