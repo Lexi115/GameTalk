@@ -8,7 +8,7 @@ import it.unisa.studenti.nc8.gametalk.post.comment.Comment;
 
 import java.util.List;
 
-public class CommentDAOImpl extends DatabaseDAO<Comment>  implements CommentDAO{
+public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
     public CommentDAOImpl(Database db, ResultSetMapper<Comment> mapper) {
         super(db, mapper);
