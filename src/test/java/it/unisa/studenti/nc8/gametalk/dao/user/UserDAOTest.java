@@ -1,7 +1,8 @@
 package it.unisa.studenti.nc8.gametalk.dao.user;
 
-import it.unisa.studenti.nc8.gametalk.exceptions.DAOException;
-import it.unisa.studenti.nc8.gametalk.user.User;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.DAOException;
+import it.unisa.studenti.nc8.gametalk.business.model.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
