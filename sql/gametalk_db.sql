@@ -42,6 +42,7 @@ INSERT INTO `categories` (`name`) VALUES
 ('Guides'),
 ('Help'),
 ('Memes'),
+('Reports'),
 ('Welcome');
 
 -- --------------------------------------------------------
