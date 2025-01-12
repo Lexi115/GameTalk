@@ -9,7 +9,7 @@ import java.sql.SQLException;
  *
  * @version 1.0
  */
-public interface Database {
+public interface Database extends AutoCloseable {
     /**
      * Crea una connessione al database.
      *
@@ -29,6 +29,7 @@ public interface Database {
      *
      * @throws SQLException Se si verifica un errore durante la chiusura.
      */
+    @Override
     void close() throws SQLException;
 
     /**
