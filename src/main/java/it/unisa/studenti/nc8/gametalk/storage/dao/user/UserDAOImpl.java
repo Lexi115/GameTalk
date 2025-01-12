@@ -45,7 +45,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     }
 
     @Override
-    public int save(User entity) throws DAOException {
+    public long save(User entity) throws DAOException {
         try (db) {
             db.connect();
             String query = "INSERT INTO users (id, username, password_hash, creation_date, " +
@@ -68,7 +68,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     }
 
     @Override
-    public int update(User entity) throws DAOException {
+    public boolean update(User entity) throws DAOException {
         try (db) {
             db.connect();
             String query = "UPDATE users SET id = ?, username = ?, password_hash = ?, " +
@@ -85,19 +85,19 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
                     entity.getId()
             };
 
-            return db.executeUpdate(query, params);
+            return db.executeUpdate(query, params) > 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
     @Override
-    public int delete(long id) throws DAOException {
+    public boolean delete(long id) throws DAOException {
         try (db) {
             db.connect();
             String query = "DELETE FROM users WHERE id = ?";
 
-            return db.executeUpdate(query, id);
+            return db.executeUpdate(query, id) > 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
