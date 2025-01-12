@@ -6,18 +6,18 @@ import java.sql.SQLException;
 public class DatabaseMock implements Database{
 
     @Override
-    public boolean connect() throws SQLException {
+    public void connect() throws SQLException {
+
+    }
+
+    @Override
+    public boolean isConnected(){
         return false;
     }
 
     @Override
-    public boolean isConnected() throws SQLException {
-        return false;
-    }
+    public void close() throws SQLException {
 
-    @Override
-    public boolean close() throws SQLException {
-        return false;
     }
 
     @Override
