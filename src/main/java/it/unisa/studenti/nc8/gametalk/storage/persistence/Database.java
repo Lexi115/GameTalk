@@ -3,12 +3,61 @@ package it.unisa.studenti.nc8.gametalk.storage.persistence;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Interfaccia per la gestione della connessione e delle operazioni con un database SQL.
+ * Utilizza un pool di connessioni per migliorare le prestazioni.
+ *
+ * @version 1.0
+ */
 public interface Database {
-    boolean connect() throws SQLException;
-    boolean isConnected() throws SQLException;
-    boolean close() throws SQLException;
+    /**
+     * Crea una connessione al database.
+     *
+     * @throws SQLException Se la connessione fallisce.
+     */
+    void connect() throws SQLException;
 
+    /**
+     * Controlla se la connessione al database è attiva.
+     *
+     * @return true se la connessione è attiva, false altrimenti.
+     */
+    boolean isConnected();
+
+    /**
+     * Chiude la connessione al database.
+     *
+     * @throws SQLException Se si verifica un errore durante la chiusura.
+     */
+    void close() throws SQLException;
+
+    /**
+     * Esegue una query SELECT sul database.
+     *
+     * @param query      La query SQL da eseguire.
+     * @param parameters Parametri da inserire nella query.
+     * @return Il risultato della query come ResultSet.
+     * @throws SQLException Se si verifica un errore durante l'esecuzione.
+     */
     ResultSet executeQuery(String query, Object... parameters) throws SQLException;
+
+    /**
+     * Esegue una query di tipo INSERT, UPDATE o DELETE sul database.
+     *
+     * @param query      La query SQL da eseguire.
+     * @param parameters Parametri da inserire nella query.
+     * @return Il numero di righe modificate.
+     * @throws SQLException Se si verifica un errore durante l'esecuzione.
+     */
     int executeUpdate(String query, Object... parameters) throws SQLException;
+
+    /**
+     * Esegue una query di tipo INSERT e restituisce la chiave generata.
+     *
+     * @param query      La query SQL da eseguire.
+     * @param parameters Parametri da inserire nella query.
+     * @return La chiave primaria generata.
+     * @throws SQLException Se si verifica un errore durante l'esecuzione.
+     */
     int executeUpdateReturnKeys(String query, Object... parameters) throws SQLException;
 }
