@@ -60,5 +60,5 @@ public interface Database extends AutoCloseable {
      * @return La chiave primaria generata.
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
-    int executeUpdateReturnKeys(String query, Object... parameters) throws SQLException;
+    long executeUpdateReturnKeys(String query, Object... parameters) throws SQLException;
 }
