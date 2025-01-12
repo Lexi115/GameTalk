@@ -6,8 +6,9 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
-
 
 /**
  * Classe per la gestione della connessione e delle operazioni con un database SQL.
@@ -73,7 +74,7 @@ public class DatabaseImpl implements Database {
     /**
      * Controlla se la connessione al database è attiva.
      *
-     * @return true se la connessione è attiva, false altrimenti.
+     * @return <code>true</code> se la connessione è attiva, <code>false</code> altrimenti.
      */
     @Override
     public boolean isConnected() {
@@ -139,30 +140,29 @@ public class DatabaseImpl implements Database {
         }
     }
 
-
     /**
-     * Esegue una query di tipo INSERT e restituisce la chiave generata.
+     * Esegue una query di tipo INSERT e restituisce le chiavi generate.
      *
      * @param query      La query SQL da eseguire.
      * @param parameters Parametri da inserire nella query.
-     * @return La chiave primaria generata.
+     * @return Una lista di tutte le chiavi generate.
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
     @Override
-    public int executeUpdateReturnKeys(String query, Object... parameters) throws SQLException {
+    public List<Long> executeInsert(String query, Object... parameters) throws SQLException {
         try (PreparedStatement statement = this.prepareStatement(query, true)) {
             statement.executeUpdate();
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("Nessuna chiave generata trovata.");
+                List<Long> keys = new ArrayList<>();
+                while (generatedKeys.next()) {
+                    keys.add(generatedKeys.getLong(1));
                 }
+                return keys;
             }
         } catch (SQLException e) {
-            LOGGER.error("Errore durante l'esecuzione dell'update: {}", query, e);
-            throw new SQLException("Errore durante l'esecuzione dell'update.", e);
+            LOGGER.error("Errore durante l'esecuzione dell'insert: {}", query, e);
+            throw new SQLException("Errore durante l'esecuzione dell'insert.", e);
         }
     }
 

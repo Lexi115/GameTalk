@@ -22,7 +22,7 @@ public interface UserDAO extends DAO<User> {
      * a quello specificato. Supporta la paginazione.
      *
      * @param username il nome utente da cercare, può includere caratteri jolly o essere parziale.
-     * @param page il numero della pagina da recuperare (partendo da 0).
+     * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti che corrispondono al criterio di ricerca.
      * @throws DAOException se si verifica un errore durante l'interazione con il database.
@@ -34,7 +34,7 @@ public interface UserDAO extends DAO<User> {
      * Recupera una lista di utenti che hanno ricevuto almeno un avvertimento (strike).
      * Supporta la paginazione.
      *
-     * @param page il numero della pagina da recuperare (partendo da 0).
+     * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti che hanno ricevuto almeno uno strike.
      * @throws DAOException se si verifica un errore durante l'interazione con il database.
@@ -44,7 +44,7 @@ public interface UserDAO extends DAO<User> {
     /**
      * Recupera una lista di utenti bannati. Supporta la paginazione.
      *
-     * @param page il numero della pagina da recuperare (partendo da 0).
+     * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti bannati.
      * @throws DAOException se si verifica un errore durante l'interazione con il database.

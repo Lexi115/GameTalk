@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
 
-    public UserDAOImpl(Database db, ResultSetMapper<User> mapper) {
+    public UserDAOImpl(final Database db, ResultSetMapper<User> mapper) {
         super(db, mapper);
     }
 
@@ -90,7 +90,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
                     entity.getRole().toString()
             };
 
-            return db.executeUpdateReturnKeys(query, params);
+            List<Long> keys = db.executeInsert(query, params);
+            return !keys.isEmpty() ? keys.getFirst() : 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -151,7 +152,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * a quello specificato. Supporta la paginazione.
      *
      * @param username il nome utente da cercare, può includere caratteri jolly o essere parziale.
-     * @param page il numero della pagina da recuperare (partendo da 0).
+     * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti che corrispondono al criterio di ricerca.
      * @throws DAOException se si verifica un errore durante l'interazione con il database.
@@ -175,7 +176,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * Recupera una lista di utenti che hanno ricevuto almeno un avvertimento (strike).
      * Supporta la paginazione.
      *
-     * @param page il numero della pagina da recuperare (partendo da 0).
+     * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti che hanno ricevuto almeno uno strike.
      * @throws DAOException se si verifica un errore durante l'interazione con il database.
@@ -198,7 +199,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     /**
      * Recupera una lista di utenti bannati. Supporta la paginazione.
      *
-     * @param page il numero della pagina da recuperare (partendo da 0).
+     * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti bannati.
      * @throws DAOException se si verifica un errore durante l'interazione con il database.
