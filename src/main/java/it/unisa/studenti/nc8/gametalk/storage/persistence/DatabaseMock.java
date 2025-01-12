@@ -3,35 +3,32 @@ package it.unisa.studenti.nc8.gametalk.storage.persistence;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DatabaseMock implements Database{
-
+public class DatabaseMock implements Database {
     @Override
     public void connect() throws SQLException {
-
     }
 
     @Override
-    public boolean isConnected(){
+    public boolean isConnected() {
         return false;
     }
 
     @Override
     public void close() throws SQLException {
-
     }
 
     @Override
-    public ResultSet executeQuery(String query, Object... parameters) throws SQLException {
+    public ResultSet executeQuery(String query, Object... parameters) {
         return null;
     }
 
     @Override
-    public int executeUpdate(String query, Object... parameters) throws SQLException {
+    public int executeUpdate(String query, Object... parameters) {
         return 0;
     }
 
     @Override
-    public int executeUpdateReturnKeys(String query, Object... parameters) throws SQLException {
+    public int executeUpdateReturnKeys(String query, Object... parameters) {
         return 0;
     }
 }
