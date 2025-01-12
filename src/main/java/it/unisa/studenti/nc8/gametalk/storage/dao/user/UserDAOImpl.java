@@ -21,25 +21,35 @@ import java.util.List;
  */
 public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
 
-    public UserDAOImpl(final Database db, ResultSetMapper<User> mapper) {
+    /**
+     * Costruttore.
+     *
+     * @param db     Istanza di {@link Database} per la connessione al database.
+     * @param mapper Mapper per convertire un {@link ResultSet}
+     *               in un oggetto {@link User}.
+     */
+    public UserDAOImpl(final Database db, final ResultSetMapper<User> mapper) {
         super(db, mapper);
     }
 
     /**
-     * Recupera un'entità dal sistema di persistenza in base al suo identificativo univoco.
+     * Recupera un'entità dal sistema di persistenza in base al suo
+     * identificativo univoco.
      *
      * @param id l'identificativo univoco dell'entità da recuperare.
-     * @return l'entità corrispondente all'ID fornito, o {@code null} se non trovata.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return l'entità corrispondente all'ID fornito, o {@code null}
+     * se non trovata.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     @Override
-    public User get(long id) throws DAOException {
-        try (db) {
+    public User get(final long id) throws DAOException {
+        try (Database db = this.getDb()) {
             db.connect();
             String query = "SELECT * FROM users WHERE id = ?";
 
             ResultSet rs = db.executeQuery(query, id);
-            List<User> users = mapper.map(rs);
+            List<User> users = this.getMapper().map(rs);
 
             return !users.isEmpty() ? users.getFirst() : null;
         } catch (SQLException e) {
@@ -50,17 +60,19 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     /**
      * Recupera tutte le entità del tipo specificato dal sistema di persistenza.
      *
-     * @return una lista contenente tutte le entità, oppure una lista vuota se nessuna entità è stata trovata.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return una lista contenente tutte le entità, oppure una lista vuota se
+     * nessuna entità è stata trovata.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     @Override
     public List<User> getAll() throws DAOException {
-        try (db) {
+        try (Database db = this.getDb()) {
             db.connect();
             String query = "SELECT * FROM users";
 
             ResultSet rs = db.executeQuery(query);
-            return mapper.map(rs);
+            return this.getMapper().map(rs);
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -70,15 +82,18 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * Salva una nuova entità nel sistema di persistenza.
      *
      * @param entity l'entità da salvare.
-     * @return l'ID della nuova riga aggiunta, o 0 se non è stata aggiunta alcuna riga.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return l'ID della nuova riga aggiunta, o 0 se non è stata
+     * aggiunta alcuna riga.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     @Override
-    public long save(User entity) throws DAOException {
-        try (db) {
+    public long save(final User entity) throws DAOException {
+        try (Database db = this.getDb()) {
             db.connect();
-            String query = "INSERT INTO users (id, username, password_hash, creation_date, " +
-                    "banned, strikes, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO users (id, username, password_hash, "
+                    + "creation_date, banned, strikes, role) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             Object[] params = {
                     entity.getId(),
@@ -101,15 +116,18 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * Aggiorna i dati di un'entità esistente nel sistema di persistenza.
      *
      * @param entity l'entità da aggiornare.
-     * @return <code>true</code> se la riga è stata aggiornata, <code>false</code> altrimenti.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return <code>true</code> se la riga è stata aggiornata,
+     * <code>false</code> altrimenti.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     @Override
-    public boolean update(User entity) throws DAOException {
-        try (db) {
+    public boolean update(final User entity) throws DAOException {
+        try (Database db = this.getDb()) {
             db.connect();
-            String query = "UPDATE users SET id = ?, username = ?, password_hash = ?, " +
-                    "creation_date = ?, banned = ?, strikes = ?, roles = ? WHERE id = ?";
+            String query = "UPDATE users SET id = ?, username = ?, "
+                    + "password_hash = ?, creation_date = ?, banned = ?, "
+                    + "strikes = ?, roles = ? WHERE id = ?";
 
             Object[] params = {
                     entity.getId(),
@@ -129,15 +147,18 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     }
 
     /**
-     * Elimina un'entità dal sistema di persistenza in base al suo identificativo univoco.
+     * Elimina un'entità dal sistema di persistenza in base al suo
+     * identificativo univoco.
      *
      * @param id l'identificativo univoco dell'entità da eliminare.
-     * @return <code>true</code> se la riga è stata eliminata, <code>false</code> altrimenti.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return <code>true</code> se la riga è stata eliminata,
+     * <code>false</code> altrimenti.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     @Override
-    public boolean delete(long id) throws DAOException {
-        try (db) {
+    public boolean delete(final long id) throws DAOException {
+        try (Database db = this.getDb()) {
             db.connect();
             String query = "DELETE FROM users WHERE id = ?";
 
@@ -148,49 +169,61 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     }
 
     /**
-     * Recupera una lista di utenti che hanno uno username corrispondente o simile
-     * a quello specificato. Supporta la paginazione.
+     * Recupera una lista di utenti che hanno uno username corrispondente
+     * o simile a quello specificato. Supporta la paginazione.
      *
-     * @param username il nome utente da cercare, può includere caratteri jolly o essere parziale.
+     * @param username il nome utente da cercare, può includere caratteri jolly.
      * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti che corrispondono al criterio di ricerca.
-     * @throws DAOException se si verifica un errore durante l'interazione con il database.
+     * @throws DAOException se si verifica un errore durante l'interazione
+     * con il database.
      */
     @Override
-    public List<User> getUsersByUsername(String username, int page, int limit) throws DAOException {
+    public List<User> getUsersByUsername(
+            final String username,
+            final int page,
+            final int limit
+    ) throws DAOException {
         int offset = (page - 1) * limit;
 
-        try (db) {
+        try (Database db = this.getDb()) {
             db.connect();
-            String query = "SELECT * FROM users WHERE username LIKE ? LIMIT ? OFFSET ?";
+            String query = "SELECT * FROM users WHERE username LIKE ? "
+                    + "LIMIT ? OFFSET ?";
 
             ResultSet rs = db.executeQuery(query, username, limit, offset);
-            return mapper.map(rs);
+            return this.getMapper().map(rs);
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
     /**
-     * Recupera una lista di utenti che hanno ricevuto almeno un avvertimento (strike).
+     * Recupera una lista di utenti che hanno ricevuto almeno
+     * un avvertimento (strike).
      * Supporta la paginazione.
      *
      * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti che hanno ricevuto almeno uno strike.
-     * @throws DAOException se si verifica un errore durante l'interazione con il database.
+     * @throws DAOException se si verifica un errore durante l'interazione
+     * con il database.
      */
     @Override
-    public List<User> getStruckUsers(int page, int limit) throws DAOException {
+    public List<User> getStruckUsers(
+            final int page,
+            final int limit
+    ) throws DAOException {
         int offset = (page - 1) * limit;
 
-        try (db) {
+        try (Database db = this.getDb()) {
             db.connect();
-            String query = "SELECT * FROM users WHERE strikes > 0 LIMIT ? OFFSET ?";
+            String query = "SELECT * FROM users WHERE strikes > 0 "
+                    + "LIMIT ? OFFSET ?";
 
             ResultSet rs = db.executeQuery(query, limit, offset);
-            return mapper.map(rs);
+            return this.getMapper().map(rs);
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -202,18 +235,23 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti bannati.
-     * @throws DAOException se si verifica un errore durante l'interazione con il database.
+     * @throws DAOException se si verifica un errore durante l'interazione
+     * con il database.
      */
     @Override
-    public List<User> getBannedUsers(int page, int limit) throws DAOException {
+    public List<User> getBannedUsers(
+            final int page,
+            final int limit
+    ) throws DAOException {
         int offset = (page - 1) * limit;
 
-        try (db) {
+        try (Database db = this.getDb()) {
             db.connect();
-            String query = "SELECT * FROM users WHERE banned = 1 LIMIT ? OFFSET ?";
+            String query = "SELECT * FROM users WHERE banned = 1 "
+                    + "LIMIT ? OFFSET ?";
 
             ResultSet rs = db.executeQuery(query, limit, offset);
-            return mapper.map(rs);
+            return this.getMapper().map(rs);
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }

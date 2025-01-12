@@ -14,19 +14,24 @@ import java.util.List;
 public interface DAO<T> {
 
     /**
-     * Recupera un'entità dal sistema di persistenza in base al suo identificativo univoco.
+     * Recupera un'entità dal sistema di persistenza in base al suo
+     * identificativo univoco.
      *
      * @param id l'identificativo univoco dell'entità da recuperare.
-     * @return l'entità corrispondente all'ID fornito, o {@code null} se non trovata.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return l'entità corrispondente all'ID fornito, o {@code null}
+     * se non trovata.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     T get(long id) throws DAOException;
 
     /**
      * Recupera tutte le entità del tipo specificato dal sistema di persistenza.
      *
-     * @return una lista contenente tutte le entità, oppure una lista vuota se nessuna entità è stata trovata.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return una lista contenente tutte le entità, oppure una lista vuota se
+     * nessuna entità è stata trovata.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     List<T> getAll() throws DAOException;
 
@@ -34,8 +39,10 @@ public interface DAO<T> {
      * Salva una nuova entità nel sistema di persistenza.
      *
      * @param entity l'entità da salvare.
-     * @return l'ID della nuova riga aggiunta, o 0 se non è stata aggiunta alcuna riga.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return l'ID della nuova riga aggiunta, o 0 se non è stata
+     * aggiunta alcuna riga.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     long save(T entity) throws DAOException;
 
@@ -43,17 +50,22 @@ public interface DAO<T> {
      * Aggiorna i dati di un'entità esistente nel sistema di persistenza.
      *
      * @param entity l'entità da aggiornare.
-     * @return <code>true</code> se la riga è stata aggiornata, <code>false</code> altrimenti.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return <code>true</code> se la riga è stata aggiornata,
+     * <code>false</code> altrimenti.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     boolean update(T entity) throws DAOException;
 
     /**
-     * Elimina un'entità dal sistema di persistenza in base al suo identificativo univoco.
+     * Elimina un'entità dal sistema di persistenza in base al suo
+     * identificativo univoco.
      *
      * @param id l'identificativo univoco dell'entità da eliminare.
-     * @return <code>true</code> se la riga è stata eliminata, <code>false</code> altrimenti.
-     * @throws DAOException se si verifica un errore durante l'interazione con il sistema di persistenza.
+     * @return <code>true</code> se la riga è stata eliminata,
+     * <code>false</code> altrimenti.
+     * @throws DAOException se si verifica un errore durante l'interazione con
+     * il sistema di persistenza.
      */
     boolean delete(long id) throws DAOException;
 }

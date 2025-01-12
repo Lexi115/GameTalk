@@ -5,50 +5,64 @@ import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Classe per la gestione della connessione e delle operazioni con un database SQL.
- * Utilizza un pool di connessioni per migliorare le prestazioni.
+ * Classe per la gestione della connessione e delle operazioni
+ * con un database SQL. Utilizza un pool di connessioni per
+ * migliorare le prestazioni.
  *
  * @version 1.0
  */
 public class DatabaseImpl implements Database {
+    /** Logger per registrare eventi e errori. */
     private static final Logger LOGGER = LogManager.getLogger();
 
+    /** Host del database. */
     private final String host;
+
+    /** Porta su cui è in ascolto il database. */
     private final int port;
+
+    /** Nome utente per autenticarsi al database. */
     private final String username;
+
+    /** Password per autenticarsi al database. */
     private final String password;
+
+    /** Nome del database a cui connettersi. */
     private final String databaseName;
 
+    /** Pool di connessioni per gestire le connessioni al database. */
     private static DataSource dataSource;
+
+    /** Connessione attuale al database. */
     private Connection connection;
 
     /**
-     * Costruttore con parametri di default per host (localhost) e porta (3306).
+     * Costruttore.
      *
-     * @param username      Nome utente per accedere al database.
-     * @param password      Password per accedere al database.
-     * @param databaseName  Nome del database da utilizzare.
-     */
-    public DatabaseImpl(String username, String password, String databaseName) {
-        this("localhost", 3306, username, password, databaseName);
-    }
-
-    /**
-     * Costruttore con parametri personalizzati per host e porta.
-     *
-     * @param host          Host del database (es. localhost).
+     * @param host         Host del database (es. localhost).
      * @param port          Porta del database (es. 3306).
      * @param username      Nome utente per accedere al database.
      * @param password      Password per accedere al database.
      * @param databaseName  Nome del database da utilizzare.
      */
-    public DatabaseImpl(String host, int port, String username, String password, String databaseName) {
+    public DatabaseImpl(
+            final String host,
+            final int port,
+            final String username,
+            final String password,
+            final String databaseName
+    ) {
         this.host = host;
         this.port = port;
         this.username = username;
@@ -74,7 +88,8 @@ public class DatabaseImpl implements Database {
     /**
      * Controlla se la connessione al database è attiva.
      *
-     * @return <code>true</code> se la connessione è attiva, <code>false</code> altrimenti.
+     * @return <code>true</code> se la connessione è attiva,
+     * <code>false</code> altrimenti.
      */
     @Override
     public boolean isConnected() {
@@ -98,8 +113,9 @@ public class DatabaseImpl implements Database {
                 connection = null;
                 LOGGER.info("Connessione al database chiusa.");
             } catch (SQLException e) {
-                LOGGER.error("Errore durante la chiusura della connessione al database.", e);
-                throw new SQLException("Errore durante la chiusura del database.", e);
+                LOGGER.error("Errore durante la chiusura del database.", e);
+                throw new SQLException(
+                        "Errore durante la chiusura del database.", e);
             }
         }
     }
@@ -113,12 +129,17 @@ public class DatabaseImpl implements Database {
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
     @Override
-    public ResultSet executeQuery(String query, Object... parameters) throws SQLException {
+    public ResultSet executeQuery(
+            final String query,
+            final Object... parameters
+    ) throws SQLException {
         try (PreparedStatement statement = this.prepareStatement(query)) {
             return statement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.error("Errore durante l'esecuzione della query: {}", query, e);
-            throw new SQLException("Errore durante l'esecuzione della query.", e);
+            LOGGER.error(
+                    "Errore durante l'esecuzione della query: {}", query, e);
+            throw new SQLException(
+                    "Errore durante l'esecuzione della query.", e);
         }
     }
 
@@ -131,12 +152,17 @@ public class DatabaseImpl implements Database {
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
     @Override
-    public int executeUpdate(String query, Object... parameters) throws SQLException {
+    public int executeUpdate(
+            final String query,
+            final Object... parameters
+    ) throws SQLException {
         try (PreparedStatement statement = this.prepareStatement(query)) {
             return statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Errore durante l'esecuzione dell'update: {}", query, e);
-            throw new SQLException("Errore durante l'esecuzione dell'update.", e);
+            LOGGER.error(
+                    "Errore durante l'esecuzione dell'update: {}", query, e);
+            throw new SQLException(
+                    "Errore durante l'esecuzione dell'update.", e);
         }
     }
 
@@ -149,7 +175,10 @@ public class DatabaseImpl implements Database {
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
     @Override
-    public List<Long> executeInsert(String query, Object... parameters) throws SQLException {
+    public List<Long> executeInsert(
+            final String query,
+            final Object... parameters
+    ) throws SQLException {
         try (PreparedStatement statement = this.prepareStatement(query, true)) {
             statement.executeUpdate();
 
@@ -161,8 +190,10 @@ public class DatabaseImpl implements Database {
                 return keys;
             }
         } catch (SQLException e) {
-            LOGGER.error("Errore durante l'esecuzione dell'insert: {}", query, e);
-            throw new SQLException("Errore durante l'esecuzione dell'insert.", e);
+            LOGGER.error(
+                    "Errore durante l'esecuzione dell'insert: {}", query, e);
+            throw new SQLException(
+                    "Errore durante l'esecuzione dell'insert.", e);
         }
     }
 
@@ -191,9 +222,13 @@ public class DatabaseImpl implements Database {
      * @param statement  L'oggetto PreparedStatement da completare.
      * @param parameters I parametri da inserire.
      * @return Il PreparedStatement con i parametri settati.
-     * @throws SQLException Se si verifica un errore nell'impostazione dei parametri.
+     * @throws SQLException Se si verifica un errore nell'impostazione
+     * dei parametri.
      */
-    private PreparedStatement fillParameters(PreparedStatement statement, Object... parameters) throws SQLException {
+    private PreparedStatement fillParameters(
+            final PreparedStatement statement,
+            final Object... parameters
+    ) throws SQLException {
         for (int i = 0; i < parameters.length; i++) {
             statement.setObject(i + 1, parameters[i]);
         }
@@ -209,7 +244,10 @@ public class DatabaseImpl implements Database {
      * @return L'oggetto PreparedStatement pronto per l'esecuzione.
      * @throws SQLException Se si verifica un errore durante la preparazione.
      */
-    private PreparedStatement prepareStatement(String query, Object... parameters) throws SQLException {
+    private PreparedStatement prepareStatement(
+            final String query,
+            final Object... parameters
+    ) throws SQLException {
         return this.prepareStatement(query, false, parameters);
     }
 
@@ -217,19 +255,25 @@ public class DatabaseImpl implements Database {
      * Prepara una query SQL con opzione per ottenere chiavi generate.
      *
      * @param query               La query SQL da preparare.
-     * @param returnGeneratedKeys true se si vogliono restituire chiavi generate.
+     * @param returnGeneratedKeys true se si vogliono restituire
+     *                            chiavi generate.
      * @param parameters          I parametri da inserire.
      * @return L'oggetto PreparedStatement pronto per l'esecuzione.
      * @throws SQLException Se si verifica un errore durante la preparazione.
      */
-    private PreparedStatement prepareStatement(String query, boolean returnGeneratedKeys, Object... parameters)
-            throws SQLException {
+    private PreparedStatement prepareStatement(
+            final String query,
+            final boolean returnGeneratedKeys,
+            final Object... parameters
+    ) throws SQLException {
         if (!this.isConnected()) {
             throw new SQLException("Connessione al database non attiva.");
         }
 
-        PreparedStatement statement = connection.prepareStatement(query, returnGeneratedKeys ?
-                Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS);
+        PreparedStatement statement = connection.prepareStatement(
+                query, returnGeneratedKeys
+                ? Statement.RETURN_GENERATED_KEYS
+                        : Statement.NO_GENERATED_KEYS);
         return this.fillParameters(statement, parameters);
     }
 
@@ -239,7 +283,8 @@ public class DatabaseImpl implements Database {
      * @return L'URL JDBC per la connessione.
      */
     private String getUrl() {
-        return "jdbc:mysql://" + host + ":" + port + "/" + databaseName + "?serverTimezone="
+        return "jdbc:mysql://" + host + ":" + port + "/"
+                + databaseName + "?serverTimezone="
                 + TimeZone.getDefault().getID();
     }
 

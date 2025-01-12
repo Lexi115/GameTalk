@@ -5,7 +5,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Interfaccia per la gestione della connessione e delle operazioni con un database SQL.
+ * Interfaccia per la gestione della connessione e delle operazioni
+ * con un database SQL.
  *
  * @version 1.0
  */
@@ -40,7 +41,8 @@ public interface Database extends AutoCloseable {
      * @return Il risultato della query come ResultSet.
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
-    ResultSet executeQuery(String query, Object... parameters) throws SQLException;
+    ResultSet executeQuery(String query, Object... parameters)
+            throws SQLException;
 
     /**
      * Esegue una query di tipo INSERT, UPDATE o DELETE sul database.
@@ -60,5 +62,6 @@ public interface Database extends AutoCloseable {
      * @return Una lista di tutte le chiavi generate.
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
-    List<Long> executeInsert(String query, Object... parameters) throws SQLException;
+    List<Long> executeInsert(String query, Object... parameters)
+            throws SQLException;
 }
