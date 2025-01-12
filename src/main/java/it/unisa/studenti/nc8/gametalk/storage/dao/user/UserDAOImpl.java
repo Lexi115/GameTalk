@@ -25,17 +25,17 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     }
 
     @Override
-    public boolean save(User entity) throws DAOException {
-        return false;
+    public int save(User entity) throws DAOException {
+        return 1;
     }
 
     @Override
-    public boolean update(User entity) throws DAOException {
-        return false;
+    public int update(User entity) throws DAOException {
+        return 1;
     }
 
     @Override
-    public boolean delete(long id) throws DAOException {
-        return false;
+    public int delete(long id) throws DAOException {
+        return 1;
     }
 }

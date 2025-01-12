@@ -36,16 +36,12 @@ public class CommentService {
             }
         }
 
-    //TODO paginazione anche qui
+    //TODO
     public List<Comment> getCommentsByThreadId(long threadId){
-        try {
-            if(threadId <= 0){
-                throw new IllegalArgumentException("Id thread non valido");
-            }
-            return commentDAO.getCommentsByThreadId(threadId);
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
+        if(threadId <= 0){
+            throw new IllegalArgumentException("Id thread non valido");
         }
+        return List.of();
     }
 
     public void updateComment(Comment comment) {

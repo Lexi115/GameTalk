@@ -9,9 +9,9 @@ public interface DAO<T> {
 
     List<T> getAll() throws DAOException;
 
-    boolean save(T entity) throws DAOException;
+    int save(T entity) throws DAOException;
 
-    boolean update(T entity) throws DAOException;
+    int update(T entity) throws DAOException;
 
-    boolean delete(long id) throws DAOException;
+    int delete(long id) throws DAOException;
 }
