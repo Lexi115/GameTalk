@@ -4,9 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseMock implements Database {
-
     @Override
-    public void connect() {
+    public void connect() throws SQLException {
     }
 
     @Override
@@ -15,7 +14,7 @@ public class DatabaseMock implements Database {
     }
 
     @Override
-    public void close() {
+    public void close() throws SQLException {
     }
 
     @Override

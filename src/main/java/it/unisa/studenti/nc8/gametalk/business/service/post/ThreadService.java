@@ -36,16 +36,12 @@ public class ThreadService {
         }
     }
 
-    //TODO ricerca!!!! paginazione!!!! non va bene cosi
+    //TODO ricerca!!!! mancano i metodi
     public List<Thread> getThreadsByTitle(String title) {
-        try{
-            if(title.isEmpty()){
-                throw new IllegalArgumentException("Titolo non valido");
-            }
-
-            return threadDAO.getThreadsByTitle(title);
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
+        if(title.isEmpty()){
+            throw new IllegalArgumentException("Titolo non valido");
         }
+
+        return List.of();
     }
     }

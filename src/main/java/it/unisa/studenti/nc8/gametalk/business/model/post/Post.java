@@ -1,13 +1,12 @@
 package it.unisa.studenti.nc8.gametalk.business.model.post;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public abstract class Post {
     protected long id;
     protected long userId;
     protected String body;
-    protected int upVotes;
+    protected int votes;
     protected Date creationDate;
 
     public long getId() {
@@ -34,12 +33,12 @@ public abstract class Post {
         this.body = body;
     }
 
-    public int getUpVotes() {
-        return upVotes;
+    public int getVotes() {
+        return votes;
     }
 
-    public void setUpVotes(int upVotes) {
-        this.upVotes = upVotes;
+    public void setVotes(int votes) {
+        this.votes = votes;
     }
 
     public Date getCreationDate() {
@@ -56,7 +55,7 @@ public abstract class Post {
                 "id=" + id +
                 ", userId=" + userId +
                 ", body='" + body + '\'' +
-                ", upVotes=" + upVotes +
+                ", upVotes=" + votes +
                 ", creationDate=" + creationDate +
                 '}';
     }
