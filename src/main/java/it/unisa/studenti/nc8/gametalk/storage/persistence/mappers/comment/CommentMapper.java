@@ -7,7 +7,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Implementazione dell'interfaccia {@link ResultSetMapper} per mappare i risultati
+ * di una query {@link ResultSet} in una lista di oggetti {@link Comment}.
+*/
 public class CommentMapper implements ResultSetMapper<Comment> {
+
+    /**
+     * Mappa i risultati di una query SQL (un {@link ResultSet}) in una lista di oggetti {@link Comment}.
+     *
+     * @param rs il {@link ResultSet} contenente i risultati della query
+     * @return una lista di oggetti {@link Comment} corrispondenti ai dati del {@link ResultSet}
+     * @throws SQLException se si verifica un errore durante l'accesso ai dati nel {@link ResultSet}
+     */
     @Override
     public List<Comment> map(ResultSet rs) throws SQLException {
         List<Comment> comments = new ArrayList<>();
