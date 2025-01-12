@@ -44,7 +44,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
 
     @Override
     public List<Thread> getAll() throws DAOException {
-        try {
+        try (db) {
             db.connect();
 
             String query = "SELECT * FROM threads";

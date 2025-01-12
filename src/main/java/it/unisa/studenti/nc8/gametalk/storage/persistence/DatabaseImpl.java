@@ -95,6 +95,7 @@ public class DatabaseImpl implements Database {
             try {
                 connection.close();
                 connection = null;
+                LOGGER.info("Connessione al database chiusa.");
             } catch (SQLException e) {
                 LOGGER.error("Errore durante la chiusura della connessione al database.", e);
                 throw new SQLException("Errore durante la chiusura del database.", e);
