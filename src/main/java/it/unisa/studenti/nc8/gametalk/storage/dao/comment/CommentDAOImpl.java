@@ -10,61 +10,81 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO{
+public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
-    public CommentDAOImpl(Database db, ResultSetMapper<Comment> mapper) {
+    /**
+     * Costruttore che inizializza l'oggetto {@link CommentDAOImpl} con
+     * il database e il mapper per mappare i risultati delle query.
+     *
+     * @param db Oggetto {@link Database}, contiene informazioni sul database
+     *           con cui interagire.
+     * @param mapper il mapper per mappare i risultati del {@link ResultSet}
+     */
+    public CommentDAOImpl(
+            final Database db,
+            final ResultSetMapper<Comment> mapper
+    ) {
         super(db, mapper);
     }
 
+    /**
+     * Recupera un commento specifico dal database in base al suo ID.
+     *
+     * @param id l'ID del commento da recuperare
+     * @return l'oggetto {@link Comment} corrispondente all'ID,
+     * oppure {@code null} se non esiste
+     * @throws DAOException se si verifica un errore durante
+     * l'esecuzione della query
+     */
     @Override
-    public Comment get(long id) throws DAOException {
-        try {
+    public Comment get(final long id) throws DAOException {
+        try (Database db = this.getDb()) {
             db.connect();
-            Comment comment = null;
-
             String query = "SELECT * FROM comments WHERE id = ?";
 
             ResultSet rs = db.executeQuery(query, id);
-
-            List<Comment> comments = mapper.map(rs);
-
-            if(!comments.isEmpty()){
-                comment = comments.getFirst();
-            }
-
-            db.close();
-            return comment;
-
+            List<Comment> comments = this.getMapper().map(rs);
+            return !comments.isEmpty() ? comments.getFirst() : null;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
+    /**
+     * Recupera tutti i commenti dal database (pericolosa).
+     *
+     * @return una lista di tutti i commenti
+     * @throws DAOException se si verifica un errore durante
+     * l'esecuzione della query
+     */
     @Override
     public List<Comment> getAll() throws DAOException {
-        try {
+        try (Database db = this.getDb()) {
             db.connect();
-
             String query = "SELECT * FROM comments";
 
             ResultSet rs = db.executeQuery(query);
-
-            List<Comment> comments = mapper.map(rs);
-
-            db.close();
-            return comments;
-
+            return this.getMapper().map(rs);
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
+    /**
+     * Salva un nuovo commento nel database.
+     *
+     * @param entity il commento da salvare
+     * @return l'ID della nuova riga aggiunta, o 0 se non è stata
+     * aggiunta alcuna riga.
+     * @throws DAOException se si verifica un errore durante
+     * l'esecuzione della query
+     */
     @Override
-    public int save(Comment entity) throws DAOException {
-        int rowsAffected;
-        try {
+    public long save(final Comment entity) throws DAOException {
+        try (Database db = this.getDb()) {
             db.connect();
-            String query = "INSERT INTO comments (thread_id, user_id, body, votes, creation_date) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO comments (thread_id, user_id, body, "
+                    + "votes, creation_date) VALUES (?, ?, ?, ?, ?)";
 
             Object[] params = {
                     entity.getThreadId(),
@@ -74,21 +94,27 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO{
                     entity.getCreationDate()
             };
 
-            rowsAffected = db.executeUpdate(query, params);
-            db.close();
-
-            return rowsAffected;
+            return db.executeUpdate(query, params);
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
+    /**
+     * Aggiorna un commento esistente nel database.
+     *
+     * @param entity il commento da aggiornare
+     * @return <code>true</code> se la riga è stata eliminata,
+     * <code>false</code> altrimenti.
+     * @throws DAOException se si verifica un errore durante
+     * l'esecuzione della query
+     */
     @Override
-    public int update(Comment entity) throws DAOException {
-        int rowsAffected;
-        try {
+    public boolean update(final Comment entity) throws DAOException {
+        try (Database db = this.getDb()) {
             db.connect();
-            String query = "UPDATE comments SET thread_id = ?, user_id = ?, body = ?, votes = ?, creation_date = ? WHERE id = ?";
+            String query = "UPDATE comments SET thread_id = ?, user_id = ?, "
+                    + "body = ?, votes = ?, creation_date = ? WHERE id = ?";
 
             Object[] params = {
                     entity.getThreadId(),
@@ -99,48 +125,59 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO{
                     entity.getId()
             };
 
-            rowsAffected = db.executeUpdate(query, params);
-            db.close();
-            return rowsAffected;
-
+            return db.executeUpdate(query, params) > 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
+    /**
+     * Elimina un commento dal database.
+     *
+     * @param id l'ID del commento da eliminare
+     * @return <code>true</code> se la riga è stata eliminata,
+     * <code>false</code> altrimenti.
+     * @throws DAOException se si verifica un errore durante
+     * l'esecuzione della query
+     */
     @Override
-    public int delete(long id) throws DAOException {
-        int rowsAffected;
-        try {
+    public boolean delete(final long id) throws DAOException {
+        try (Database db = this.getDb()) {
             db.connect();
             String query = "DELETE FROM comments WHERE id = ?";
 
-            rowsAffected = db.executeUpdate(query);
-            db.close();
-            return rowsAffected;
-
+            return db.executeUpdate(query) > 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
+    /**
+     * Recupera una lista di commenti in base all'ID del thread,
+     * con supporto per la paginazione.
+     *
+     * @param threadId l'ID del thread per cui recuperare i commenti.
+     * @param page il numero della pagina.
+     * @param limit il numero massimo di commenti per pagina.
+     * @return una lista di commenti del thread specificato.
+     * @throws DAOException se si verifica un errore durante
+     * l'esecuzione della query.
+     */
     @Override
-    public List<Comment> getCommentsByThreadId(long threadId,int page) throws DAOException {
-        int limit = 10;
+    public List<Comment> getCommentsByThreadId(
+            final long threadId,
+            final int page,
+            final int limit
+    ) throws DAOException {
         int offset = (page - 1) * limit;
 
-        try {
+        try (Database db = this.getDb()) {
             db.connect();
-
-            String query = "SELECT * FROM comments WHERE thread_id = ? LIMIT ? OFFSET ?";
+            String query = "SELECT * FROM comments WHERE thread_id = ? "
+                    + "ORDER BY creation_date DESC LIMIT ? OFFSET ?";
 
             ResultSet rs = db.executeQuery(query, threadId, limit, offset);
-
-            List<Comment> commentsList = mapper.map(rs);
-
-            db.close();
-            return commentsList;
-
+            return this.getMapper().map(rs);
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
