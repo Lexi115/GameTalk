@@ -1,7 +1,7 @@
-package it.unisa.studenti.nc8.gametalk.storage.dao.comment;
+package it.unisa.studenti.nc8.gametalk.storage.dao.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
-import it.unisa.studenti.nc8.gametalk.business.exceptions.DAOException;
+import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 
 import java.util.List;

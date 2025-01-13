@@ -1,4 +1,4 @@
-package it.unisa.studenti.nc8.gametalk.business.exceptions;
+package it.unisa.studenti.nc8.gametalk.storage.exceptions;
 
 /**
  * Eccezione lanciata da una classe che implementa

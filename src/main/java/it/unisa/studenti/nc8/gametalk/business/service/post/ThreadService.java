@@ -1,34 +1,41 @@
 package it.unisa.studenti.nc8.gametalk.business.service.post;
 
-import it.unisa.studenti.nc8.gametalk.business.exceptions.DAOException;
-import it.unisa.studenti.nc8.gametalk.storage.dao.thread.ThreadDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.thread.ThreadDAOImpl;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.thread.ThreadMapper;
+import it.unisa.studenti.nc8.gametalk.business.enums.Category;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
 
 import java.util.List;
 
 /**
- * Classe di servizio per la gestione di oggetti {@link Thread}.
- * Fornisce metodi per recuperare e cercare thread.
+ * Interfaccia di servizio per la gestione di oggetti {@link Thread}.
+ * Fornisce metodi per creare, rimuovere, aggiornare e cercare threads.
  */
-public class ThreadService {
+public interface ThreadService {
 
     /**
-     * Il DAO utilizzato per effettuare operazioni CRUD
-     * su oggetti {@link Thread}.
-     */
-    private final ThreadDAO threadDAO;
-
-    /**
-     * Costruttore.
+     * Aggiunge un nuovo thread.
      *
-     * @param db il database utilizzato per la persistenza dei dati.
+     * @param thread Il thread da aggiungere.
+     * @throws ServiceException se si è verificato un errore.
      */
-    public ThreadService(final Database db) {
-        this.threadDAO = new ThreadDAOImpl(db, new ThreadMapper());
-    }
+    void addThread(Thread thread) throws ServiceException;
+
+    /**
+     * Rimuove un thread esistente.
+     *
+     * @param id L'ID del thread da rimuovere.
+     * @throws IllegalArgumentException se l'ID è minore o uguale a 0.
+     * @throws ServiceException se si è verificato un errore.
+     */
+    void removeThread(long id) throws ServiceException;
+
+    /**
+     * Aggiorna un thread esistente.
+     *
+     * @param thread Il thread da aggiornare.
+     * @throws ServiceException se si è verificato un errore.
+     */
+    void updateThread(Thread thread) throws ServiceException;
 
     /**
      * Restituisce un thread dato il suo ID.
@@ -36,47 +43,36 @@ public class ThreadService {
      * @param id l'ID del thread da recuperare.
      * @return il thread con l'ID specificato.
      * @throws IllegalArgumentException se l'ID è minore o uguale a 0.
-     * @throws RuntimeException se si verifica un errore nell'accesso
-     * al database.
+     * @throws ServiceException se si è verificato un errore.
      */
-    public Thread getThreadById(final long id) {
-        try {
-            if (id <= 0) {
-                throw new IllegalArgumentException("Id thread non valido");
-            }
-            return threadDAO.get(id);
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    Thread findThreadById(long id) throws ServiceException;
 
     /**
-     * Restituisce tutti i thread presenti nel database.
+     * Recupera i thread in base al titolo e alla categoria, con supporto per la
+     * paginazione.
+     *
+     * @param title    Il titolo del thread da cercare.
+     * @param category La categoria dei thread da cercare.
+     * @param page     Il numero della pagina da recuperare.
+     * @param pageSize Il numero di thread per pagina.
+     * @return Una lista di thread che corrispondono ai criteri di ricerca.
+     * @throws IllegalArgumentException se il <code>title</code>
+     * è <code>null</code>, <code>page</code>
+     * o <code>pageSize</code> sono minori o uguali a 0
+     * @throws ServiceException se si è verificato un errore.
+     */
+    List<Thread> findThreadsByTitle(
+            String title,
+            Category category,
+            int page,
+            int pageSize
+    ) throws ServiceException;
+
+    /**
+     * Restituisce tutti i thread presenti nel sistema di persistenza.
      *
      * @return una lista di tutti i thread.
-     * @throws RuntimeException se si verifica un errore nell'accesso
-     * al database.
+     * @throws ServiceException se si è verificato un errore.
      */
-    public List<Thread> getAllThreads() {
-        try {
-            return threadDAO.getAll();
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Restituisce tutti i thread con un titolo che corrisponde al parametro.
-     *
-     * @param title il titolo da cercare.
-     * @return una lista di thread con il titolo specificato.
-     * @throws IllegalArgumentException se il titolo è vuoto.
-     */
-    public List<Thread> getThreadsByTitle(final String title) {
-        if (title == null || title.trim().isEmpty()) {
-            throw new IllegalArgumentException("Titolo non valido");
-        }
-
-        return List.of(); // Implementazione da completare
-    }
+     List<Thread> findAllThreads() throws ServiceException;
 }

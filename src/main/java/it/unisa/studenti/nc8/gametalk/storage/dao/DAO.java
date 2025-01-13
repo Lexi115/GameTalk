@@ -1,6 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao;
 
-import it.unisa.studenti.nc8.gametalk.business.exceptions.DAOException;
+import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 
 import java.util.List;
 

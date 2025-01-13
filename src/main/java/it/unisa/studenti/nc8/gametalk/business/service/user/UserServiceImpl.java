@@ -2,14 +2,32 @@ package it.unisa.studenti.nc8.gametalk.business.service.user;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
 import java.util.List;
 
 /**
- * Interfaccia di servizio per la gestione di oggetti {@link User}.
- * Fornisce metodi per creare, rimuovere, aggiornare e cercare utenti.
+ * Classe di servizio per la gestione di oggetti {@link User}.
  */
-public interface UserService {
+public class UserServiceImpl implements UserService {
+
+    /**
+     * Il DAO utilizzato per effettuare operazioni CRUD
+     * su oggetti {@link User}.
+     */
+    private final UserDAO userDAO;
+
+    /**
+     * Costruttore.
+     *
+     * @param db il database utilizzato per la persistenza dei dati.
+     */
+    public UserServiceImpl(final Database db) {
+        this.userDAO = new UserDAOImpl(db, new UserMapper());
+    }
 
     /**
      * Aggiunge un nuovo utente.
@@ -17,16 +35,21 @@ public interface UserService {
      * @param user L'utente da aggiungere.
      * @throws ServiceException se si è verificato un errore.
      */
-    void addUser(User user) throws ServiceException;
+    @Override
+    public void addUser(final User user) throws ServiceException {
+        return;
+    }
 
     /**
      * Rimuove un utente esistente.
      *
-     * @param id l'ID dell'utente da rimuovere.
-     * @throws IllegalArgumentException se l'ID è minore o uguale a 0.
+     * @param id l'id dell'utente da rimuovere.
      * @throws ServiceException se si è verificato un errore.
      */
-    void removeUser(long id) throws ServiceException;
+    @Override
+    public void removeUser(final long id) throws ServiceException {
+        return;
+    }
 
     /**
      * Aggiorna un utente esistente.
@@ -34,7 +57,10 @@ public interface UserService {
      * @param user L'utente da aggiornare.
      * @throws ServiceException se si è verificato un errore.
      */
-    void updateUser(User user) throws ServiceException;
+    @Override
+    public void updateUser(final User user) throws ServiceException {
+        return;
+    }
 
     /**
      * Trova un utente per il suo ID.
@@ -43,19 +69,29 @@ public interface UserService {
      * @return L'utente con l'ID specificato.
      * @throws ServiceException se si è verificato un errore.
      */
-    User findUserById(long id) throws ServiceException;
+    @Override
+    public User findUserById(final long id) throws ServiceException {
+        return null;
+    }
 
     /**
      * Trova gli utenti per nome utente con supporto per la paginazione.
      *
-     * @param username Il nome utente da cercare.
+     * @param username Il nome utente da cercare. Può essere anche
+     *                 incompleto.
      * @param page     Il numero della pagina da recuperare.
      * @param pageSize Il numero di risultati per pagina.
      * @return Una lista di utenti che corrispondono al nome utente.
      * @throws ServiceException se si è verificato un errore.
      */
-    List<User> findUsersByUsername(String username, int page, int pageSize)
-            throws ServiceException;
+    @Override
+    public List<User> findUsersByUsername(
+            final String username,
+            final int page,
+            final int pageSize
+    ) throws ServiceException {
+        return List.of();
+    }
 
     /**
      * Trova gli utenti che hanno ricevuto un certo numero di "strikes", con
@@ -66,8 +102,13 @@ public interface UserService {
      * @return Una lista di utenti con "strikes".
      * @throws ServiceException se si è verificato un errore.
      */
-    List<User> findStruckUsers(int page, int pageSize)
-            throws ServiceException;
+    @Override
+    public List<User> findStruckUsers(
+            final int page,
+            final int pageSize
+    ) throws ServiceException {
+        return List.of();
+    }
 
     /**
      * Trova gli utenti bannati, con supporto per la paginazione.
@@ -77,6 +118,11 @@ public interface UserService {
      * @return Una lista di utenti bannati.
      * @throws ServiceException se si è verificato un errore.
      */
-    List<User> findBannedUsers(int page, int pageSize)
-            throws ServiceException;
+    @Override
+    public List<User> findBannedUsers(
+            final int page,
+            final int pageSize
+    ) throws ServiceException {
+        return List.of();
+    }
 }
