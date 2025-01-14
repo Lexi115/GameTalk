@@ -2,7 +2,7 @@ package it.unisa.studenti.nc8.gametalk.business.model.user;
 
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Classe che rappresenta un utente nel sistema.
@@ -16,11 +16,11 @@ public class User {
     /** Nome utente scelto dall'utente. */
     private String username;
 
-    /** Hash della password dell'utente. */
-    private String passwordHash;
+    /** Password dell'utente. */
+    private String password;
 
     /** Data di creazione dell'utente. */
-    private Date creationDate;
+    private LocalDate creationDate;
 
     /** Indica se l'utente è bannato. */
     private boolean banned;
@@ -68,21 +68,21 @@ public class User {
     }
 
     /**
-     * Restituisce l'hash della password.
+     * Restituisce la password.
      *
      * @return l'hash della password.
      */
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
     /**
-     * Imposta l'hash della password.
+     * Imposta la password.
      *
-     * @param passwordHash l'hash della password da assegnare.
+     * @param password la password da assegnare.
      */
-    public void setPasswordHash(final String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPasswordHash(final String password) {
+        this.password = password;
     }
 
     /**
@@ -90,7 +90,7 @@ public class User {
      *
      * @return la data di creazione.
      */
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
@@ -99,7 +99,7 @@ public class User {
      *
      * @param creationDate la data di creazione da assegnare.
      */
-    public void setCreationDate(final Date creationDate) {
+    public void setCreationDate(final LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
