@@ -41,7 +41,7 @@ public class ThreadMapper implements ResultSetMapper<Thread> {
             thread.setVotes(rs.getInt("votes"));
             thread.setArchived(rs.getBoolean("archived"));
             thread.setCategory(Category.valueOf(rs.getString("category")));
-            thread.setCreationDate(rs.getDate("creation_date"));
+            thread.setCreationDate(rs.getDate("creation_date").toLocalDate());
 
             threads.add(thread);
         }

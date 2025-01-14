@@ -12,12 +12,23 @@ import java.util.List;
 public interface CommentService {
 
     /**
-     * Aggiunge un nuovo commento.
+     * Aggiunge un nuovo commento a un thread esistente e lo salva nel database.
+     * Il commento viene validato prima di essere salvato.
      *
-     * @param comment Il commento da aggiungere.
-     * @throws ServiceException se si è verificato un errore.
+     * @param id L'ID del nuovo commento.
+     * @param threadId L'ID del thread a cui il commento appartiene.
+     * @param userId L'ID dell'utente che ha scritto il commento.
+     * @param body Il corpo del commento.
+     * @param votes Il numero di voti iniziali del commento.
+     *
+     * @throws ServiceException Se il commento non è valido o
+     * se si verifica un errore durante il salvataggio nel database.
      */
-    void addComment(Comment comment) throws ServiceException;
+    void addComment(long id,
+                    long threadId,
+                    long userId,
+                    String body,
+                    int votes) throws ServiceException;
 
     /**
      * Rimuove un commento esistente.
@@ -36,14 +47,6 @@ public interface CommentService {
      * @throws ServiceException se si è verificato un errore.
      */
     Comment findCommentById(long id) throws ServiceException;
-
-    /**
-     * Restituisce tutti i commenti presenti nel sistema di persistenza.
-     *
-     * @return una lista di tutti i commenti.
-     * @throws ServiceException se si è verificato un errore.
-     */
-    List<Comment> findAllComments() throws ServiceException;
 
     /**
      * Recupera i commenti di un thread, con supporto per la paginazione.

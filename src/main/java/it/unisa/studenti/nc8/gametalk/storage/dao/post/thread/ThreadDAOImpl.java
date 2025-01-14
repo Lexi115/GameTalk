@@ -123,8 +123,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         try (Database db = this.getDb()) {
             db.connect();
             String query = "UPDATE threads SET user_id = ?, title = ?, "
-                    + "body = ?, votes = ?, archived = ?, category = ?, "
-                    + "creation_date = ? WHERE id = ?";
+                    + "body = ?, votes = ?, archived = ?, category = ? "
+                    + "WHERE id = ?";
 
             Object[] params = {
                     entity.getUserId(),
@@ -133,7 +133,6 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
                     entity.getVotes(),
                     entity.isArchived(),
                     entity.getCategory().toString(),
-                    entity.getCreationDate(),
                     entity.getId()
             };
 

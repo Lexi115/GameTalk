@@ -142,7 +142,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
 
             return db.executeUpdate(query, params) > 0;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException(e);
         }
     }
 
