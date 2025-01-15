@@ -1,6 +1,5 @@
 package it.unisa.studenti.nc8.gametalk.business.service.post;
 
-import it.unisa.studenti.nc8.gametalk.business.validators.CommentValidator;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
