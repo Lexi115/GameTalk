@@ -133,8 +133,9 @@ public class DatabaseImpl implements Database {
             final String query,
             final Object... parameters
     ) throws SQLException {
-        try (PreparedStatement statement = this.prepareStatement(
-                query, parameters)) {
+        try {
+            PreparedStatement statement = this.prepareStatement(
+                    query, parameters);
             return statement.executeQuery();
         } catch (SQLException e) {
             LOGGER.error(

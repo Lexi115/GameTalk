@@ -45,7 +45,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
     @Override
-    public Thread get(final long id) throws DAOException {
+    public Thread get(final Long id) throws DAOException {
         try (Database db = this.getDb()) {
             db.connect();
             String query = "SELECT * FROM threads WHERE id = ?";
@@ -151,7 +151,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
     @Override
-    public boolean delete(final long id) throws DAOException {
+    public boolean delete(final Long id) throws DAOException {
         try (Database db = this.getDb()) {
             db.connect();
             String query = "DELETE FROM threads WHERE id = ?";

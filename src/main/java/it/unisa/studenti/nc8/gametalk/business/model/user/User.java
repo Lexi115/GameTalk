@@ -81,7 +81,7 @@ public class User {
      *
      * @param password la password da assegnare.
      */
-    public void setPasswordHash(final String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 

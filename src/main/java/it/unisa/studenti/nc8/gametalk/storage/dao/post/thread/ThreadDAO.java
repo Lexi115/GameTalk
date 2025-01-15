@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public interface ThreadDAO extends DAO<Thread> {
+public interface ThreadDAO extends DAO<Thread, Long> {
 
     /**
      * Ottiene una lista di thread che corrispondono al titolo
