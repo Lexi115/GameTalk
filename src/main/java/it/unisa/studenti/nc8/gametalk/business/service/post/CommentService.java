@@ -19,7 +19,6 @@ public interface CommentService {
      * @param threadId L'ID del thread a cui il commento appartiene.
      * @param userId L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
-     * @param votes Il numero di voti iniziali del commento.
      *
      * @throws ServiceException Se il commento non è valido o
      * se si verifica un errore durante il salvataggio nel database.
@@ -27,8 +26,7 @@ public interface CommentService {
     void addComment(long id,
                     long threadId,
                     long userId,
-                    String body,
-                    int votes) throws ServiceException;
+                    String body) throws ServiceException;
 
     /**
      * Rimuove un commento esistente.
