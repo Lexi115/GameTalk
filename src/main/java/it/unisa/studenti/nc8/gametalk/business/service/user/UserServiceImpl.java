@@ -2,11 +2,16 @@ package it.unisa.studenti.nc8.gametalk.business.service.user;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
+import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
+import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -15,10 +20,20 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     /**
+     * Il database con il quale lavorare.
+     */
+    private final Database db;
+
+    /**
      * Il DAO utilizzato per effettuare operazioni CRUD
      * su oggetti {@link User}.
      */
     private final UserDAO userDAO;
+
+    /**
+     * L'oggetto che valida i campi di {@link User}.
+     */
+    private final Validator<User> userValidator;
 
     /**
      * Costruttore.
@@ -26,18 +41,55 @@ public class UserServiceImpl implements UserService {
      * @param db il database utilizzato per la persistenza dei dati.
      */
     public UserServiceImpl(final Database db) {
+        this.db = db;
         this.userDAO = new UserDAOImpl(db, new UserMapper());
+        this.userValidator = new UserValidator();
     }
 
     /**
      * Aggiunge un nuovo utente.
      *
-     * @param user L'utente da aggiungere.
+     * @param username L'username dell'utente.
+     * @param password La password dell'utente.
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public void addUser(final User user) throws ServiceException {
-        return;
+    public void createUser(
+            final String username,
+            final String password
+    ) throws ServiceException {
+        try (db) {
+            db.connect();
+            db.beginTransaction();
+
+            // Crea nuovo utente
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setCreationDate(LocalDate.now());
+
+            // Valida username e password
+            if (!userValidator.validate(user)) {
+                throw new ServiceException("Username o password incorretti");
+            }
+
+            // Verifica esistenza di un utente con lo stesso username
+            User existingUser = userDAO.getUserByUsername(username);
+            if (existingUser != null) {
+                throw new ServiceException("Username già in uso.");
+            }
+
+            // Salva nuovo utente
+            userDAO.save(user);
+            db.commit();
+        } catch (SQLException | DAOException e) {
+            try {
+                db.rollback();
+            } catch (SQLException e1) {
+                throw new ServiceException("Errore rollback", e1);
+            }
+            throw new ServiceException("Errore creazione utente", e);
+        }
     }
 
     /**
@@ -47,19 +99,51 @@ public class UserServiceImpl implements UserService {
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public void removeUser(final long id) throws ServiceException {
+    public void removeUser(final String id) throws ServiceException {
         return;
     }
 
     /**
      * Aggiorna un utente esistente.
      *
-     * @param user L'utente da aggiornare.
+     * @param id L'ID dell'utente.
+     * @param password La nuova password dell'utente.
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public void updateUser(final User user) throws ServiceException {
-        return;
+    public void updateUser(
+            final String id,
+            final String password
+    ) throws ServiceException {
+        try (db) {
+            db.connect();
+            db.beginTransaction();
+
+            // Trova utente già esistente
+            User user = userDAO.get(id);
+            if (user == null) {
+                throw new ServiceException("Utente non trovato");
+            }
+
+            // Aggiorna campi utente
+            user.setPassword(password);
+
+            // Valida password
+            if (!userValidator.validate(user)) {
+                throw new ServiceException("Password non valida");
+            }
+
+            // Aggiorna utente
+            userDAO.update(user);
+            db.commit();
+        } catch (SQLException | DAOException e) {
+            try {
+                db.rollback();
+            } catch (SQLException e1) {
+                throw new ServiceException("Errore rollback", e1);
+            }
+            throw new ServiceException("Errore aggiornamento utente", e);
+        }
     }
 
     /**
@@ -70,7 +154,7 @@ public class UserServiceImpl implements UserService {
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public User findUserById(final long id) throws ServiceException {
+    public User findUserById(final String id) throws ServiceException {
         return null;
     }
 
@@ -91,6 +175,12 @@ public class UserServiceImpl implements UserService {
             final int pageSize
     ) throws ServiceException {
         return List.of();
+    }
+
+    @Override
+    public User findUserByUsername(final String username) throws ServiceException {
+        List<User> users = this.findUsersByUsername(username, 1, 1);
+        return !users.isEmpty() ? users.getFirst() : null;
     }
 
     /**

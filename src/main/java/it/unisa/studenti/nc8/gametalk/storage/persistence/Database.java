@@ -62,7 +62,7 @@ public interface Database extends AutoCloseable {
      * @return Una lista di tutte le chiavi generate.
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
-    List<Long> executeInsert(String query, Object... parameters)
+    List<Object> executeInsert(String query, Object... parameters)
             throws SQLException;
 
     /**

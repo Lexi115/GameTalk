@@ -43,14 +43,13 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * il sistema di persistenza.
      */
     @Override
-    public User get(final long id) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+    public User get(final String id) throws DAOException {
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM users WHERE id = ?";
 
             ResultSet rs = db.executeQuery(query, id);
             List<User> users = this.getMapper().map(rs);
-
             return !users.isEmpty() ? users.getFirst() : null;
         } catch (SQLException e) {
             throw new DAOException("Errore recupero utente: ", e);
@@ -67,8 +66,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      */
     @Override
     public List<User> getAll() throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM users";
 
             ResultSet rs = db.executeQuery(query);
@@ -88,15 +87,14 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * il sistema di persistenza.
      */
     @Override
-    public long save(final User entity) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
-            String query = "INSERT INTO users (id, username, password_hash, "
+    public String save(final User entity) throws DAOException {
+        try {
+            Database db = this.getDb();
+            String query = "INSERT INTO users (username, password_hash, "
                     + "creation_date, banned, strikes, role) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
 
             Object[] params = {
-                    entity.getId(),
                     entity.getUsername(),
                     entity.getPassword(),
                     entity.getCreationDate(),
@@ -105,8 +103,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
                     entity.getRole().toString()
             };
 
-            List<Long> keys = db.executeInsert(query, params);
-            return !keys.isEmpty() ? keys.getFirst() : 0;
+            List<Object> keys = db.executeInsert(query, params);
+            return !keys.isEmpty() ? (String) keys.getFirst() : null;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio utente: ", e);
         }
@@ -123,21 +121,19 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      */
     @Override
     public boolean update(final User entity) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
-            String query = "UPDATE users SET id = ?, username = ?, "
+        try {
+            Database db = this.getDb();
+            String query = "UPDATE users SET "
                     + "password_hash = ?, creation_date = ?, banned = ?, "
-                    + "strikes = ?, roles = ? WHERE id = ?";
+                    + "strikes = ?, roles = ? WHERE username = ?";
 
             Object[] params = {
-                    entity.getId(),
-                    entity.getUsername(),
                     entity.getPassword(),
                     entity.getCreationDate(),
                     entity.isBanned(),
                     entity.getStrikes(),
                     entity.getRole().toString(),
-                    entity.getId()
+                    entity.getUsername()
             };
 
             return db.executeUpdate(query, params) > 0;
@@ -157,10 +153,10 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * il sistema di persistenza.
      */
     @Override
-    public boolean delete(final long id) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
-            String query = "DELETE FROM users WHERE id = ?";
+    public boolean delete(final String id) throws DAOException {
+        try {
+            Database db = this.getDb();
+            String query = "DELETE FROM users WHERE username = ?";
 
             return db.executeUpdate(query, id) > 0;
         } catch (SQLException e) {
@@ -176,6 +172,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti che corrispondono al criterio di ricerca.
+     * @throws IllegalArgumentException se <code>page</code> o
+     * <code>limit</code> sono minori o uguali a 0.
      * @throws DAOException se si verifica un errore durante l'interazione
      * con il database.
      */
@@ -185,10 +183,15 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             final int page,
             final int limit
     ) throws DAOException {
+        if (page < 1 || limit < 1) {
+            throw new IllegalArgumentException(
+                    "Valori page / limit non validi");
+        }
+
         int offset = (page - 1) * limit;
 
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM users WHERE username LIKE ? "
                     + "LIMIT ? OFFSET ?";
 
@@ -200,6 +203,11 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
         }
     }
 
+    public User getUserByUsername(final String username) throws DAOException {
+        List<User> users = getUsersByUsername(username, 1, 1);
+        return !users.isEmpty() ? users.getFirst() : null;
+    }
+
     /**
      * Recupera una lista di utenti che hanno ricevuto almeno
      * un avvertimento (strike).
@@ -208,6 +216,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti che hanno ricevuto almeno uno strike.
+     * @throws IllegalArgumentException se <code>page</code> o
+     * <code>limit</code> sono minori o uguali a 0.
      * @throws DAOException se si verifica un errore durante l'interazione
      * con il database.
      */
@@ -216,10 +226,15 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             final int page,
             final int limit
     ) throws DAOException {
+        if (page < 1 || limit < 1) {
+            throw new IllegalArgumentException(
+                    "Valori page / limit non validi");
+        }
+
         int offset = (page - 1) * limit;
 
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM users WHERE strikes > 0 "
                     + "LIMIT ? OFFSET ?";
 
@@ -236,6 +251,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * @param page il numero della pagina da recuperare (partendo da 1).
      * @param limit il numero massimo di risultati per pagina.
      * @return una lista di utenti bannati.
+     * @throws IllegalArgumentException se <code>page</code> o
+     * <code>limit</code> sono minori o uguali a 0.
      * @throws DAOException se si verifica un errore durante l'interazione
      * con il database.
      */
@@ -244,10 +261,15 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             final int page,
             final int limit
     ) throws DAOException {
+        if (page < 1 || limit < 1) {
+            throw new IllegalArgumentException(
+                    "Valori page / limit non validi");
+        }
+
         int offset = (page - 1) * limit;
 
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM users WHERE banned = 1 "
                     + "LIMIT ? OFFSET ?";
 

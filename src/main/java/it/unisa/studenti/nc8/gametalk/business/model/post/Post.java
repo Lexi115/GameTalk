@@ -12,7 +12,7 @@ public abstract class Post {
     private long id;
 
     /** Identificativo dell'utente che ha creato il post. */
-    private long userId;
+    private String username;
 
     /** Username dell'utente che ha creato il post. */
     private String userName;
@@ -49,17 +49,17 @@ public abstract class Post {
      *
      * @return l'ID dell'utente.
      */
-    public long getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * Imposta l'ID dell'utente che ha creato il post.
      *
-     * @param userId l'ID dell'utente da assegnare.
+     * @param username l'ID dell'utente da assegnare.
      */
-    public void setUserId(final long userId) {
-        this.userId = userId;
+    public void setUsername(final String username) {
+        this.username = username;
     }
 
     /**
@@ -141,7 +141,7 @@ public abstract class Post {
     public String toString() {
         return "Post{"
                 + "id=" + id
-                + ", userId=" + userId
+                + ", username=" + username
                 + ", body='" + body + '\''
                 + ", votes=" + votes
                 + ", creationDate=" + creationDate

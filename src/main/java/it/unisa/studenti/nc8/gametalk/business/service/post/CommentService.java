@@ -17,7 +17,7 @@ public interface CommentService {
      *
      * @param id L'ID del nuovo commento.
      * @param threadId L'ID del thread a cui il commento appartiene.
-     * @param userId L'ID dell'utente che ha scritto il commento.
+     * @param username L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
      *
      * @throws ServiceException Se il commento non è valido o

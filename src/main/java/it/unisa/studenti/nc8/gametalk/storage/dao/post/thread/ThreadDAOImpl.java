@@ -45,7 +45,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
     @Override
-    public Thread get(final long id) throws DAOException {
+    public Thread get(final Long id) throws DAOException {
         try {
             Database db = this.getDb();
             String query = "SELECT * FROM threads WHERE id = ?";
@@ -86,7 +86,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
     @Override
-    public long save(final Thread entity) throws DAOException {
+    public Long save(final Thread entity) throws DAOException {
         try {
             Database db = this.getDb();
             String query = "INSERT INTO threads (user_id, title, body, votes, "
@@ -94,7 +94,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             Object[] params = {
-                    entity.getUserId(),
+                    entity.getUsername(),
                     entity.getTitle(),
                     entity.getBody(),
                     entity.getVotes(),
@@ -103,8 +103,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
                     entity.getCreationDate()
             };
 
-            List<Long> keys = db.executeInsert(query, params);
-            return !keys.isEmpty() ? keys.getFirst() : 0;
+            List<Object> keys = db.executeInsert(query, params);
+            return !keys.isEmpty() ? (Long) keys.getFirst() : 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -127,7 +127,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
                     + "WHERE id = ?";
 
             Object[] params = {
-                    entity.getUserId(),
+                    entity.getUsername(),
                     entity.getTitle(),
                     entity.getBody(),
                     entity.getVotes(),
@@ -151,7 +151,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
     @Override
-    public boolean delete(final long id) throws DAOException {
+    public boolean delete(final Long id) throws DAOException {
         try {
             Database db = this.getDb();
             String query = "DELETE FROM threads WHERE id = ?";

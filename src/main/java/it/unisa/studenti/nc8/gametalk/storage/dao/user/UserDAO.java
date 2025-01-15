@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public interface UserDAO extends DAO<User> {
+public interface UserDAO extends DAO<User, String> {
     /**
      * Recupera una lista di utenti che hanno uno username corrispondente
      * o simile a quello specificato. Supporta la paginazione.
@@ -29,6 +29,8 @@ public interface UserDAO extends DAO<User> {
      */
     List<User> getUsersByUsername(String username, int page, int limit)
             throws DAOException;
+
+    User getUserByUsername(String username) throws DAOException;
 
     /**
      * Recupera una lista di utenti che hanno ricevuto almeno

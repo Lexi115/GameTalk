@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public interface CommentDAO extends DAO<Comment> {
+public interface CommentDAO extends DAO<Comment, Long> {
 
     /**
      * Recupera una lista di commenti in base all'ID del thread,

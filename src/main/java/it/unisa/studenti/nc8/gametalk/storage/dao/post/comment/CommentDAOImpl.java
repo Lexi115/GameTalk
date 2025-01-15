@@ -37,7 +37,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      * l'esecuzione della query
      */
     @Override
-    public Comment get(final long id) throws DAOException {
+    public Comment get(final Long id) throws DAOException {
         try {
             Database db = this.getDb();
             String query = "SELECT * FROM comments WHERE id = ?";
@@ -80,7 +80,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      * l'esecuzione della query
      */
     @Override
-    public long save(final Comment entity) throws DAOException {
+    public Long save(final Comment entity) throws DAOException {
         try {
             Database db = this.getDb();
             String query = "INSERT INTO comments (thread_id, user_id, body, "
@@ -88,13 +88,14 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
             Object[] params = {
                     entity.getThreadId(),
-                    entity.getUserId(),
+                    entity.getUsername(),
                     entity.getBody(),
                     entity.getVotes(),
                     entity.getCreationDate()
             };
 
-            return db.executeUpdate(query, params);
+            List<Object> keys = db.executeInsert(query, params);
+            return !keys.isEmpty() ? (Long) keys.getFirst() : 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -118,7 +119,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
             Object[] params = {
                     entity.getThreadId(),
-                    entity.getUserId(),
+                    entity.getUsername(),
                     entity.getBody(),
                     entity.getVotes(),
                     entity.getCreationDate(),
@@ -141,7 +142,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      * l'esecuzione della query
      */
     @Override
-    public boolean delete(final long id) throws DAOException {
+    public boolean delete(final Long id) throws DAOException {
         try {
             Database db = this.getDb();
             String query = "DELETE FROM comments WHERE id = ?";

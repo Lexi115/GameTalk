@@ -179,7 +179,7 @@ public class DatabaseImpl implements Database {
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
     @Override
-    public List<Long> executeInsert(
+    public List<Object> executeInsert(
             final String query,
             final Object... parameters
     ) throws SQLException {
@@ -188,9 +188,9 @@ public class DatabaseImpl implements Database {
             statement.executeUpdate();
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                List<Long> keys = new ArrayList<>();
+                List<Object> keys = new ArrayList<>();
                 while (generatedKeys.next()) {
-                    keys.add(generatedKeys.getLong(1));
+                    keys.add(generatedKeys.getObject(1));
                 }
                 return keys;
             }

@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param id L'ID del nuovo commento.
      * @param threadId L'ID del thread a cui il commento appartiene.
-     * @param userId L'ID dell'utente che ha scritto il commento.
+     * @param username L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
      *
      * @throws ServiceException Se il commento non è valido o se si verifica
@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
         Comment newComment = new Comment();
         newComment.setId(id);
         newComment.setThreadId(threadId);
-        newComment.setUserId(userId);
+        newComment.setUsername(username);
         newComment.setBody(body);
         newComment.setVotes(0);
         newComment.setCreationDate(LocalDate.now());
