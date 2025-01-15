@@ -23,7 +23,7 @@ public interface DAO<T> {
      * @throws DAOException se si verifica un errore durante l'interazione con
      * il sistema di persistenza.
      */
-    T get(long id) throws DAOException;
+        T get(long id) throws DAOException;
 
     /**
      * Recupera tutte le entità del tipo specificato dal sistema di persistenza.

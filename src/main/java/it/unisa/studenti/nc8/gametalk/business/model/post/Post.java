@@ -14,6 +14,9 @@ public abstract class Post {
     /** Identificativo dell'utente che ha creato il post. */
     private long userId;
 
+    /** Username dell'utente che ha creato il post. */
+    private String userName;
+
     /** Contenuto testuale del post. */
     private String body;
 
@@ -57,6 +60,22 @@ public abstract class Post {
      */
     public void setUserId(final long userId) {
         this.userId = userId;
+    }
+
+    /**
+     * @return lo username dell'utente che ha creato il post.
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * Imposta lo username dell'utente che ha creato il post.
+     *
+     * @param userName l'ID dell'utente da assegnare.
+     */
+    public void setUserName(final String userName) {
+        this.userName = userName;
     }
 
     /**

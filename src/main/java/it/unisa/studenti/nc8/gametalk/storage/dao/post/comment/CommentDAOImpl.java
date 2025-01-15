@@ -38,8 +38,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public Comment get(final long id) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM comments WHERE id = ?";
 
             ResultSet rs = db.executeQuery(query, id);
@@ -59,8 +59,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public List<Comment> getAll() throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM comments";
 
             ResultSet rs = db.executeQuery(query);
@@ -81,8 +81,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public long save(final Comment entity) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "INSERT INTO comments (thread_id, user_id, body, "
                     + "votes, creation_date) VALUES (?, ?, ?, ?, ?)";
 
@@ -111,8 +111,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public boolean update(final Comment entity) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "UPDATE comments SET thread_id = ?, user_id = ?, "
                     + "body = ?, votes = ?, creation_date = ? WHERE id = ?";
 
@@ -142,8 +142,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public boolean delete(final long id) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "DELETE FROM comments WHERE id = ?";
 
             return db.executeUpdate(query) > 0;
@@ -171,8 +171,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     ) throws DAOException {
         int offset = (page - 1) * limit;
 
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM comments WHERE thread_id = ? "
                     + "ORDER BY creation_date DESC LIMIT ? OFFSET ?";
 
