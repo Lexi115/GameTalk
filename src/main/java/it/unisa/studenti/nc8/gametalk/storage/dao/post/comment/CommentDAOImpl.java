@@ -6,6 +6,7 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -83,7 +84,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     public Long save(final Comment entity) throws DAOException {
         try {
             Database db = this.getDb();
-            String query = "INSERT INTO comments (thread_id, user_id, body, "
+            String query = "INSERT INTO comments (thread_id, username, body, "
                     + "votes, creation_date) VALUES (?, ?, ?, ?, ?)";
 
             Object[] params = {
@@ -95,7 +96,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             };
 
             List<Object> keys = db.executeInsert(query, params);
-            return !keys.isEmpty() ? (Long) keys.getFirst() : 0;
+            return !keys.isEmpty()
+                    ? ((BigInteger) keys.getFirst()).longValue() : 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -114,7 +116,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     public boolean update(final Comment entity) throws DAOException {
         try {
             Database db = this.getDb();
-            String query = "UPDATE comments SET thread_id = ?, user_id = ?, "
+            String query = "UPDATE comments SET thread_id = ?, username = ?, "
                     + "body = ?, votes = ?, creation_date = ? WHERE id = ?";
 
             Object[] params = {
@@ -147,7 +149,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             Database db = this.getDb();
             String query = "DELETE FROM comments WHERE id = ?";
 
-            return db.executeUpdate(query) > 0;
+            return db.executeUpdate(query, id) > 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }

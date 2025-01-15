@@ -6,16 +6,12 @@ import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.DatabaseImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,9 +42,8 @@ class UserDAOImplTest {
     void save() throws DAOException, SQLException {
         db.beginTransaction();
         User user = new User();
-        user.setId(1);
         user.setUsername("pasquale");
-        user.setPasswordHash("password_hashed");
+        user.setPassword("password_hashed");
         user.setCreationDate(LocalDate.now());
         user.setBanned(false);
         user.setStrikes(2);

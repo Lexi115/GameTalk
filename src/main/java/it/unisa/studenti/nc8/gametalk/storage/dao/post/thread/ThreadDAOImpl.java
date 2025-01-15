@@ -8,6 +8,7 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
 
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -89,7 +90,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
     public Long save(final Thread entity) throws DAOException {
         try {
             Database db = this.getDb();
-            String query = "INSERT INTO threads (user_id, title, body, votes, "
+            String query = "INSERT INTO threads (username, title, body, votes, "
                     + "archived, category, creation_date) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -104,7 +105,10 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
             };
 
             List<Object> keys = db.executeInsert(query, params);
-            return !keys.isEmpty() ? (Long) keys.getFirst() : 0;
+
+            return !keys.isEmpty()
+                    ? ((BigInteger) keys.getFirst()).longValue() : 0;
+
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -122,7 +126,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
     public boolean update(final Thread entity) throws DAOException {
         try {
             Database db = this.getDb();
-            String query = "UPDATE threads SET user_id = ?, title = ?, "
+            String query = "UPDATE threads SET username = ?, title = ?, "
                     + "body = ?, votes = ?, archived = ?, category = ? "
                     + "WHERE id = ?";
 
@@ -156,7 +160,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
             Database db = this.getDb();
             String query = "DELETE FROM threads WHERE id = ?";
 
-            return db.executeUpdate(query) > 0;
+            return db.executeUpdate(query, id) > 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -204,12 +208,20 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
             final int limit,
             final Order order
     ) throws DAOException {
+
+        if (page < 1 || limit < 1) {
+            throw new IllegalArgumentException(
+                    "Valori page / limit non validi");
+        }
+
         int offset = (page - 1) * limit;
 
         try {
             Database db = this.getDb();
+
             String baseQuery = "SELECT * FROM threads WHERE title LIKE ? "
                     + "AND category LIKE ?";
+
             String query = switch (order) {
                 case Oldest -> baseQuery + " ORDER BY creation_date ASC";
                 case Newest -> baseQuery + " ORDER BY creation_date DESC";

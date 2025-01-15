@@ -34,9 +34,8 @@ public class UserMapper implements ResultSetMapper<User> {
 
         while (rs.next()) {
             User user = new User();
-            user.setId(rs.getLong("id"));
             user.setUsername(rs.getString("username"));
-            user.setPasswordHash(rs.getString("password_hash"));
+            user.setPassword(rs.getString("password_hash"));
             user.setCreationDate(rs.getDate("creation_date").toLocalDate());
             user.setBanned(rs.getBoolean("banned"));
             user.setStrikes(rs.getInt("strikes"));
