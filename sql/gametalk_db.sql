@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: db
--- Creato il: Gen 09, 2025 alle 16:43
--- Versione del server: 11.4.3-MariaDB-ubu2404
--- Versione PHP: 8.2.22
+-- Host: localhost:3306
+-- Generation Time: Jan 15, 2025 at 03:04 PM
+-- Server version: 8.0.30
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,19 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `categories`
+-- Table structure for table `categories`
 --
 
 CREATE TABLE `categories` (
-  `name` varchar(20) NOT NULL
+  `name` varchar(20) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dump dei dati per la tabella `categories`
+-- Dumping data for table `categories`
 --
 
 INSERT INTO `categories` (`name`) VALUES
-('Annoucements'),
+('Announcements'),
 ('Bugs'),
 ('General'),
 ('Guides'),
@@ -48,30 +48,30 @@ INSERT INTO `categories` (`name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `comments`
+-- Table structure for table `comments`
 --
 
 CREATE TABLE `comments` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `thread_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `body` text NOT NULL,
-  `votes` int(11) NOT NULL DEFAULT 0,
+  `id` bigint UNSIGNED NOT NULL,
+  `thread_id` bigint UNSIGNED NOT NULL,
+  `username` varchar(24) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `body` text COLLATE utf8mb4_general_ci NOT NULL,
+  `votes` int NOT NULL DEFAULT '0',
   `creation_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `roles`
+-- Table structure for table `roles`
 --
 
 CREATE TABLE `roles` (
-  `name` varchar(20) NOT NULL
+  `name` varchar(20) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dump dei dati per la tabella `roles`
+-- Dumping data for table `roles`
 --
 
 INSERT INTO `roles` (`name`) VALUES
@@ -81,121 +81,112 @@ INSERT INTO `roles` (`name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `threads`
+-- Table structure for table `threads`
 --
 
 CREATE TABLE `threads` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `title` varchar(32) NOT NULL,
-  `body` text NOT NULL,
-  `votes` int(11) NOT NULL DEFAULT 0,
-  `archived` tinyint(1) NOT NULL DEFAULT 0,
-  `category` varchar(20) DEFAULT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `username` varchar(24) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `title` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+  `body` text COLLATE utf8mb4_general_ci NOT NULL,
+  `votes` int NOT NULL DEFAULT '0',
+  `archived` tinyint(1) NOT NULL DEFAULT '0',
+  `category` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `creation_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `username` varchar(24) NOT NULL,
-  `password_hash` char(64) NOT NULL,
+  `username` varchar(24) COLLATE utf8mb4_general_ci NOT NULL,
+  `password_hash` char(64) COLLATE utf8mb4_general_ci NOT NULL,
   `creation_date` date NOT NULL,
-  `banned` tinyint(1) NOT NULL DEFAULT 0,
-  `strikes` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `role` varchar(20) NOT NULL
+  `banned` tinyint(1) NOT NULL DEFAULT '0',
+  `strikes` int UNSIGNED NOT NULL DEFAULT '0',
+  `role` varchar(20) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indici per le tabelle scaricate
+-- Indexes for dumped tables
 --
 
 --
--- Indici per le tabelle `categories`
+-- Indexes for table `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`name`);
 
 --
--- Indici per le tabelle `comments`
+-- Indexes for table `comments`
 --
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `thread_id` (`thread_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `username` (`username`);
 
 --
--- Indici per le tabelle `roles`
+-- Indexes for table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`name`);
 
 --
--- Indici per le tabelle `threads`
+-- Indexes for table `threads`
 --
 ALTER TABLE `threads`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `category` (`category`);
+  ADD KEY `category` (`category`),
+  ADD KEY `username` (`username`);
 
 --
--- Indici per le tabelle `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
+  ADD PRIMARY KEY (`username`),
   ADD KEY `role` (`role`);
 
 --
--- AUTO_INCREMENT per le tabelle scaricate
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT per la tabella `comments`
+-- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `threads`
+-- AUTO_INCREMENT for table `threads`
 --
 ALTER TABLE `threads`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT per la tabella `users`
---
-ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- Limiti per le tabelle scaricate
+-- Constraints for dumped tables
 --
 
 --
--- Limiti per la tabella `comments`
+-- Constraints for table `comments`
 --
 ALTER TABLE `comments`
-  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `threads` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `threads`
+-- Constraints for table `threads`
 --
 ALTER TABLE `threads`
-  ADD CONSTRAINT `threads_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `threads_ibfk_2` FOREIGN KEY (`category`) REFERENCES `categories` (`name`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `threads_ibfk_2` FOREIGN KEY (`category`) REFERENCES `categories` (`name`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `threads_ibfk_3` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `users`
+-- Constraints for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role`) REFERENCES `roles` (`name`) ON DELETE NO ACTION ON UPDATE CASCADE;
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role`) REFERENCES `roles` (`name`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
