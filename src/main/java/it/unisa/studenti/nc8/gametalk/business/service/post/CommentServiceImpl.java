@@ -46,7 +46,7 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param id L'ID del nuovo commento.
      * @param threadId L'ID del thread a cui il commento appartiene.
-     * @param userId L'ID dell'utente che ha scritto il commento.
+     * @param username L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
      * @param votes Il numero di voti iniziali del commento.
      *
@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
      */
     public void addComment(final long id,
                            final long threadId,
-                           final long userId,
+                           final String username,
                            final String body,
                            final int votes)
             throws ServiceException {
@@ -64,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
         Comment newComment = new Comment();
         newComment.setId(id);
         newComment.setThreadId(threadId);
-        newComment.setUserId(userId);
+        newComment.setUsername(username);
         newComment.setBody(body);
         newComment.setVotes(votes);
         newComment.setCreationDate(LocalDate.now());

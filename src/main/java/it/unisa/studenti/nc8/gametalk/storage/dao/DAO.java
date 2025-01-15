@@ -44,7 +44,7 @@ public interface DAO<T, K> {
      * @throws DAOException se si verifica un errore durante l'interazione con
      * il sistema di persistenza.
      */
-    long save(T entity) throws DAOException;
+    K save(T entity) throws DAOException;
 
     /**
      * Aggiorna i dati di un'entità esistente nel sistema di persistenza.

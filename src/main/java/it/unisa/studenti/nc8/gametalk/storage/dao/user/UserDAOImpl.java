@@ -87,15 +87,14 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * il sistema di persistenza.
      */
     @Override
-    public long save(final User entity) throws DAOException {
+    public String save(final User entity) throws DAOException {
         try {
             Database db = this.getDb();
-            String query = "INSERT INTO users (id, username, password_hash, "
+            String query = "INSERT INTO users (username, password_hash, "
                     + "creation_date, banned, strikes, role) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
 
             Object[] params = {
-                    entity.getId(),
                     entity.getUsername(),
                     entity.getPassword(),
                     entity.getCreationDate(),
@@ -104,8 +103,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
                     entity.getRole().toString()
             };
 
-            List<Long> keys = db.executeInsert(query, params);
-            return !keys.isEmpty() ? keys.getFirst() : 0;
+            List<Object> keys = db.executeInsert(query, params);
+            return !keys.isEmpty() ? (String) keys.getFirst() : null;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio utente: ", e);
         }
@@ -124,19 +123,17 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     public boolean update(final User entity) throws DAOException {
         try {
             Database db = this.getDb();
-            String query = "UPDATE users SET id = ?, username = ?, "
+            String query = "UPDATE users SET "
                     + "password_hash = ?, creation_date = ?, banned = ?, "
-                    + "strikes = ?, roles = ? WHERE id = ?";
+                    + "strikes = ?, roles = ? WHERE username = ?";
 
             Object[] params = {
-                    entity.getId(),
-                    entity.getUsername(),
                     entity.getPassword(),
                     entity.getCreationDate(),
                     entity.isBanned(),
                     entity.getStrikes(),
                     entity.getRole().toString(),
-                    entity.getId()
+                    entity.getUsername()
             };
 
             return db.executeUpdate(query, params) > 0;
@@ -159,7 +156,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     public boolean delete(final String id) throws DAOException {
         try {
             Database db = this.getDb();
-            String query = "DELETE FROM users WHERE id = ?";
+            String query = "DELETE FROM users WHERE username = ?";
 
             return db.executeUpdate(query, id) > 0;
         } catch (SQLException e) {

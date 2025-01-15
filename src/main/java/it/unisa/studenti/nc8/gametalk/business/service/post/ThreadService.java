@@ -16,7 +16,7 @@ public interface ThreadService {
      * Crea un nuovo thread con i dati forniti e lo salva nel database.
      * Il thread viene validato prima di essere salvato.
      *
-     * @param userId L'ID dell'utente che sta creando il thread.
+     * @param username L'ID dell'utente che sta creando il thread.
      * @param title Il titolo del nuovo thread.
      * @param body Il corpo del nuovo thread.
      * @param votes Il numero iniziale di voti del thread.
@@ -29,7 +29,7 @@ public interface ThreadService {
      *                          il salvataggio nel database.
      */
     void createThread(
-            long userId,
+            String username,
             String title,
             String body,
             int votes,
@@ -51,7 +51,7 @@ public interface ThreadService {
      * Il thread viene validato prima di essere salvato nel database.
      *
      * @param id L'ID del thread da aggiornare.
-     * @param userId L'ID dell'utente che ha effettuato l'aggiornamento.
+     * @param username L'ID dell'utente che ha effettuato l'aggiornamento.
      * @param title Il nuovo titolo del thread.
      * @param body Il nuovo corpo del thread.
      * @param votes Il nuovo numero di voti del thread.
@@ -64,7 +64,7 @@ public interface ThreadService {
      */
     void updateThread(
             long id,
-            long userId,
+            String username,
             String title,
             String body,
             int votes,

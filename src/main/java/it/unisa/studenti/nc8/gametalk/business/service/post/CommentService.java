@@ -17,7 +17,7 @@ public interface CommentService {
      *
      * @param id L'ID del nuovo commento.
      * @param threadId L'ID del thread a cui il commento appartiene.
-     * @param userId L'ID dell'utente che ha scritto il commento.
+     * @param username L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
      * @param votes Il numero di voti iniziali del commento.
      *
@@ -26,7 +26,7 @@ public interface CommentService {
      */
     void addComment(long id,
                     long threadId,
-                    long userId,
+                    String username,
                     String body,
                     int votes) throws ServiceException;
 

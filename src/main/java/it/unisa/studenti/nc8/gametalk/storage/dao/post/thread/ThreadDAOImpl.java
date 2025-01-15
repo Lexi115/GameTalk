@@ -86,15 +86,15 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
     @Override
-    public long save(final Thread entity) throws DAOException {
+    public Long save(final Thread entity) throws DAOException {
         try (Database db = this.getDb()) {
             db.connect();
-            String query = "INSERT INTO threads (user_id, title, body, votes, "
+            String query = "INSERT INTO threads (username, title, body, votes, "
                     + "archived, category, creation_date) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             Object[] params = {
-                    entity.getUserId(),
+                    entity.getUsername(),
                     entity.getTitle(),
                     entity.getBody(),
                     entity.getVotes(),
@@ -103,8 +103,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
                     entity.getCreationDate()
             };
 
-            List<Long> keys = db.executeInsert(query, params);
-            return !keys.isEmpty() ? keys.getFirst() : 0;
+            List<Object> keys = db.executeInsert(query, params);
+            return !keys.isEmpty() ? (Long) keys.getFirst() : 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -122,12 +122,12 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
     public boolean update(final Thread entity) throws DAOException {
         try (Database db = this.getDb()) {
             db.connect();
-            String query = "UPDATE threads SET user_id = ?, title = ?, "
+            String query = "UPDATE threads SET username = ?, title = ?, "
                     + "body = ?, votes = ?, archived = ?, category = ? "
                     + "WHERE id = ?";
 
             Object[] params = {
-                    entity.getUserId(),
+                    entity.getUsername(),
                     entity.getTitle(),
                     entity.getBody(),
                     entity.getVotes(),

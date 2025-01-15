@@ -80,21 +80,22 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      * l'esecuzione della query
      */
     @Override
-    public long save(final Comment entity) throws DAOException {
+    public Long save(final Comment entity) throws DAOException {
         try (Database db = this.getDb()) {
             db.connect();
-            String query = "INSERT INTO comments (thread_id, user_id, body, "
+            String query = "INSERT INTO comments (thread_id, username, body, "
                     + "votes, creation_date) VALUES (?, ?, ?, ?, ?)";
 
             Object[] params = {
                     entity.getThreadId(),
-                    entity.getUserId(),
+                    entity.getUsername(),
                     entity.getBody(),
                     entity.getVotes(),
                     entity.getCreationDate()
             };
 
-            return db.executeUpdate(query, params);
+            List<Object> keys = db.executeInsert(query, params);
+            return !keys.isEmpty() ? (Long) keys.getFirst() : 0;
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
@@ -113,12 +114,12 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     public boolean update(final Comment entity) throws DAOException {
         try (Database db = this.getDb()) {
             db.connect();
-            String query = "UPDATE comments SET thread_id = ?, user_id = ?, "
+            String query = "UPDATE comments SET thread_id = ?, username = ?, "
                     + "body = ?, votes = ?, creation_date = ? WHERE id = ?";
 
             Object[] params = {
                     entity.getThreadId(),
-                    entity.getUserId(),
+                    entity.getUsername(),
                     entity.getBody(),
                     entity.getVotes(),
                     entity.getCreationDate(),

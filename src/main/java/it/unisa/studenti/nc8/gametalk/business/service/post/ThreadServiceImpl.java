@@ -47,7 +47,7 @@ public class ThreadServiceImpl implements ThreadService {
      * Crea un nuovo thread con i dati forniti e lo salva nel database.
      * Il thread viene validato prima di essere salvato.
      *
-     * @param userId L'ID dell'utente che sta creando il thread.
+     * @param username L'ID dell'utente che sta creando il thread.
      * @param title Il titolo del nuovo thread.
      * @param body Il corpo del nuovo thread.
      * @param votes Il numero iniziale di voti del thread.
@@ -60,7 +60,7 @@ public class ThreadServiceImpl implements ThreadService {
      */
     @Override
     public void createThread(
-            final long userId,
+            final String username,
             final String title,
             final String body,
             final int votes,
@@ -70,7 +70,7 @@ public class ThreadServiceImpl implements ThreadService {
 
         //Inizializzazione oggetto Thread
         Thread newThread = new Thread();
-        newThread.setUserId(userId);
+        newThread.setUsername(username);
         newThread.setTitle(title);
         newThread.setBody(body);
         newThread.setVotes(votes);
@@ -121,7 +121,7 @@ public class ThreadServiceImpl implements ThreadService {
      *
      *
      * @param id L'ID del thread da aggiornare.
-     * @param userId L'ID dell'utente che ha effettuato l'aggiornamento.
+     * @param username L'ID dell'utente che ha effettuato l'aggiornamento.
      * @param title Il nuovo titolo del thread.
      * @param body Il nuovo corpo del thread.
      * @param votes Il nuovo numero di voti del thread.
@@ -134,7 +134,7 @@ public class ThreadServiceImpl implements ThreadService {
     @Override
     public void updateThread(
             final long id,
-            final long userId,
+            final String username,
             final String title,
             final String body,
             final int votes,
@@ -144,7 +144,7 @@ public class ThreadServiceImpl implements ThreadService {
         //Inizializzazione oggetto Thread
         Thread updatedThread = new Thread();
         updatedThread.setId(id);
-        updatedThread.setUserId(userId);
+        updatedThread.setUsername(username);
         updatedThread.setTitle(title);
         updatedThread.setBody(body);
         updatedThread.setVotes(votes);
