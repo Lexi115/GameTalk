@@ -25,7 +25,7 @@ public interface CommentService {
      */
     void addComment(long id,
                     long threadId,
-                    long userId,
+                    String username,
                     String body) throws ServiceException;
 
     /**

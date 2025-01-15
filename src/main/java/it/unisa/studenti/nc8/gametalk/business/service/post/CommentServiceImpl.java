@@ -1,6 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.service.post;
 
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.business.validators.post.comment.CommentValidator;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAO;
@@ -60,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
      */
     public void addComment(final long id,
                            final long threadId,
-                           final long userId,
+                           final String username,
                            final String body)
             throws ServiceException {
 

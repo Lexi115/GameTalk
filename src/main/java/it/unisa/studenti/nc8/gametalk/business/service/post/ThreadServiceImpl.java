@@ -4,6 +4,7 @@ import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.business.validators.post.thread.ThreadValidator;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAOImpl;

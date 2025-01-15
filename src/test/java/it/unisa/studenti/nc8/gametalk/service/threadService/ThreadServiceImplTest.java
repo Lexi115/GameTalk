@@ -20,11 +20,11 @@ public class ThreadServiceImplTest {
 
     @Test
     void createThreadTest() throws ServiceException {
-        threadService.createThread(3,"rose","rosse molto rosse", Category.General);
+        threadService.createThread("PIPPO", "rose","rosse molto rosse", Category.General);
     }
 
     @Test
     void updateThreadTest() throws ServiceException {
-        threadService.updateThread(1,"rosa","rosse molto rosse", Category.Announcements);
+        threadService.updateThread(3,"PIPPO", "rose", "rosse molto rosse", Category.Announcements);
     }
 }
