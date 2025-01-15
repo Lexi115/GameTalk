@@ -183,7 +183,6 @@ public class DatabaseImpl implements Database {
     ) throws SQLException {
         try (PreparedStatement statement = this.prepareStatement(
                 query, true, parameters)) {
-
             statement.executeUpdate();
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -250,7 +249,7 @@ public class DatabaseImpl implements Database {
      */
     private PreparedStatement prepareStatement(
             final String query,
-            final Object... parameters
+            final Object[] parameters
     ) throws SQLException {
         return this.prepareStatement(query, false, parameters);
     }
@@ -268,7 +267,7 @@ public class DatabaseImpl implements Database {
     private PreparedStatement prepareStatement(
             final String query,
             final boolean returnGeneratedKeys,
-            final Object... parameters
+            final Object[] parameters
     ) throws SQLException {
         if (!this.isConnected()) {
             throw new SQLException("Connessione al database non attiva.");
@@ -330,5 +329,57 @@ public class DatabaseImpl implements Database {
      */
     public String getDatabaseName() {
         return databaseName;
+    }
+
+    /**
+     * Avvia una nuova transazione.
+     * <p>
+     * Questo metodo prepara il contesto per eseguire una serie di operazioni
+     * come un'unica unità di lavoro. Le modifiche non saranno persistenti
+     * fino a quando non viene eseguito il commit.
+     *
+     * @throws SQLException Se si verifica un errore durante
+     * l'avvio della transazione.
+     */
+    @Override
+    public void beginTransaction() throws SQLException {
+        if (connection.getAutoCommit()) {
+            connection.setAutoCommit(false);
+        }
+    }
+
+    /**
+     * Conferma la transazione corrente.
+     * <p>
+     * Questo metodo applica in modo permanente tutte le operazioni eseguite
+     * durante la transazione corrente. Dopo il commit, le modifiche non possono
+     * essere annullate.
+     *
+     * @throws SQLException Se si verifica un errore durante
+     * il commit della transazione.
+     */
+    @Override
+    public void commit() throws SQLException {
+        if (!connection.getAutoCommit()) {
+            connection.commit();
+            connection.setAutoCommit(true);
+        }
+    }
+
+    /**
+     * Annulla la transazione corrente.
+     * <p>
+     * Questo metodo annulla tutte le operazioni eseguite durante la transazione
+     * corrente, ripristinando lo stato precedente.
+     *
+     * @throws SQLException Se si verifica un errore durante il rollback
+     * della transazione.
+     */
+    @Override
+    public void rollback() throws SQLException {
+        if (!connection.getAutoCommit()) {
+            connection.rollback();
+            connection.setAutoCommit(true);
+        }
     }
 }

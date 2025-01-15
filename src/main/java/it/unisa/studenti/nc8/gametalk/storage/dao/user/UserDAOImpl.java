@@ -53,7 +53,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
 
             return !users.isEmpty() ? users.getFirst() : null;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore recupero utente: ", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             ResultSet rs = db.executeQuery(query);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore recupero utenti: ", e);
         }
     }
 
@@ -98,7 +98,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             Object[] params = {
                     entity.getId(),
                     entity.getUsername(),
-                    entity.getPasswordHash(),
+                    entity.getPassword(),
                     entity.getCreationDate(),
                     entity.isBanned(),
                     entity.getStrikes(),
@@ -108,7 +108,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             List<Long> keys = db.executeInsert(query, params);
             return !keys.isEmpty() ? keys.getFirst() : 0;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore salvataggio utente: ", e);
         }
     }
 
@@ -132,7 +132,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             Object[] params = {
                     entity.getId(),
                     entity.getUsername(),
-                    entity.getPasswordHash(),
+                    entity.getPassword(),
                     entity.getCreationDate(),
                     entity.isBanned(),
                     entity.getStrikes(),
@@ -142,7 +142,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
 
             return db.executeUpdate(query, params) > 0;
         } catch (SQLException e) {
-            throw new DAOException(e);
+            throw new DAOException("Errore aggiornamento utente: ", e);
         }
     }
 
@@ -164,7 +164,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
 
             return db.executeUpdate(query, id) > 0;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore rimozione utente: ", e);
         }
     }
 
@@ -195,7 +195,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             ResultSet rs = db.executeQuery(query, username, limit, offset);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException(
+                    "Errore recupero lista utenti per username: ", e);
         }
     }
 
@@ -225,7 +226,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             ResultSet rs = db.executeQuery(query, limit, offset);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore recupero utenti con strikes: ", e);
         }
     }
 
@@ -253,7 +254,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             ResultSet rs = db.executeQuery(query, limit, offset);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore recupero utenti bannati: ", e);
         }
     }
 }

@@ -11,7 +11,8 @@ public interface Validator<T> {
      * Valida un oggetto del tipo specificato.
      *
      * @param t L'oggetto da validare.
-     * @return {@code true} se l'oggetto Ã¨ valido, {@code false} altrimenti.
+     * @return {@code true} se l'oggetto è valido, {@code false} altrimenti.
      */
     boolean validate(T t);
 }
+
