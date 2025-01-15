@@ -47,7 +47,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             List<Comment> comments = this.getMapper().map(rs);
             return !comments.isEmpty() ? comments.getFirst() : null;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore recupero commento ID " + id, e);
         }
     }
 
@@ -67,7 +67,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             ResultSet rs = db.executeQuery(query);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore recupero commenti", e);
         }
     }
 
@@ -99,7 +99,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             return !keys.isEmpty()
                     ? ((BigInteger) keys.getFirst()).longValue() : 0;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore salvataggio commento", e);
         }
     }
 
@@ -130,7 +130,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
             return db.executeUpdate(query, params) > 0;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore aggiornamento commento", e);
         }
     }
 
@@ -151,7 +151,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
             return db.executeUpdate(query, id) > 0;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore rimozione commento", e);
         }
     }
 
@@ -182,7 +182,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             ResultSet rs = db.executeQuery(query, threadId, limit, offset);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException(
+                    "Errore recupero commenti thread ID " + threadId, e);
         }
     }
 }
