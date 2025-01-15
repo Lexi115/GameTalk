@@ -160,6 +160,7 @@ public class DatabaseImpl implements Database {
     ) throws SQLException {
         try (PreparedStatement statement = this.prepareStatement(
                 query, parameters)) {
+            System.out.println(statement.toString());
             return statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(

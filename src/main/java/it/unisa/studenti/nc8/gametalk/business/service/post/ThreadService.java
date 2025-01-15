@@ -19,9 +19,6 @@ public interface ThreadService {
      * @param username L'ID dell'utente che sta creando il thread.
      * @param title Il titolo del nuovo thread.
      * @param body Il corpo del nuovo thread.
-     * @param votes Il numero iniziale di voti del thread.
-     * @param archived Indica se il thread è archiviato al
-     *                 momento della creazione.
      * @param category La categoria del nuovo thread.
      *
      * @throws ServiceException Se il thread non è valido o se si
@@ -32,8 +29,6 @@ public interface ThreadService {
             String username,
             String title,
             String body,
-            int votes,
-            boolean archived,
             Category category
     ) throws ServiceException;
 
@@ -54,8 +49,6 @@ public interface ThreadService {
      * @param username L'ID dell'utente che ha effettuato l'aggiornamento.
      * @param title Il nuovo titolo del thread.
      * @param body Il nuovo corpo del thread.
-     * @param votes Il nuovo numero di voti del thread.
-     * @param archived Indica se il thread deve essere archiviato.
      * @param category La nuova categoria del thread.
      *
      * @throws ServiceException Se il thread non è valido o se
@@ -67,8 +60,6 @@ public interface ThreadService {
             String username,
             String title,
             String body,
-            int votes,
-            boolean archived,
             Category category
     ) throws ServiceException;
 

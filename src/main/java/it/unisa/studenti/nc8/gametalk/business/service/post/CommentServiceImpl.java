@@ -10,6 +10,7 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.comment.CommentMapper;
 import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,6 +19,11 @@ import java.util.List;
  */
 public class CommentServiceImpl implements CommentService {
 
+    /**
+     * Oggetto {@link Database}, contiene informazioni sul database
+     * con cui interagire.
+     */
+    private final Database db;
     /**
      * Il DAO utilizzato per effettuare operazioni CRUD
      * su oggetti {@link Comment}.
@@ -36,6 +42,7 @@ public class CommentServiceImpl implements CommentService {
      * @param db il database utilizzato per la persistenza dei dati.
      */
     public CommentServiceImpl(final Database db) {
+        this.db = db;
         this.commentDAO = new CommentDAOImpl(db, new CommentMapper());
         this.commentValidator = new CommentValidator();
     }
@@ -48,16 +55,14 @@ public class CommentServiceImpl implements CommentService {
      * @param threadId L'ID del thread a cui il commento appartiene.
      * @param username L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
-     * @param votes Il numero di voti iniziali del commento.
      *
      * @throws ServiceException Se il commento non è valido o se si verifica
      *                          un errore durante il salvataggio nel database.
      */
     public void addComment(final long id,
                            final long threadId,
-                           final String username,
-                           final String body,
-                           final int votes)
+                           final long userId,
+                           final String body)
             throws ServiceException {
 
         //Inizializzazione oggetto Comment
@@ -66,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
         newComment.setThreadId(threadId);
         newComment.setUsername(username);
         newComment.setBody(body);
-        newComment.setVotes(votes);
+        newComment.setVotes(0);
         newComment.setCreationDate(LocalDate.now());
 
         //Validazione commento
@@ -75,9 +80,12 @@ public class CommentServiceImpl implements CommentService {
         }
 
         //Salvataggio comment
-        try {
+        try (db) {
+
+            db.connect();
             commentDAO.save(newComment);
-        } catch (DAOException e) {
+
+        } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante il salvataggio del commento", e);
         }
@@ -92,14 +100,18 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public void deleteComment(final long id) throws ServiceException {
-        try {
             if (id <= 0) {
                 throw new IllegalArgumentException(
                         "Id deve essere maggiore di 0");
             }
-            commentDAO.delete(id);
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
+            try (db) {
+
+                db.connect();
+                commentDAO.delete(id);
+
+        } catch (SQLException | DAOException e) {
+            throw new ServiceException(
+                    "Errore durante l'eliminazione del commento", e);
         }
     }
 
@@ -112,14 +124,17 @@ public class CommentServiceImpl implements CommentService {
      * @throws ServiceException se si è verificato un errore.
      */
     public Comment findCommentById(final long id) throws ServiceException {
-        try {
-            if (id <= 0) {
-                throw new IllegalArgumentException(
-                        "ID deve essere maggiore di 0");
-            }
+        if (id <= 0) {
+            throw new IllegalArgumentException(
+                    "ID deve essere maggiore di 0");
+        }
 
+        try (db) {
+
+            db.connect();
             return commentDAO.get(id);
-        } catch (DAOException e) {
+
+        } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore recupero commento tramite ID.", e);
         }
@@ -153,14 +168,15 @@ public class CommentServiceImpl implements CommentService {
         }
 
         //Recupero commenti dal thread
-        try {
+        try (db) {
 
+            db.connect();
             return commentDAO.getCommentsByThreadId(
                     threadId,
                     realPage,
                     pageSize);
 
-        } catch (DAOException e) {
+        } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante il recupero dei "
                             + "commenti appartenenti al thread " + threadId, e);

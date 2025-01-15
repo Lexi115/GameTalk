@@ -46,8 +46,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      */
     @Override
     public Thread get(final Long id) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM threads WHERE id = ?";
 
             ResultSet rs = db.executeQuery(query, id);
@@ -66,8 +66,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      */
     @Override
     public List<Thread> getAll() throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "SELECT * FROM threads";
 
             ResultSet rs = db.executeQuery(query);
@@ -87,9 +87,9 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      */
     @Override
     public Long save(final Thread entity) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
-            String query = "INSERT INTO threads (username, title, body, votes, "
+        try {
+            Database db = this.getDb();
+            String query = "INSERT INTO threads (user_id, title, body, votes, "
                     + "archived, category, creation_date) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -120,9 +120,9 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      */
     @Override
     public boolean update(final Thread entity) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
-            String query = "UPDATE threads SET username = ?, title = ?, "
+        try {
+            Database db = this.getDb();
+            String query = "UPDATE threads SET user_id = ?, title = ?, "
                     + "body = ?, votes = ?, archived = ?, category = ? "
                     + "WHERE id = ?";
 
@@ -152,8 +152,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      */
     @Override
     public boolean delete(final Long id) throws DAOException {
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String query = "DELETE FROM threads WHERE id = ?";
 
             return db.executeUpdate(query) > 0;
@@ -206,8 +206,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
     ) throws DAOException {
         int offset = (page - 1) * limit;
 
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String baseQuery = "SELECT * FROM threads WHERE title LIKE ? "
                     + "AND category LIKE ?";
             String query = switch (order) {
@@ -247,8 +247,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
     ) throws DAOException {
         int offset = (page - 1) * limit;
 
-        try (Database db = this.getDb()) {
-            db.connect();
+        try {
+            Database db = this.getDb();
             String baseQuery = "SELECT * FROM threads WHERE category LIKE ?";
             String query = switch (order) {
                 case Oldest -> baseQuery + " ORDER BY creation_date ASC";
