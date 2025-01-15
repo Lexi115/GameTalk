@@ -133,7 +133,8 @@ public class DatabaseImpl implements Database {
             final String query,
             final Object... parameters
     ) throws SQLException {
-        try (PreparedStatement statement = this.prepareStatement(query, parameters)) {
+        try (PreparedStatement statement = this.prepareStatement(
+                query, parameters)) {
             return statement.executeQuery();
         } catch (SQLException e) {
             LOGGER.error(
@@ -156,7 +157,8 @@ public class DatabaseImpl implements Database {
             final String query,
             final Object... parameters
     ) throws SQLException {
-        try (PreparedStatement statement = this.prepareStatement(query, parameters)) {
+        try (PreparedStatement statement = this.prepareStatement(
+                query, parameters)) {
             return statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(
@@ -179,7 +181,8 @@ public class DatabaseImpl implements Database {
             final String query,
             final Object... parameters
     ) throws SQLException {
-        try (PreparedStatement statement = this.prepareStatement(query, true, parameters)) {
+        try (PreparedStatement statement = this.prepareStatement(
+                query, true, parameters)) {
             statement.executeUpdate();
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {

@@ -38,7 +38,7 @@ public class CommentMapper implements ResultSetMapper<Comment> {
             comment.setUserId(rs.getLong("user_id"));
             comment.setBody(rs.getString("body"));
             comment.setVotes(rs.getInt("votes"));
-            comment.setCreationDate(rs.getDate("creation_date"));
+            comment.setCreationDate(rs.getDate("creation_date").toLocalDate());
 
             comments.add(comment);
         }

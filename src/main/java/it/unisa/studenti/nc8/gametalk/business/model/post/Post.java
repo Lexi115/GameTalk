@@ -1,6 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.business.model.post;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Classe astratta che rappresenta un post generico.
@@ -21,7 +21,7 @@ public abstract class Post {
     private int votes;
 
     /** Data di creazione del post. */
-    private Date creationDate;
+    private LocalDate creationDate;
 
     /**
      * Restituisce l'ID del post.
@@ -100,7 +100,7 @@ public abstract class Post {
      *
      * @return la data di creazione.
      */
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
@@ -109,7 +109,7 @@ public abstract class Post {
      *
      * @param creationDate la data di creazione da assegnare.
      */
-    public void setCreationDate(final Date creationDate) {
+    public void setCreationDate(final LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
