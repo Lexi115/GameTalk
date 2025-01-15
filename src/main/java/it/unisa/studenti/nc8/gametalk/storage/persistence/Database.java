@@ -64,4 +64,39 @@ public interface Database extends AutoCloseable {
      */
     List<Long> executeInsert(String query, Object... parameters)
             throws SQLException;
+
+    /**
+     * Avvia una nuova transazione.
+     * <p>
+     * Questo metodo prepara il contesto per eseguire una serie di operazioni
+     * come un'unica unità di lavoro. Le modifiche non saranno persistenti
+     * fino a quando non viene eseguito il commit.
+     *
+     * @throws SQLException Se si verifica un errore durante
+     * l'avvio della transazione.
+     */
+    void beginTransaction() throws SQLException;
+
+    /**
+     * Conferma la transazione corrente.
+     * <p>
+     * Questo metodo applica in modo permanente tutte le operazioni eseguite
+     * durante la transazione corrente. Dopo il commit, le modifiche non possono
+     * essere annullate.
+     *
+     * @throws SQLException Se si verifica un errore durante
+     * il commit della transazione.
+     */
+    void commit() throws SQLException;
+
+    /**
+     * Annulla la transazione corrente.
+     * <p>
+     * Questo metodo annulla tutte le operazioni eseguite durante la transazione
+     * corrente, ripristinando lo stato precedente.
+     *
+     * @throws SQLException Se si verifica un errore durante il rollback
+     * della transazione.
+     */
+    void rollback() throws SQLException;
 }
