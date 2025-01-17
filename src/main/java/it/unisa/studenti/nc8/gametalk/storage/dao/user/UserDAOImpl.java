@@ -91,7 +91,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
         try {
             Database db = this.getDb();
             String query = "INSERT INTO users (username, password_hash, "
-                    + "creation_date, banned, strikes, role) "
+                    + "creation_date, banned, role) "
                     + "VALUES (?, ?, ?, ?, ?, ?)";
 
             Object[] params = {
@@ -99,7 +99,6 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
                     entity.getPassword(),
                     entity.getCreationDate(),
                     entity.isBanned(),
-                    entity.getStrikes(),
                     entity.getRole().toString()
             };
 
@@ -125,13 +124,12 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             Database db = this.getDb();
             String query = "UPDATE users SET "
                     + "password_hash = ?, creation_date = ?, banned = ?, "
-                    + "strikes = ?, roles = ? WHERE username = ?";
+                    + "roles = ? WHERE username = ?";
 
             Object[] params = {
                     entity.getPassword(),
                     entity.getCreationDate(),
                     entity.isBanned(),
-                    entity.getStrikes(),
                     entity.getRole().toString(),
                     entity.getUsername()
             };
@@ -200,43 +198,6 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
         } catch (SQLException e) {
             throw new DAOException(
                     "Errore recupero lista utenti per username: ", e);
-        }
-    }
-
-    /**
-     * Recupera una lista di utenti che hanno ricevuto almeno
-     * un avvertimento (strike).
-     * Supporta la paginazione.
-     *
-     * @param page il numero della pagina da recuperare (partendo da 1).
-     * @param limit il numero massimo di risultati per pagina.
-     * @return una lista di utenti che hanno ricevuto almeno uno strike.
-     * @throws IllegalArgumentException se <code>page</code> o
-     * <code>limit</code> sono minori o uguali a 0.
-     * @throws DAOException se si verifica un errore durante l'interazione
-     * con il database.
-     */
-    @Override
-    public List<User> getStruckUsers(
-            final int page,
-            final int limit
-    ) throws DAOException {
-        if (page < 1 || limit < 1) {
-            throw new IllegalArgumentException(
-                    "Valori page / limit non validi");
-        }
-
-        int offset = (page - 1) * limit;
-
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM users WHERE strikes > 0 "
-                    + "LIMIT ? OFFSET ?";
-
-            ResultSet rs = db.executeQuery(query, limit, offset);
-            return this.getMapper().map(rs);
-        } catch (SQLException e) {
-            throw new DAOException("Errore recupero utenti con strikes: ", e);
         }
     }
 

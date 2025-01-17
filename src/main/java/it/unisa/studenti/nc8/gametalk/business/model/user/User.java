@@ -22,9 +22,6 @@ public class User {
     /** Indica se l'utente è bannato. */
     private boolean banned;
 
-    /** Numero di avvertimenti ricevuti dall'utente. */
-    private int strikes;
-
     /** Ruolo associato all'utente. */
     private Role role;
 
@@ -99,24 +96,6 @@ public class User {
      */
     public void setBanned(final boolean banned) {
         this.banned = banned;
-    }
-
-    /**
-     * Restituisce il numero di avvertimenti dell'utente.
-     *
-     * @return il numero di avvertimenti.
-     */
-    public int getStrikes() {
-        return strikes;
-    }
-
-    /**
-     * Imposta il numero di avvertimenti dell'utente.
-     *
-     * @param strikes il numero di avvertimenti da assegnare.
-     */
-    public void setStrikes(final int strikes) {
-        this.strikes = strikes;
     }
 
     /**

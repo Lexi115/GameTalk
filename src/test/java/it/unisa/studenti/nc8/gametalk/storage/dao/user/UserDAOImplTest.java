@@ -46,7 +46,6 @@ class UserDAOImplTest {
         user.setPassword("password_hashed");
         user.setCreationDate(LocalDate.now());
         user.setBanned(false);
-        user.setStrikes(2);
         user.setRole(Role.Moderator);
 
         userDAO.save(user);
@@ -65,10 +64,6 @@ class UserDAOImplTest {
 
     @Test
     void getUsersByUsername() {
-    }
-
-    @Test
-    void getStruckUsers() {
     }
 
     @Test

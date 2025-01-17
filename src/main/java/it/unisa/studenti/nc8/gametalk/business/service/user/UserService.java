@@ -60,18 +60,6 @@ public interface UserService {
             throws ServiceException;
 
     /**
-     * Trova gli utenti che hanno ricevuto un certo numero di "strikes", con
-     * supporto per la paginazione.
-     *
-     * @param page     Il numero della pagina da recuperare.
-     * @param pageSize Il numero di risultati per pagina.
-     * @return Una lista di utenti con "strikes".
-     * @throws ServiceException se si è verificato un errore.
-     */
-    List<User> findStruckUsers(int page, int pageSize)
-            throws ServiceException;
-
-    /**
      * Trova gli utenti bannati, con supporto per la paginazione.
      *
      * @param page     Il numero della pagina da recuperare.

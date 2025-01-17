@@ -31,19 +31,6 @@ public interface UserDAO extends DAO<User, String> {
             throws DAOException;
 
     /**
-     * Recupera una lista di utenti che hanno ricevuto almeno
-     * un avvertimento (strike).
-     * Supporta la paginazione.
-     *
-     * @param page il numero della pagina da recuperare (partendo da 1).
-     * @param limit il numero massimo di risultati per pagina.
-     * @return una lista di utenti che hanno ricevuto almeno uno strike.
-     * @throws DAOException se si verifica un errore durante l'interazione
-     * con il database.
-     */
-    List<User> getStruckUsers(int page, int limit) throws DAOException;
-
-    /**
      * Recupera una lista di utenti bannati. Supporta la paginazione.
      *
      * @param page il numero della pagina da recuperare (partendo da 1).
