@@ -13,7 +13,7 @@ public class CommentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Database db = new DatabaseImpl("localhost", 3306, "root", "", "gametalk_db");
+        Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db");
         commentService = new CommentServiceImpl(db);
     }
 
