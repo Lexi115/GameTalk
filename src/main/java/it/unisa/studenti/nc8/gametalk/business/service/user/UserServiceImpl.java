@@ -95,24 +95,29 @@ public class UserServiceImpl implements UserService {
     /**
      * Rimuove un utente esistente.
      *
-     * @param id l'id dell'utente da rimuovere.
+     * @param username l'id dell'utente da rimuovere.
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public void removeUser(final String id) throws ServiceException {
-        return;
+    public void removeUser(final String username) throws ServiceException {
+        try (db) {
+            db.connect();
+            userDAO.delete(username);
+        } catch (SQLException | DAOException e) {
+            throw new ServiceException("Errore rimozione utente", e);
+        }
     }
 
     /**
      * Aggiorna un utente esistente.
      *
-     * @param id L'ID dell'utente.
+     * @param username L'ID dell'utente.
      * @param password La nuova password dell'utente.
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
     public void updateUser(
-            final String id,
+            final String username,
             final String password
     ) throws ServiceException {
         try (db) {
@@ -120,7 +125,7 @@ public class UserServiceImpl implements UserService {
             db.beginTransaction();
 
             // Trova utente già esistente
-            User user = userDAO.get(id);
+            User user = userDAO.get(username);
             if (user == null) {
                 throw new ServiceException("Utente non trovato");
             }
@@ -149,13 +154,15 @@ public class UserServiceImpl implements UserService {
     /**
      * Trova un utente per il suo ID.
      *
-     * @param id L'ID dell'utente.
+     * @param username L'ID dell'utente.
      * @return L'utente con l'ID specificato.
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public User findUserById(final String id) throws ServiceException {
-        return null;
+    public User findUserByUsername(final String username)
+            throws ServiceException {
+        List<User> users = this.findUsersByUsername(username, 1, 1);
+        return !users.isEmpty() ? users.getFirst() : null;
     }
 
     /**
@@ -174,13 +181,12 @@ public class UserServiceImpl implements UserService {
             final int page,
             final int pageSize
     ) throws ServiceException {
-        return List.of();
-    }
-
-    @Override
-    public User findUserByUsername(final String username) throws ServiceException {
-        List<User> users = this.findUsersByUsername(username, 1, 1);
-        return !users.isEmpty() ? users.getFirst() : null;
+        try (db) {
+            db.connect();
+            return userDAO.getUsersByUsername(username, page, pageSize);
+        } catch (SQLException | DAOException e) {
+            throw new ServiceException("Errore recupero utenti", e);
+        }
     }
 
     /**
@@ -197,7 +203,12 @@ public class UserServiceImpl implements UserService {
             final int page,
             final int pageSize
     ) throws ServiceException {
-        return List.of();
+        try (db) {
+            db.connect();
+            return userDAO.getStruckUsers(page, pageSize);
+        } catch (SQLException | DAOException e) {
+            throw new ServiceException("Errore recupero utenti con strikes", e);
+        }
     }
 
     /**
@@ -213,6 +224,11 @@ public class UserServiceImpl implements UserService {
             final int page,
             final int pageSize
     ) throws ServiceException {
-        return List.of();
+        try (db) {
+            db.connect();
+            return userDAO.getBannedUsers(page, pageSize);
+        } catch (SQLException | DAOException e) {
+            throw new ServiceException("Errore recupero utenti bannati", e);
+        }
     }
 }

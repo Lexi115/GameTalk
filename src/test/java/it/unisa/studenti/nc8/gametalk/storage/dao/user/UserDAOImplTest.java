@@ -50,8 +50,6 @@ class UserDAOImplTest {
         user.setRole(Role.Moderator);
 
         userDAO.save(user);
-
-        // errore
         ResultSet rs = db.executeQuery("SELECT * FROM users WHERE id = 1");
         db.commit();
         assertTrue(rs.next());

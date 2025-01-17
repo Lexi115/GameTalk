@@ -23,29 +23,29 @@ public interface UserService {
     /**
      * Rimuove un utente esistente.
      *
-     * @param id l'ID dell'utente da rimuovere.
+     * @param username l'ID dell'utente da rimuovere.
      * @throws IllegalArgumentException se l'ID è minore o uguale a 0.
      * @throws ServiceException se si è verificato un errore.
      */
-    void removeUser(String id) throws ServiceException;
+    void removeUser(String username) throws ServiceException;
 
     /**
      * Aggiorna un utente esistente.
      *
-     * @param id L'ID dell'utente.
+     * @param username L'ID dell'utente.
      * @param password La nuova password dell'utente.
      * @throws ServiceException se si è verificato un errore.
      */
-    void updateUser(String id, String password) throws ServiceException;
+    void updateUser(String username, String password) throws ServiceException;
 
     /**
      * Trova un utente per il suo ID.
      *
-     * @param id L'ID dell'utente.
+     * @param username L'ID dell'utente.
      * @return L'utente con l'ID specificato.
      * @throws ServiceException se si è verificato un errore.
      */
-    User findUserById(String id) throws ServiceException;
+    User findUserByUsername(String username) throws ServiceException;
 
     /**
      * Trova gli utenti per nome utente con supporto per la paginazione.
@@ -58,8 +58,6 @@ public interface UserService {
      */
     List<User> findUsersByUsername(String username, int page, int pageSize)
             throws ServiceException;
-
-    User findUserByUsername(String username) throws ServiceException;
 
     /**
      * Trova gli utenti che hanno ricevuto un certo numero di "strikes", con

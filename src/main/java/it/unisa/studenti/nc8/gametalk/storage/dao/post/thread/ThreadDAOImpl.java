@@ -56,7 +56,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
             List<Thread> threads = this.getMapper().map(rs);
             return (!threads.isEmpty() ? threads.getFirst() : null);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore recupero thread ID " + id, e);
         }
     }
 
@@ -75,7 +75,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
             ResultSet rs = db.executeQuery(query);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore recupero threads", e);
         }
     }
 
@@ -111,7 +111,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
                     ? ((BigInteger) keys.getFirst()).longValue() : 0;
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore salvataggio thread", e);
         }
     }
 
@@ -143,7 +143,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
 
             return db.executeUpdate(query, params) > 0;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore aggiornamento thread", e);
         }
     }
 
@@ -163,7 +163,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
 
             return db.executeUpdate(query, id) > 0;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore rimozione thread", e);
         }
     }
 
@@ -232,7 +232,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
                     "%" + title + "%", categoryString, limit, offset);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore ricerca threads", e);
         }
     }
 
@@ -266,7 +266,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
                     query, category.toString(), limit, offset);
             return this.getMapper().map(rs);
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new DAOException("Errore ricerca threads", e);
         }
     }
 
