@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
             }
 
             // Verifica esistenza di un utente con lo stesso username
-            User existingUser = userDAO.getUserByUsername(username);
+            User existingUser = userDAO.get(username);
             if (existingUser != null) {
                 throw new ServiceException("Username già in uso.");
             }

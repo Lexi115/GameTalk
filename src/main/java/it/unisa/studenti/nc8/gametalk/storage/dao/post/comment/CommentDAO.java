@@ -30,4 +30,43 @@ public interface CommentDAO extends DAO<Comment, Long> {
      */
     List<Comment> getCommentsByThreadId(long threadId, int page, int limit)
             throws DAOException;
+
+    /**
+     * Vota un commento associato al suo ID.
+     * Se l'utente ha già votato il commento, il voto viene aggiornato con
+     * il nuovo valore.
+     *
+     * @param commentId ID del commento da votare.
+     * @param username Nome dell'utente che sta effettuando il voto.
+     * @param vote Valore del voto da assegnare al commento. Deve essere:
+     *             <ul>
+     *             <li>-1: Downvote.</li>
+     *             <li>0: Voto neutro o rimozione del voto (se presente).</li>
+     *             <li>1: Upovote.</li>
+     *             </ul>
+     *
+     * @throws DAOException Se si verifica un errore durante l'elaborazione
+     * del voto, ad esempio un errore durante l'inserimento o l'aggiornamento
+     * nel database.
+     */
+    void voteComment(
+            long commentId,
+            String username,
+            int vote
+    ) throws DAOException;
+
+    /**
+     * Rimuove il voto di un commento associato al suo ID se questo esiste.
+     *
+     * @param commentId ID del commento di cui rimuovere il voto.
+     * @param username Nome dell'utente che ha espresso il voto da rimuovere.
+     *
+     * @throws DAOException Se si verifica un errore durante l'elaborazione
+     * del voto, ad esempio un errore durante l'inserimento o l'aggiornamento
+     * nel database.
+     */
+    void removeVoteComment(
+            long commentId,
+            String username
+    ) throws DAOException;
 }

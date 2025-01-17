@@ -3,14 +3,18 @@ package it.unisa.studenti.nc8.gametalk.business.service.post;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.model.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.thread.ThreadValidator;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.thread.ThreadMapper;
 import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -34,6 +38,12 @@ public class ThreadServiceImpl implements ThreadService {
     private final ThreadDAO threadDAO;
 
     /**
+     * Il DAO utilizzato per effettuare operazioni CRUD
+     * su oggetti {@link User}.
+     */
+    private final UserDAO userDAO;
+
+    /**
      * Il validator che valida i dati contenuti in
      * un oggetto {@link Thread}.
      */
@@ -47,6 +57,7 @@ public class ThreadServiceImpl implements ThreadService {
     public ThreadServiceImpl(final Database db) {
         this.db = db;
         this.threadDAO = new ThreadDAOImpl(db, new ThreadMapper());
+        this.userDAO = new UserDAOImpl(db, new UserMapper());
         this.threadValidator = new ThreadValidator();
     }
 
@@ -223,9 +234,6 @@ public class ThreadServiceImpl implements ThreadService {
      * @param order Ordinamento della lista (più recenti,
      *              più vecchi, più votati).
      * @return Una lista di thread che corrispondono ai criteri di ricerca.
-     * @throws IllegalArgumentException se il <code>title</code>
-     * è <code>null</code>, <code>page</code>
-     * o <code>pageSize</code> sono minori o uguali a 0
      * @throws ServiceException se si è verificato un errore.
      */
     public List<Thread> findThreads(
@@ -309,6 +317,126 @@ public class ThreadServiceImpl implements ThreadService {
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante la ricerca per titolo e categoria", e);
+        }
+    }
+
+    /**
+     * Recupera i thread pubblicati da un utente, con opzioni di paginazione.
+     *
+     * @param username Il nome dell'utente.
+     * @param page     Il numero della pagina da recuperare.
+     * @param pageSize Il numero di thread per pagina.
+     * @param order Ordinamento della lista (più recenti,
+     *              più vecchi, più votati).
+     * @return Una lista di thread pubblicati dall'utente.
+     * @throws IllegalArgumentException se lo <code>username</code>
+     * è <code>null</code> o è vuoto.
+     * @throws ServiceException se si è verificato un errore.
+     */
+    @Override
+    public List<Thread> findThreadsByUsername(
+            final String username,
+            final int page,
+            final int pageSize,
+            final Order order
+    ) throws ServiceException {
+
+        //Sanificazione TODO da spostare
+        int realPage = Math.max(page, 1);
+
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username non valido.");
+        }
+
+        //Username valido, recupero i thread.
+        try (db) {
+
+            db.connect();
+            return threadDAO.getThreadsByUsername(
+                    username,
+                    realPage,
+                    pageSize,
+                    order
+            );
+        } catch (SQLException | DAOException e) {
+            throw new ServiceException(
+                    "Errore durante la ricerca per titolo", e);
+        }
+    }
+
+    /**
+     * Permette a un utente di votare un thread, con la possibilità di rimuovere
+     * un voto esistente (impostando il voto a 0). In caso di voto invalido, o
+     * se il thread non esiste, viene sollevata un'eccezione.
+     *
+     * @param threadId ID del thread da votare.
+     * @param username Nome utente dell'utente che sta effettuando il voto.
+     * @param vote Valore del voto da assegnare al thread, deve essere:
+     *             <ul>
+     *             <li>-1: Downvote.</li>
+     *             <li>0: Rimozione del voto esistente (se presente).</li>
+     *             <li>1: Upvote.</li>
+     *             </ul>
+     *
+     * @throws ServiceException Se si verifica un errore durante l'elaborazione
+     * del voto, come:
+     * <ul>
+     * <li>Il thread con l'ID specificato non esiste.</li>
+     * <li>Errore durante l'aggiunta del voto.</li>
+     * </ul>
+     * @throws IllegalArgumentException Se il valore del voto non è valido
+     * (diverso da -1, 0, 1).
+     *
+     */
+    public void rateThread(
+            final long threadId,
+            final String username,
+            final int vote
+    ) throws ServiceException {
+        //Sanificazione
+        if (vote < -1 || vote > 1) {
+            throw new IllegalArgumentException("Voto non valido");
+        }
+
+        try (db) {
+
+            db.connect();
+            db.beginTransaction();
+
+            //Verifico l'esistenza del thread
+            Thread thread = threadDAO.get(threadId);
+            if (thread == null) {
+                throw new ServiceException(
+                        "Nessun thread trovato con id " + threadId);
+            }
+
+            //Verifico l'esistenza dell'utente
+            User user = userDAO.get(username);
+            if (user == null) {
+                throw new ServiceException(
+                        "Nessun utente trovato con username " + username);
+            }
+
+            //Thread esiste, lo voto
+            if (vote == 0) {
+                //Rimuovo il voto
+                threadDAO.removeVoteThread(threadId, username);
+            } else {
+                //Inserisco il voto
+                threadDAO.voteThread(threadId, username, vote);
+            }
+
+            db.commit();
+
+        } catch (SQLException | DAOException e) {
+            try {
+                db.rollback();
+            } catch (SQLException ex) {
+                throw new ServiceException(ex);
+            }
+            throw new ServiceException(
+                    "Errore durante l'aggiunta del voto " + vote
+                            + " al thread " + threadId, e);
         }
     }
 }

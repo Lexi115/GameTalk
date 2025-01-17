@@ -30,8 +30,6 @@ public interface UserDAO extends DAO<User, String> {
     List<User> getUsersByUsername(String username, int page, int limit)
             throws DAOException;
 
-    User getUserByUsername(String username) throws DAOException;
-
     /**
      * Recupera una lista di utenti che hanno ricevuto almeno
      * un avvertimento (strike).

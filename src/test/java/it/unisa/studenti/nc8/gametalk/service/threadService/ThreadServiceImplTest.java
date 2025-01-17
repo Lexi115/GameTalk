@@ -25,7 +25,7 @@ public class ThreadServiceImplTest {
 
     @Test
     void createThreadTest() throws ServiceException {
-        assertDoesNotThrow(() -> threadService.createThread("AlphaMaster", "Switch 2 Reveal", "rosse molto rosse", Category.General));
+        assertDoesNotThrow(() -> threadService.createThread("ApexLegends", "Switch 2 Reveal", "rosse molto rosse", Category.General));
     }
 
     @Test
@@ -99,6 +99,20 @@ public class ThreadServiceImplTest {
             assertNotNull(threads);
             assertFalse(threads.isEmpty());
         });
+    }
+
+    @Test
+    void findThreadsByUsernameTest() throws ServiceException {
+        assertDoesNotThrow(() -> {
+            var threads = threadService.findThreadsByUsername("AlphaMaster", 1, 12, Order.Best);
+            assertNotNull(threads);
+            assertFalse(threads.isEmpty());
+        });
+    }
+
+    @Test
+    void rateThreadTestUpvote() throws ServiceException {
+        threadService.rateThread(7,"ApexLegends",1);
     }
 
     @Test

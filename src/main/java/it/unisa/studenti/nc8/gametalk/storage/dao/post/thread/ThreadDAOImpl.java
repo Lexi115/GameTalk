@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementazione della classe DAO per l'entità Thread.
@@ -222,15 +223,11 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
             String baseQuery = "SELECT * FROM threads WHERE title LIKE ? "
                     + "AND category LIKE ?";
 
-            String query = switch (order) {
-                case Oldest -> baseQuery + " ORDER BY creation_date ASC";
-                case Newest -> baseQuery + " ORDER BY creation_date DESC";
-                default -> baseQuery + " ORDER BY votes DESC";
-            };
-            query += " LIMIT ? OFFSET ?";
+            String query = composeQuery(baseQuery, order);
 
             String categoryString = category != null
                     ? category.toString() : "%%";
+
             ResultSet rs = db.executeQuery(query,
                     "%" + title + "%", categoryString, limit, offset);
             return this.getMapper().map(rs);
@@ -262,12 +259,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         try {
             Database db = this.getDb();
             String baseQuery = "SELECT * FROM threads WHERE category LIKE ?";
-            String query = switch (order) {
-                case Oldest -> baseQuery + " ORDER BY creation_date ASC";
-                case Newest -> baseQuery + " ORDER BY creation_date DESC";
-                default -> baseQuery + " ORDER BY votes DESC";
-            };
-            query += " LIMIT ? OFFSET ?";
+
+            String query = composeQuery(baseQuery, order);
 
             ResultSet rs = db.executeQuery(
                     query, category.toString(), limit, offset);
@@ -275,5 +268,166 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
+    }
+
+    /**
+     * Ottiene una lista di thread pubblicati da un utente specifico.
+     *
+     * @param username  Il nome dell'utente.
+     * @param page      Numero della pagina (paginazione).
+     * @param limit     Numero di Thread massimi per pagina.
+     * @param order     Ordinamento della lista (più recenti,
+     *                  più vecchi, più votati).
+     * @return Lista di thread corrispondenti.
+     * @throws DAOException In caso di errori durante l'esecuzione della query.
+     */
+    @Override
+    public List<Thread> getThreadsByUsername(
+            final String username,
+            final int page,
+            final int limit,
+            final Order order
+    ) throws DAOException {
+        if (page < 1 || limit < 1) {
+            throw new IllegalArgumentException(
+                    "Valori page / limit non validi");
+        }
+
+        int offset = (page - 1) * limit;
+
+        try {
+            Database db = this.getDb();
+
+            String baseQuery = "SELECT * FROM threads WHERE username = ?";
+
+            //Compongo la query con ordine e paginazione
+            String query = composeQuery(baseQuery, order);
+
+            ResultSet rs = db.executeQuery(
+                    query, username, limit, offset);
+            return this.getMapper().map(rs);
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+    }
+
+    /**
+     * Vota un thread associato al suo ID.
+     * Se l'utente ha già votato il thread, il voto viene aggiornato con
+     * il nuovo valore.
+     *
+     * @param threadId ID del thread da votare.
+     * @param username Nome dell'utente che sta effettuando il voto.
+     * @param vote Valore del voto da assegnare al thread. Deve essere:
+     *             <ul>
+     *             <li>-1: Downvote.</li>
+     *             <li>0: Voto neutro o rimozione del voto (se presente).</li>
+     *             <li>1: Upovote.</li>
+     *             </ul>
+     *
+     * @throws DAOException Se si verifica un errore durante l'elaborazione
+     * del voto, ad esempio un errore durante l'inserimento o l'aggiornamento
+     * nel database.
+     */
+    @Override
+    public void voteThread(
+            final long threadId,
+            final String username,
+            final int vote
+    ) throws DAOException {
+        try {
+            Database db = this.getDb();
+
+            String query =
+                    "INSERT INTO votes_threads (username, thread_id, vote)"
+                    + " VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE vote = ?";
+
+            db.executeInsert(query, username, threadId, vote, vote);
+
+            updateThreadVotes(threadId);
+
+        } catch (SQLException e) {
+            throw new DAOException("Voto non andato a buon fine", e);
+        }
+    }
+
+    /**
+     * Rimuove il voto di un thread associato al suo ID se questo esiste.
+     *
+     * @param threadId ID del thread di cui rimuovere il voto.
+     * @param username Nome dell'utente che ha espresso il voto da rimuovere.
+     *
+     * @throws DAOException Se si verifica un errore durante l'elaborazione
+     * del voto, ad esempio un errore durante l'inserimento o l'aggiornamento
+     * nel database.
+     */
+    public void removeVoteThread(
+            final long threadId,
+            final String username
+    ) throws DAOException {
+        try {
+            Database db = this.getDb();
+
+            String query = "DELETE FROM votes_threads "
+                    + "WHERE username = ? AND thread_id = ?";
+
+            if (db.executeUpdate(query, username, threadId) > 0) {
+                updateThreadVotes(threadId);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Rimozione voto non andata a buon fine", e);
+        }
+    }
+
+    /**
+     * Aggiorna il conteggio totale dei voti di un thread effettuando una
+     * somma di tutti i voti presenti nel database.
+     *
+     * @param threadId ID del thread di cui aggiornare il conteggio dei voti.
+     *
+     * @throws SQLException Se si verifica un errore durante l'aggiornamento del
+     * conteggio dei voti nel database.
+     */
+    private void updateThreadVotes(final long threadId) throws SQLException {
+        Database db = this.getDb();
+        String updateVotesQuery = "UPDATE threads SET votes = "
+        + "COALESCE((SELECT SUM(vote) "
+        + "FROM votes_threads WHERE thread_id = ?), 0)"
+        + " WHERE id = ?";
+
+        db.executeUpdate(updateVotesQuery, threadId, threadId);
+    }
+
+    /**
+     * Compone una stringa di query SQL basata sulla query di base e
+     * sui criteri di ordinamento specificati,
+     * aggiungendoci una clausola LIMIT e OFFSET.
+     * @param baseQuery la query SQL di base
+     *                  (senza clausole di ordinamento, LIMIT od OFFSET).
+     * @param order il criterio di ordinamento desiderato
+     *              ({@link Order#Oldest}, {@link Order#Newest},
+     *              o {@link Order#Best}).
+     *              Se nullo, verrà utilizzato {@link Order#Best}.
+     * @return la query SQL completa con le clausole ORDER BY,
+     * LIMIT e OFFSET aggiunte.
+     *
+     */
+
+    private String composeQuery(
+            final String baseQuery,
+            final Order order
+    ) {
+        //Caso order = null, defaulta a best
+        Order realOrder = Objects.requireNonNullElse(order, Order.Best);
+
+        String finalQuery = switch (realOrder) {
+            case Oldest -> baseQuery + " ORDER BY creation_date ASC";
+            case Newest -> baseQuery + " ORDER BY creation_date DESC";
+            default -> baseQuery + " ORDER BY votes DESC";
+        };
+        finalQuery += " LIMIT ? OFFSET ?";
+
+        return finalQuery;
     }
 }

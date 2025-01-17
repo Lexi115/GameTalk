@@ -36,19 +36,19 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * Recupera un'entità dal sistema di persistenza in base al suo
      * identificativo univoco.
      *
-     * @param id l'identificativo univoco dell'entità da recuperare.
+     * @param username l'identificativo univoco dell'entità da recuperare.
      * @return l'entità corrispondente all'ID fornito, o {@code null}
      * se non trovata.
      * @throws DAOException se si verifica un errore durante l'interazione con
      * il sistema di persistenza.
      */
     @Override
-    public User get(final String id) throws DAOException {
+    public User get(final String username) throws DAOException {
         try {
             Database db = this.getDb();
-            String query = "SELECT * FROM users WHERE id = ?";
+            String query = "SELECT * FROM users WHERE username = ?";
 
-            ResultSet rs = db.executeQuery(query, id);
+            ResultSet rs = db.executeQuery(query, username);
             List<User> users = this.getMapper().map(rs);
             return !users.isEmpty() ? users.getFirst() : null;
         } catch (SQLException e) {
@@ -201,11 +201,6 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             throw new DAOException(
                     "Errore recupero lista utenti per username: ", e);
         }
-    }
-
-    public User getUserByUsername(final String username) throws DAOException {
-        List<User> users = getUsersByUsername(username, 1, 1);
-        return !users.isEmpty() ? users.getFirst() : null;
     }
 
     /**

@@ -15,7 +15,6 @@ public interface CommentService {
      * Aggiunge un nuovo commento a un thread esistente e lo salva nel database.
      * Il commento viene validato prima di essere salvato.
      *
-     * @param id L'ID del nuovo commento.
      * @param threadId L'ID del thread a cui il commento appartiene.
      * @param username L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
@@ -23,10 +22,11 @@ public interface CommentService {
      * @throws ServiceException Se il commento non è valido o
      * se si verifica un errore durante il salvataggio nel database.
      */
-    void addComment(long id,
-                    long threadId,
-                    String username,
-                    String body) throws ServiceException;
+    void addComment(
+            long threadId,
+            String username,
+            String body
+    ) throws ServiceException;
 
     /**
      * Rimuove un commento esistente.
@@ -61,5 +61,35 @@ public interface CommentService {
             long threadId,
             int page,
             int pageSize
+    ) throws ServiceException;
+
+    /**
+     * Permette a un utente di votare un commento, con la possibilità di
+     * rimuovere un voto esistente (impostando il voto a 0). In caso di
+     * voto invalido, o se il commento non esiste, viene sollevata un'eccezione.
+     *
+     * @param commentId ID del commento da votare.
+     * @param username Nome utente dell'utente che sta effettuando il voto.
+     * @param vote Valore del voto da assegnare al commento, deve essere:
+     *             <ul>
+     *             <li>-1: Downvote.</li>
+     *             <li>0: Rimozione del voto esistente (se presente).</li>
+     *             <li>1: Upvote.</li>
+     *             </ul>
+     *
+     * @throws ServiceException Se si verifica un errore durante l'elaborazione
+     * del voto, come:
+     * <ul>
+     * <li>Il commento con l'ID specificato non esiste.</li>
+     * <li>Errore durante l'aggiunta del voto.</li>
+     * </ul>
+     * @throws IllegalArgumentException Se il valore del voto non è valido
+     * (diverso da -1, 0, 1).
+     *
+     */
+    void rateComment(
+            long commentId,
+            String username,
+            int vote
     ) throws ServiceException;
 }

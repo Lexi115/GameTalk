@@ -99,4 +99,55 @@ public interface ThreadService {
             int pageSize,
             Order order
     ) throws ServiceException;
+
+    /**
+     * Recupera i thread pubblicati da un utente, con opzioni di paginazione.
+     *
+     * @param username Il nome dell'utente.
+     * @param page     Il numero della pagina da recuperare.
+     * @param pageSize Il numero di thread per pagina.
+     * @param order Ordinamento della lista (più recenti,
+     *              più vecchi, più votati).
+     * @return Una lista di thread pubblicati dall'utente.
+     * @throws IllegalArgumentException se lo <code>username</code>
+     * è <code>null</code>, <code>page</code>
+     * o <code>pageSize</code> sono minori o uguali a 0
+     * @throws ServiceException se si è verificato un errore.
+     */
+    List<Thread> findThreadsByUsername(
+            String username,
+            int page,
+            int pageSize,
+            Order order
+    ) throws ServiceException;
+
+    /**
+     * Permette a un utente di votare un thread, con la possibilità di rimuovere
+     * un voto esistente (impostando il voto a 0). In caso di voto invalido, o
+     * se il thread non esiste, viene sollevata un'eccezione.
+     *
+     * @param threadId ID del thread da votare.
+     * @param username Nome utente dell'utente che sta effettuando il voto.
+     * @param vote Valore del voto da assegnare al thread, deve essere:
+     *             <ul>
+     *             <li>-1: Downvote.</li>
+     *             <li>0: Rimozione del voto esistente (se presente).</li>
+     *             <li>1: Upvote.</li>
+     *             </ul>
+     *
+     * @throws ServiceException Se si verifica un errore durante l'elaborazione
+     * del voto, come:
+     * <ul>
+     * <li>Il thread con l'ID specificato non esiste.</li>
+     * <li>Errore durante l'aggiunta del voto.</li>
+     * </ul>
+     * @throws IllegalArgumentException Se il valore del voto non è valido
+     * (diverso da -1, 0, 1).
+     *
+     */
+    void rateThread(
+            long threadId,
+            String username,
+            int vote
+    ) throws ServiceException;
 }

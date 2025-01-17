@@ -1,7 +1,10 @@
 package it.unisa.studenti.nc8.gametalk.business.service.post;
 
+import it.unisa.studenti.nc8.gametalk.business.model.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.comment.CommentValidator;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAO;
@@ -9,6 +12,7 @@ import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.comment.CommentMapper;
 import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -31,6 +35,12 @@ public class CommentServiceImpl implements CommentService {
     private final CommentDAO commentDAO;
 
     /**
+     * Il DAO utilizzato per effettuare operazioni CRUD
+     * su oggetti {@link User}.
+     */
+    private final UserDAO userDAO;
+
+    /**
      * Il validator che valida i dati contenuti in
      * un oggetto {@link Comment}.
      */
@@ -44,6 +54,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentServiceImpl(final Database db) {
         this.db = db;
         this.commentDAO = new CommentDAOImpl(db, new CommentMapper());
+        this.userDAO = new UserDAOImpl(db, new UserMapper());
         this.commentValidator = new CommentValidator();
     }
 
@@ -51,7 +62,6 @@ public class CommentServiceImpl implements CommentService {
      * Aggiunge un nuovo commento a un thread esistente e lo salva nel database.
      * Il commento viene validato prima di essere salvato.
      *
-     * @param id L'ID del nuovo commento.
      * @param threadId L'ID del thread a cui il commento appartiene.
      * @param username L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
@@ -59,15 +69,14 @@ public class CommentServiceImpl implements CommentService {
      * @throws ServiceException Se il commento non è valido o se si verifica
      *                          un errore durante il salvataggio nel database.
      */
-    public void addComment(final long id,
-                           final long threadId,
-                           final String username,
-                           final String body)
-            throws ServiceException {
+    public void addComment(
+            final long threadId,
+            final String username,
+            final String body
+    ) throws ServiceException {
 
         //Inizializzazione oggetto Comment
         Comment newComment = new Comment();
-        newComment.setId(id);
         newComment.setThreadId(threadId);
         newComment.setUsername(username);
         newComment.setBody(body);
@@ -180,6 +189,84 @@ public class CommentServiceImpl implements CommentService {
             throw new ServiceException(
                     "Errore durante il recupero dei "
                             + "commenti appartenenti al thread " + threadId, e);
+        }
+    }
+
+    /**
+     * Permette a un utente di votare un commento, con la possibilità di
+     * rimuovere un voto esistente (impostando il voto a 0). In caso di
+     * voto invalido, o se il commento non esiste, viene sollevata un'eccezione.
+     *
+     * @param commentId ID del commento da votare.
+     * @param username Nome utente dell'utente che sta effettuando il voto.
+     * @param vote Valore del voto da assegnare al commento, deve essere:
+     *             <ul>
+     *             <li>-1: Downvote.</li>
+     *             <li>0: Rimozione del voto esistente (se presente).</li>
+     *             <li>1: Upvote.</li>
+     *             </ul>
+     *
+     * @throws ServiceException Se si verifica un errore durante l'elaborazione
+     * del voto, come:
+     * <ul>
+     * <li>Il commento con l'ID specificato non esiste.</li>
+     * <li>Errore durante l'aggiunta del voto.</li>
+     * </ul>
+     * @throws IllegalArgumentException Se il valore del voto non è valido
+     * (diverso da -1, 0, 1).
+     *
+     */
+    @Override
+    public void rateComment(
+            final long commentId,
+            final String username,
+            final int vote
+    ) throws ServiceException {
+
+        //Sanificazione
+        if (vote < -1 || vote > 1) {
+            throw new IllegalArgumentException("Voto non valido");
+        }
+
+        try (db) {
+
+            db.connect();
+            db.beginTransaction();
+
+            //Verifico l'esistenza del commento
+            Comment comment = commentDAO.get(commentId);
+            if (comment == null) {
+                throw new ServiceException(
+                        "Nessun commento trovato con id " + commentId);
+            }
+
+            //Verifico l'esistenza dell'utente
+            User user = userDAO.get(username);
+            if (user == null) {
+                throw new ServiceException(
+                        "Nessun utente trovato con username " + username);
+            }
+
+            //Commento esiste, lo voto da parte dell utente
+            if (vote == 0) {
+                //Rimuovo il voto
+                commentDAO.removeVoteComment(commentId, username);
+            } else {
+                //Inserisco il voto
+                commentDAO.voteComment(commentId, username, vote);
+            }
+
+            db.commit();
+
+        } catch (SQLException | DAOException e) {
+            try {
+                db.rollback();
+            } catch (SQLException ex) {
+                throw new ServiceException(ex);
+            }
+            throw new ServiceException(
+                    "Errore durante l'aggiunta del voto " + vote
+                            + " al commento " + commentId, e);
         }
     }
 }
