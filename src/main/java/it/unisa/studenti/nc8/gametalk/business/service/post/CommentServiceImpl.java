@@ -1,8 +1,11 @@
 package it.unisa.studenti.nc8.gametalk.business.service.post;
 
+import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.comment.CommentValidator;
+import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
+import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
@@ -12,6 +15,7 @@ import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.comment.CommentMapper;
 import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.thread.ThreadMapper;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
 import java.sql.SQLException;
@@ -41,6 +45,12 @@ public class CommentServiceImpl implements CommentService {
     private final UserDAO userDAO;
 
     /**
+     * Il DAO utilizzato per effettuare operazioni CRUD
+     * su oggetti {@link Thread}.
+     */
+    private final ThreadDAO threadDAO;
+
+    /**
      * Il validator che valida i dati contenuti in
      * un oggetto {@link Comment}.
      */
@@ -55,6 +65,7 @@ public class CommentServiceImpl implements CommentService {
         this.db = db;
         this.commentDAO = new CommentDAOImpl(db, new CommentMapper());
         this.userDAO = new UserDAOImpl(db, new UserMapper());
+        this.threadDAO = new ThreadDAOImpl(db, new ThreadMapper());
         this.commentValidator = new CommentValidator();
     }
 
@@ -90,11 +101,28 @@ public class CommentServiceImpl implements CommentService {
 
         //Salvataggio comment
         try (db) {
-
             db.connect();
-            commentDAO.save(newComment);
+            db.beginTransaction();
 
+            //Verifica thread non archiviato
+            Thread thread = threadDAO.get(threadId);
+            if (thread == null) {
+                throw new ServiceException(
+                        "Nessun thread trovato con id " + threadId);
+            }
+
+            if (thread.isArchived()) {
+                throw new ServiceException("Thread archiviato");
+            }
+
+            commentDAO.save(newComment);
+            db.commit();
         } catch (SQLException | DAOException e) {
+            try {
+                db.rollback();
+            } catch (SQLException ex) {
+                throw new ServiceException(ex);
+            }
             throw new ServiceException(
                     "Errore durante il salvataggio del commento", e);
         }
@@ -114,12 +142,33 @@ public class CommentServiceImpl implements CommentService {
                         "Id deve essere maggiore di 0");
             }
             try (db) {
-
                 db.connect();
-                commentDAO.delete(id);
+                db.beginTransaction();
+                //Verifica thread non archiviato
+                Comment comment = commentDAO.get(id);
+                if (comment == null) {
+                    throw new ServiceException(
+                            "Comment non trovato con id " + id);
+                }
 
+                Thread thread = threadDAO.get(comment.getThreadId());
+                if (thread == null) {
+                    throw new ServiceException("Thread non trovato");
+                }
+
+                if (thread.isArchived()) {
+                    throw new ServiceException("Thread archiviato");
+                }
+
+                commentDAO.delete(id);
+                db.commit();
         } catch (SQLException | DAOException e) {
-            throw new ServiceException(
+                try {
+                    db.rollback();
+                } catch (SQLException ex) {
+                    throw new ServiceException(ex);
+                }
+                throw new ServiceException(
                     "Errore durante l'eliminazione del commento", e);
         }
     }
@@ -245,6 +294,16 @@ public class CommentServiceImpl implements CommentService {
             if (user == null) {
                 throw new ServiceException(
                         "Nessun utente trovato con username " + username);
+            }
+
+            //Verifico se il thread a cui appartiene il commento è archiviato
+            Thread thread = threadDAO.get(comment.getThreadId());
+            if (thread == null) {
+                throw new ServiceException("Thread non trovato");
+            }
+
+            if (thread.isArchived()) {
+                throw new ServiceException("Thread archiviato");
             }
 
             //Commento esiste, lo voto da parte dell utente
