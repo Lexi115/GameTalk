@@ -119,4 +119,14 @@ public class ThreadServiceImplTest {
     void findThreadsInvalidPaginationTest() {
         assertThrows(IllegalArgumentException.class, () -> threadService.findThreads("sw", Category.Memes, -1, 0, Order.Best));
     }
+
+    @Test
+    void changeCategoryTest() throws ServiceException {
+        threadService.updateThreadCategory(7,Category.Memes);
+    }
+
+    @Test
+    void archiveThreadTest() throws ServiceException {
+        threadService.archiveThread(7);
+    }
 }

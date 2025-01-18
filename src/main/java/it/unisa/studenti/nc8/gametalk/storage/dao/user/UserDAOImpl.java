@@ -91,7 +91,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
         try {
             Database db = this.getDb();
             String query = "INSERT INTO users (username, password_hash, "
-                    + "creation_date, banned, role) "
+                    + "creation_date, banned, role, auth_token) "
                     + "VALUES (?, ?, ?, ?, ?, ?)";
 
             Object[] params = {
@@ -99,7 +99,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
                     entity.getPassword(),
                     entity.getCreationDate(),
                     entity.isBanned(),
-                    entity.getRole().toString()
+                    entity.getRole().toString(),
+                    entity.getAuthToken()
             };
 
             List<Object> keys = db.executeInsert(query, params);
@@ -124,13 +125,14 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             Database db = this.getDb();
             String query = "UPDATE users SET "
                     + "password_hash = ?, creation_date = ?, banned = ?, "
-                    + "roles = ? WHERE username = ?";
+                    + "roles = ?, auth_token = ? WHERE username = ?";
 
             Object[] params = {
                     entity.getPassword(),
                     entity.getCreationDate(),
                     entity.isBanned(),
                     entity.getRole().toString(),
+                    entity.getAuthToken(),
                     entity.getUsername()
             };
 
@@ -237,15 +239,26 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     }
 
     /**
-     * Recupera un utente utilizzando il token di autenticazione.
+     * Recupera un utente dal database utilizzando il token di autenticazione.
      *
      * @param token Il token di autenticazione associato all'utente.
-     * @return L'oggetto {@link User} corrispondente al token
-     * fornito o {@code null} se non esiste alcun utente associato.
-     * @throws DAOException Se si verifica un errore
+     * @return L'oggetto User corrispondente al token fornito o {@code null}
+     * se non esiste alcun utente associato.
+     * @throws DAOException Se si verifica un errore durante l'interrogazione
+     * del database.
+     *
      */
     @Override
     public User getUserByToken(final String token) throws DAOException {
-        return null;
+        try {
+            Database db = this.getDb();
+            String query = "SELECT * FROM users WHERE auth_token = ?";
+
+            ResultSet rs = db.executeQuery(query, token);
+            List<User> users = this.getMapper().map(rs);
+            return !users.isEmpty() ? users.getFirst() : null;
+        } catch (SQLException e) {
+            throw new DAOException("Errore recupero utente con token", e);
+        }
     }
 }

@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public void updateUser(
+    public void updatePassword(
             final String username,
             final String password
     ) throws ServiceException {
@@ -146,6 +146,44 @@ public class UserServiceImpl implements UserService {
                 db.rollback();
             } catch (SQLException e1) {
                 throw new ServiceException("Errore rollback", e1);
+            }
+            throw new ServiceException("Errore aggiornamento utente", e);
+        }
+    }
+
+    /**
+     * Aggiorna un utente esistente.
+     *
+     * @param username L'ID dell'utente.
+     * @param token Il nuovo token dell'utente.
+     * @throws ServiceException se si è verificato un errore.
+     */
+    @Override
+    public void updateToken(
+            final String username,
+            final String token
+    ) throws ServiceException {
+        try (db) {
+            db.connect();
+            db.beginTransaction();
+
+            // Trova utente già esistente
+            User user = userDAO.get(username);
+            if (user == null) {
+                throw new ServiceException("Utente non trovato");
+            }
+
+            // Aggiorna campi utente
+            user.setAuthToken(token);
+
+            // Aggiorna utente
+            userDAO.update(user);
+            db.commit();
+        } catch (SQLException | DAOException e) {
+            try {
+                db.rollback();
+            } catch (SQLException ex) {
+                throw new ServiceException("Errore rollback", ex);
             }
             throw new ServiceException("Errore aggiornamento utente", e);
         }
@@ -207,6 +245,44 @@ public class UserServiceImpl implements UserService {
             return userDAO.getBannedUsers(page, pageSize);
         } catch (SQLException | DAOException e) {
             throw new ServiceException("Errore recupero utenti bannati", e);
+        }
+    }
+
+    /**
+     * Banna/Unbanna un utente dato il suo nome utente.
+     *
+     * @param username il nome utente dell'utente da bannare/unbannare.
+     * @param banned Indica come aggiornare lo stato dell'utente.
+     * @throws ServiceException se si verifica un errore durante l'operazione.
+     */
+    @Override
+    public void banUser(
+            final String username,
+            final boolean banned
+    ) throws ServiceException {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("Username non valido");
+        }
+
+        try (db) {
+            db.connect();
+            db.beginTransaction();
+
+            User user = userDAO.get(username);
+            if (user == null) {
+                throw new ServiceException("Utente non trovato");
+            }
+
+            user.setBanned(banned);
+            userDAO.update(user);
+            db.commit();
+        } catch (SQLException | DAOException e) {
+            try {
+                db.rollback();
+            } catch (SQLException ex) {
+                throw new ServiceException("Errore rollback", ex);
+            }
+            throw new ServiceException("Errore aggiornamento utente", e);
         }
     }
 }

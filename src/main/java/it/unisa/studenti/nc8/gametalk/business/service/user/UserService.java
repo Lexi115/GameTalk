@@ -30,13 +30,25 @@ public interface UserService {
     void removeUser(String username) throws ServiceException;
 
     /**
-     * Aggiorna un utente esistente.
+     * Aggiorna la password di un utente esistente.
      *
-     * @param username L'ID dell'utente.
+     * @param username Lo username dell'utente da aggiornare
      * @param password La nuova password dell'utente.
      * @throws ServiceException se si è verificato un errore.
      */
-    void updateUser(String username, String password) throws ServiceException;
+    void updatePassword(
+            String username,
+            String password
+    ) throws ServiceException;
+
+    /**
+     * Aggiorna il token di un utente.
+     *
+     * @param username Lo username dell'utente da aggiornare
+     * @param token Il nuovo token dell'utente.
+     * @throws ServiceException se si è verificato un errore.
+     */
+    void updateToken(String username, String token) throws ServiceException;
 
     /**
      * Trova un utente per il suo ID.
@@ -69,4 +81,13 @@ public interface UserService {
      */
     List<User> findBannedUsers(int page, int pageSize)
             throws ServiceException;
+
+    /**
+     * Banna/Unbanna un utente dato il suo nome utente.
+     *
+     * @param username il nome utente dell'utente da bannare/unbannare.
+     * @param banned Indica come aggiornare lo stato dell'utente.
+     * @throws ServiceException se si verifica un errore durante l'operazione.
+     */
+    void banUser(String username, boolean banned) throws ServiceException;
 }
