@@ -66,10 +66,9 @@ public class ThreadServiceImpl implements ThreadService {
      * Il thread viene validato prima di essere salvato.
      *
      * @param username L'ID dell'utente che sta creando il thread.
-     * @param title Il titolo del nuovo thread.
-     * @param body Il corpo del nuovo thread.
+     * @param title    Il titolo del nuovo thread.
+     * @param body     Il corpo del nuovo thread.
      * @param category La categoria del nuovo thread.
-     *
      * @throws ServiceException Se il thread non è valido o se si verifica un
      *                          errore durante il salvataggio nel database.
      */
@@ -113,7 +112,7 @@ public class ThreadServiceImpl implements ThreadService {
      *
      * @param id L'ID del thread da rimuovere.
      * @throws IllegalArgumentException se l'ID è minore o uguale a 0.
-     * @throws ServiceException se si è verificato un errore.
+     * @throws ServiceException         se si è verificato un errore.
      */
     @Override
     public void removeThread(final long id) throws ServiceException {
@@ -127,24 +126,21 @@ public class ThreadServiceImpl implements ThreadService {
             threadDAO.delete(id);
 
         } catch (SQLException | DAOException e) {
-                throw new ServiceException(
-                        "Errore durante l'eliminazione del thread", e);
-            }
+            throw new ServiceException(
+                    "Errore durante l'eliminazione del thread", e);
         }
+    }
 
 
     /**
      * Aggiorna un thread esistente con i nuovi dati forniti.
      * Il thread viene validato prima di essere salvato nel database.
      *
-     *
-     *
-     * @param id L'ID del thread da aggiornare.
+     * @param id       L'ID del thread da aggiornare.
      * @param username L'ID dell'utente che ha effettuato l'aggiornamento.
-     * @param title Il nuovo titolo del thread.
-     * @param body Il nuovo corpo del thread.
+     * @param title    Il nuovo titolo del thread.
+     * @param body     Il nuovo corpo del thread.
      * @param category La nuova categoria del thread.
-     *
      * @throws ServiceException Se il thread non è valido o se si verifica
      *                          un errore durante il salvataggio nel database.
      */
@@ -157,7 +153,7 @@ public class ThreadServiceImpl implements ThreadService {
             final Category category
     ) throws ServiceException {
         //Operazioni di aggiornamento
-        try  {
+        try {
             db.connect();
             db.beginTransaction();
 
@@ -166,6 +162,10 @@ public class ThreadServiceImpl implements ThreadService {
             if (updatedThread == null) {
                 throw new ServiceException(
                         "Nessun thread trovato con id " + id);
+            }
+
+            if (updatedThread.isArchived()) {
+                throw new ServiceException("Thread è archiviato");
             }
 
             //Aggiorno i campi
@@ -201,14 +201,14 @@ public class ThreadServiceImpl implements ThreadService {
      * @param id l'ID del thread da recuperare.
      * @return il thread con l'ID specificato.
      * @throws IllegalArgumentException se l'ID è minore o uguale a 0.
-     * @throws ServiceException se si è verificato un errore.
+     * @throws ServiceException         se si è verificato un errore.
      */
     @Override
     public Thread findThreadById(final long id) throws ServiceException {
-            if (id <= 0) {
-                throw new IllegalArgumentException(
-                        "Id deve essere maggiore di 0");
-            }
+        if (id <= 0) {
+            throw new IllegalArgumentException(
+                    "Id deve essere maggiore di 0");
+        }
         try (db) {
 
             db.connect();
@@ -231,8 +231,8 @@ public class ThreadServiceImpl implements ThreadService {
      *                 se si vuole cercare solo con il titolo.
      * @param page     Il numero della pagina da recuperare.
      * @param pageSize Il numero di thread per pagina.
-     * @param order Ordinamento della lista (più recenti,
-     *              più vecchi, più votati).
+     * @param order    Ordinamento della lista (più recenti,
+     *                 più vecchi, più votati).
      * @return Una lista di thread che corrispondono ai criteri di ricerca.
      * @throws ServiceException se si è verificato un errore.
      */
@@ -249,7 +249,7 @@ public class ThreadServiceImpl implements ThreadService {
 
         //Definizione decisioni
         boolean isCategoryNull = category == null;
-        boolean isTitleEmpty = title == null || title.trim().isEmpty();
+        boolean isTitleEmpty = title == null || title.isBlank();
 
         //Ricerca per generica
         if (isCategoryNull && isTitleEmpty) {
@@ -326,12 +326,12 @@ public class ThreadServiceImpl implements ThreadService {
      * @param username Il nome dell'utente.
      * @param page     Il numero della pagina da recuperare.
      * @param pageSize Il numero di thread per pagina.
-     * @param order Ordinamento della lista (più recenti,
-     *              più vecchi, più votati).
+     * @param order    Ordinamento della lista (più recenti,
+     *                 più vecchi, più votati).
      * @return Una lista di thread pubblicati dall'utente.
      * @throws IllegalArgumentException se lo <code>username</code>
-     * è <code>null</code> o è vuoto.
-     * @throws ServiceException se si è verificato un errore.
+     *                                  è <code>null</code> o è vuoto.
+     * @throws ServiceException         se si è verificato un errore.
      */
     @Override
     public List<Thread> findThreadsByUsername(
@@ -341,10 +341,9 @@ public class ThreadServiceImpl implements ThreadService {
             final Order order
     ) throws ServiceException {
 
-        //Sanificazione TODO da spostare
         int realPage = Math.max(page, 1);
 
-        if (username == null || username.trim().isEmpty()) {
+        if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username non valido.");
         }
 
@@ -371,22 +370,16 @@ public class ThreadServiceImpl implements ThreadService {
      *
      * @param threadId ID del thread da votare.
      * @param username Nome utente dell'utente che sta effettuando il voto.
-     * @param vote Valore del voto da assegnare al thread, deve essere:
-     *             <ul>
-     *             <li>-1: Downvote.</li>
-     *             <li>0: Rimozione del voto esistente (se presente).</li>
-     *             <li>1: Upvote.</li>
-     *             </ul>
-     *
+     * @param vote     Valore del voto da assegnare al thread, deve essere:
+     *                 <ul>
+     *                 <li>-1: Downvote.</li>
+     *                 <li>0: Rimozione del voto esistente (se presente).</li>
+     *                 <li>1: Upvote.</li>
+     *                 </ul>
      * @throws ServiceException Se si verifica un errore durante l'elaborazione
-     * del voto, come:
-     * <ul>
-     * <li>Il thread con l'ID specificato non esiste.</li>
-     * <li>Errore durante l'aggiunta del voto.</li>
-     * </ul>
+     *                          del voto.
      * @throws IllegalArgumentException Se il valore del voto non è valido
-     * (diverso da -1, 0, 1).
-     *
+     *                                  (diverso da -1, 0, 1).
      */
     public void rateThread(
             final long threadId,
@@ -408,6 +401,10 @@ public class ThreadServiceImpl implements ThreadService {
             if (thread == null) {
                 throw new ServiceException(
                         "Nessun thread trovato con id " + threadId);
+            }
+
+            if (thread.isArchived()) {
+                throw new ServiceException("Thread è archiviato");
             }
 
             //Verifico l'esistenza dell'utente
@@ -439,4 +436,89 @@ public class ThreadServiceImpl implements ThreadService {
                             + " al thread " + threadId, e);
         }
     }
+
+
+    /**
+     * Sposta un thread in una nuova categoria.
+     *
+     * @param threadId L'ID del thread da spostare.
+     * @param category La nuova categoria in cui spostare il thread.
+     *                 Non può essere {@code null}.
+     * @throws IllegalArgumentException Se la categoria fornita è {@code null}.
+     * @throws ServiceException Se si verifica un errore durante l'operazione.
+     */
+    @Override
+    public void updateThreadCategory(
+            final long threadId,
+            final Category category
+    ) throws ServiceException {
+        //Controllo categoria null
+        if (category == null) {
+            throw new IllegalArgumentException("Category non può essere null.");
+        }
+
+        try (db) {
+            db.connect();
+            db.beginTransaction();
+            //Recupero thread da modificare
+            Thread thread = threadDAO.get(threadId);
+            if (thread == null) {
+                throw new ServiceException(
+                        "Nessun thread trovato con id " + threadId);
+            }
+
+            if (thread.isArchived()) {
+                throw new ServiceException("Thread è archiviato");
+            }
+
+            //Thread esistente, aggiorno la categoria
+            thread.setCategory(category);
+            threadDAO.update(thread);
+            db.commit();
+        } catch (DAOException | SQLException e) {
+            try {
+                db.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            throw new ServiceException(
+                    "Errore durante lo spostamento del thread "
+                            + threadId + " nella categoria " + category, e);
+        }
+    }
+
+    /**
+     * Archivia un thread.
+     *
+     * @param threadId L'ID del thread da archiviare.
+     * @throws ServiceException Se si verifica un errore durante l'operazione.
+     */
+    @Override
+    public void archiveThread(final long threadId) throws ServiceException {
+        try (db) {
+            db.connect();
+            db.beginTransaction();
+            //Recupero thread da modificare
+            Thread thread = threadDAO.get(threadId);
+            if (thread == null) {
+                throw new ServiceException(
+                        "Nessun thread trovato con id " + threadId);
+            }
+
+            //Archivio il thread
+            thread.setArchived(true);
+            threadDAO.update(thread);
+            db.commit();
+        } catch (DAOException | SQLException e) {
+            try {
+                db.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            throw new ServiceException(
+                    "Errore durante l'archiviazione del thread", e);
+        }
+    }
+
+
 }

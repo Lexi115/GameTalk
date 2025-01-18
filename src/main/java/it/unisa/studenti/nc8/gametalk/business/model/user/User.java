@@ -25,6 +25,9 @@ public class User {
     /** Ruolo associato all'utente. */
     private Role role;
 
+    /** Token di autenticazione associato all'utente. */
+    private String authToken;
+
     /**
      * Restituisce il nome utente (ID).
      *
@@ -114,5 +117,23 @@ public class User {
      */
     public void setRole(final Role role) {
         this.role = role;
+    }
+
+    /**
+     * Restituisce il token dell'utente.
+     *
+     * @return il token dell'utente.
+     */
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    /**
+     * Imposta il token dell'utente.
+     *
+     * @param authToken il token da assegnare all'utente.
+     */
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }

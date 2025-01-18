@@ -150,4 +150,26 @@ public interface ThreadService {
             String username,
             int vote
     ) throws ServiceException;
+
+    /**
+     * Sposta un thread in una nuova categoria.
+     *
+     * @param threadId L'ID del thread da spostare.
+     * @param category La nuova categoria in cui spostare il thread.
+     *                 Non può essere {@code null}.
+     * @throws IllegalArgumentException Se la categoria fornita è {@code null}.
+     * @throws ServiceException Se si verifica un errore durante l'operazione.
+     */
+    void updateThreadCategory(
+            long threadId,
+            Category category
+    ) throws ServiceException;
+
+    /**
+     * Archivia un thread.
+     *
+     * @param threadId L'ID del thread da archiviare.
+     * @throws ServiceException Se si verifica un errore durante l'operazione.
+     */
+    void archiveThread(long threadId) throws ServiceException;
 }
