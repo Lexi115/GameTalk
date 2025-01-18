@@ -1,8 +1,10 @@
 package it.unisa.studenti.nc8.gametalk.business.core;
 
+import com.google.common.hash.Hashing;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.http.HttpServlet;
 
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,5 +39,17 @@ public abstract class Functions {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
+    }
+
+    /**
+     * Genera l'hash SHA-256 di una stringa.
+     *
+     * @param input La stringa da hashare
+     * @return La stringa hashato SHA-256
+     */
+    public static String hash(final String input) {
+        return Hashing.sha256()
+                .hashString(input, StandardCharsets.UTF_8)
+                .toString();
     }
 }
