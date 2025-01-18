@@ -235,4 +235,17 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             throw new DAOException("Errore recupero utenti bannati: ", e);
         }
     }
+
+    /**
+     * Recupera un utente utilizzando il token di autenticazione.
+     *
+     * @param token Il token di autenticazione associato all'utente.
+     * @return L'oggetto {@link User} corrispondente al token
+     * fornito o {@code null} se non esiste alcun utente associato.
+     * @throws DAOException Se si verifica un errore
+     */
+    @Override
+    public User getUserByToken(final String token) throws DAOException {
+        return null;
+    }
 }

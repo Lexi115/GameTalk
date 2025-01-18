@@ -40,4 +40,15 @@ public interface UserDAO extends DAO<User, String> {
      * con il database.
      */
     List<User> getBannedUsers(int page, int limit) throws DAOException;
+
+    /**
+     * Recupera un utente utilizzando il token di autenticazione.
+     *
+     * @param token Il token di autenticazione associato all'utente.
+     * @return L'oggetto {@link User} corrispondente al token
+     * fornito o {@code null} se non esiste alcun utente associato.
+     * @throws DAOException Se si verifica un errore
+     *
+     */
+    User getUserByToken(String token) throws DAOException;
 }
