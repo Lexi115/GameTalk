@@ -4,6 +4,8 @@ import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
+
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -86,6 +88,10 @@ public interface ThreadService {
      * @param pageSize Il numero di thread per pagina.
      * @param order Ordinamento della lista (più recenti,
      *              più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate La data di fine da cui cercare thread, può
+     *                essere {@code null}
      * @return Una lista di thread che corrispondono ai criteri di ricerca.
      * @throws IllegalArgumentException se il <code>title</code>
      * è <code>null</code>, <code>page</code>
@@ -97,7 +103,9 @@ public interface ThreadService {
             Category category,
             int page,
             int pageSize,
-            Order order
+            Order order,
+            LocalDate startDate,
+            LocalDate endDate
     ) throws ServiceException;
 
     /**

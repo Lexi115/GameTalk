@@ -233,6 +233,10 @@ public class ThreadServiceImpl implements ThreadService {
      * @param pageSize Il numero di thread per pagina.
      * @param order    Ordinamento della lista (più recenti,
      *                 più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate La data di fine da cui cercare thread, può
+     *                essere {@code null}
      * @return Una lista di thread che corrispondono ai criteri di ricerca.
      * @throws ServiceException se si è verificato un errore.
      */
@@ -241,7 +245,9 @@ public class ThreadServiceImpl implements ThreadService {
             final Category category,
             final int page,
             final int pageSize,
-            final Order order
+            final Order order,
+            final LocalDate startDate,
+            final LocalDate endDate
     ) throws ServiceException {
 
         //Sanificazione TODO da spostare
@@ -250,6 +256,20 @@ public class ThreadServiceImpl implements ThreadService {
         //Definizione decisioni
         boolean isCategoryNull = category == null;
         boolean isTitleEmpty = title == null || title.isBlank();
+
+        LocalDate actualStartDate = LocalDate.of(1000,01,01);
+        LocalDate actualEndDate = LocalDate.of(9999,12,31);
+
+        //Controllo data inizio
+        if (startDate != null && startDate.isAfter(actualStartDate)) {
+            actualStartDate = startDate;
+        }
+
+        if (endDate != null && endDate.isBefore(actualEndDate)) {
+            actualEndDate = endDate;
+        }
+
+
 
         //Ricerca per generica
         if (isCategoryNull && isTitleEmpty) {
@@ -260,7 +280,9 @@ public class ThreadServiceImpl implements ThreadService {
                         "",
                         realPage,
                         pageSize,
-                        order
+                        order,
+                        actualStartDate,
+                        actualEndDate
                 );
 
             } catch (SQLException | DAOException e) {
@@ -278,7 +300,9 @@ public class ThreadServiceImpl implements ThreadService {
                         title,
                         realPage,
                         pageSize,
-                        order
+                        order,
+                        actualStartDate,
+                        actualEndDate
                 );
             } catch (SQLException | DAOException e) {
                 throw new ServiceException(
@@ -295,7 +319,9 @@ public class ThreadServiceImpl implements ThreadService {
                         category,
                         realPage,
                         pageSize,
-                        order
+                        order,
+                        actualStartDate,
+                        actualEndDate
                 );
             } catch (SQLException | DAOException e) {
                 throw new ServiceException(
@@ -312,7 +338,9 @@ public class ThreadServiceImpl implements ThreadService {
                     category,
                     realPage,
                     pageSize,
-                    order
+                    order,
+                    actualStartDate,
+                    actualEndDate
             );
         } catch (SQLException | DAOException e) {
             throw new ServiceException(

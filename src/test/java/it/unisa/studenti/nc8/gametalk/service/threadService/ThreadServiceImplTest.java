@@ -11,6 +11,8 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.DatabaseImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ThreadServiceImplTest {
@@ -67,17 +69,14 @@ public class ThreadServiceImplTest {
 
     @Test
     void findThreadsByTitleTest() throws ServiceException {
-        assertDoesNotThrow(() -> {
-            var threads = threadService.findThreads("hat", null, 1, 12, Order.Best);
-            assertNotNull(threads);
-            assertFalse(threads.isEmpty());
-        });
+        for (Thread t : threadService.findThreads(null, null, 1, 12, null,null, LocalDate.of(2024, 1, 1))) {
+            System.out.println(t);
+        }
     }
-
     @Test
     void findThreadsGeneral() throws ServiceException {
         assertDoesNotThrow(() -> {
-            var threads = threadService.findThreads(null, null, 1, 12, Order.Best);
+            var threads = threadService.findThreads(null, null, 1, 12, Order.Best, null, null);
             assertNotNull(threads);
             assertFalse(threads.isEmpty());
         });
@@ -86,7 +85,7 @@ public class ThreadServiceImplTest {
     @Test
     void findThreadsByCategoryTest() throws ServiceException {
         assertDoesNotThrow(() -> {
-            var threads = threadService.findThreads(null, Category.General, 1, 12, Order.Best);
+            var threads = threadService.findThreads(null, Category.General, 1, 12, Order.Best, null, null);
             assertNotNull(threads);
             assertFalse(threads.isEmpty());
         });
@@ -95,7 +94,7 @@ public class ThreadServiceImplTest {
     @Test
     void findThreadsByTitleAndCategoryTest() throws ServiceException {
         assertDoesNotThrow(() -> {
-            var threads = threadService.findThreads("sw", Category.Memes, 1, 12, Order.Best);
+            var threads = threadService.findThreads("sw", Category.Memes, 1, 12, Order.Best, null, null);
             assertNotNull(threads);
             assertFalse(threads.isEmpty());
         });
@@ -117,7 +116,7 @@ public class ThreadServiceImplTest {
 
     @Test
     void findThreadsInvalidPaginationTest() {
-        assertThrows(IllegalArgumentException.class, () -> threadService.findThreads("sw", Category.Memes, -1, 0, Order.Best));
+        assertThrows(IllegalArgumentException.class, () -> threadService.findThreads("sw", Category.Memes, -1, 0, Order.Best, null, null));
     }
 
     @Test

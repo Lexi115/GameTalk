@@ -6,6 +6,7 @@ import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -28,6 +29,10 @@ public interface ThreadDAO extends DAO<Thread, Long> {
      * @param limit Numero di Thread massimi per pagina.
      * @param order Ordinamento della lista (più votati,
      *              più recenti, più vecchi).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate La data di fine da cui cercare thread, può
+     *                essere {@code null}
      * @return Lista di thread corrispondenti.
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
@@ -35,7 +40,9 @@ public interface ThreadDAO extends DAO<Thread, Long> {
             String title,
             int page,
             int limit,
-            Order order
+            Order order,
+            LocalDate startDate,
+            LocalDate endDate
     ) throws DAOException;
 
     /**
@@ -47,6 +54,10 @@ public interface ThreadDAO extends DAO<Thread, Long> {
      * @param limit     Numero di thread massimi per pagina.
      * @param order     Ordinamento della lista (più votati,
      *                  più recenti, più vecchi).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate La data di fine da cui cercare thread, può
+     *                essere {@code null}
      * @return Lista di thread corrispondenti.
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
@@ -55,7 +66,9 @@ public interface ThreadDAO extends DAO<Thread, Long> {
             Category category,
             int page,
             int limit,
-            Order order
+            Order order,
+            LocalDate startDate,
+            LocalDate endDate
     ) throws DAOException;
 
     /**
@@ -66,6 +79,10 @@ public interface ThreadDAO extends DAO<Thread, Long> {
      * @param limit     Numero di Thread massimi per pagina.
      * @param order     Ordinamento della lista (più recenti,
      *                  più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate La data di fine da cui cercare thread, può
+     *                essere {@code null}
      * @return Lista di thread corrispondenti.
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
@@ -73,7 +90,9 @@ public interface ThreadDAO extends DAO<Thread, Long> {
             Category category,
             int page,
             int limit,
-            Order order
+            Order order,
+            LocalDate startDate,
+            LocalDate endDate
     ) throws DAOException;
 
     /**
