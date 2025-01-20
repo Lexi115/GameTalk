@@ -1,10 +1,14 @@
 package it.unisa.studenti.nc8.gametalk.business.core;
 
 import com.google.common.hash.Hashing;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.unisa.studenti.nc8.gametalk.business.adapters.json.LocalDateAdapter;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.http.HttpServlet;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,5 +55,21 @@ public abstract class Functions {
         return Hashing.sha256()
                 .hashString(input, StandardCharsets.UTF_8)
                 .toString();
+    }
+
+    /**
+     * Serializza un oggetto in una stringa JSON.
+     *
+     * @param obj L'oggetto da serializzare.
+     * @return la stringa JSON corrispondente.
+     */
+    public static String toJson(final Object obj) {
+        Gson gson = new GsonBuilder()
+                // Adattatore per LocalDate
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .setPrettyPrinting()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+        return gson.toJson(obj);
     }
 }

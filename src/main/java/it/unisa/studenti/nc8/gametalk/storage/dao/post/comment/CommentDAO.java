@@ -1,8 +1,8 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.post.comment;
 
+import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
-import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 
 import java.util.List;
 
@@ -32,6 +32,17 @@ public interface CommentDAO extends DAO<Comment, Long> {
             throws DAOException;
 
     /**
+     * Conta i commenti di un determinato thread.
+     *
+     * @param threadId l'ID del thread corrispondente.
+     * @return il numero totale di commenti del thread.
+     * @throws DAOException se si verifica un errore durante
+     * l'esecuzione della query
+     */
+    long countCommentsByThreadId(long threadId)
+            throws DAOException;
+
+    /**
      * Vota un commento associato al suo ID.
      * Se l'utente ha già votato il commento, il voto viene aggiornato con
      * il nuovo valore.
@@ -42,7 +53,7 @@ public interface CommentDAO extends DAO<Comment, Long> {
      *             <ul>
      *             <li>-1: Downvote.</li>
      *             <li>0: Voto neutro o rimozione del voto (se presente).</li>
-     *             <li>1: Upovote.</li>
+     *             <li>1: Upvote.</li>
      *             </ul>
      *
      * @throws DAOException Se si verifica un errore durante l'elaborazione

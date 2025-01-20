@@ -1,10 +1,10 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.post.comment;
 
+import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
-import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 
 import java.math.BigInteger;
 import java.sql.ResultSet;
@@ -188,6 +188,29 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     }
 
     /**
+     * Conta i commenti di un determinato thread.
+     *
+     * @param threadId l'ID del thread corrispondente.
+     * @return il numero totale di commenti del thread.
+     * @throws DAOException se si verifica un errore durante
+     *                      l'esecuzione della query
+     */
+    @Override
+    public long countCommentsByThreadId(
+            final long threadId) throws DAOException {
+        try {
+            Database db = this.getDb();
+            String query = "SELECT COUNT(id) FROM comments WHERE thread_id = ?";
+
+            ResultSet rs = db.executeQuery(query, threadId);
+            return rs.next() ? rs.getLong(1) : 0;
+        } catch (SQLException e) {
+            throw new DAOException(
+                    "Errore recupero commenti thread ID " + threadId, e);
+        }
+    }
+
+    /**
      * Vota un commento associato al suo ID.
      * Se l'utente ha già votato il commento, il voto viene aggiornato con
      * il nuovo valore.
@@ -198,7 +221,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      *             <ul>
      *             <li>-1: Downvote.</li>
      *             <li>0: Voto neutro o rimozione del voto (se presente).</li>
-     *             <li>1: Upovote.</li>
+     *             <li>1: Upvote.</li>
      *             </ul>
      *
      * @throws DAOException Se si verifica un errore durante l'elaborazione
@@ -213,7 +236,6 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     ) throws DAOException {
         try {
             Database db = this.getDb();
-
             String query =
                     "INSERT INTO votes_comments (username, comment_id, vote)"
                     + " VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE vote = ?";
@@ -244,7 +266,6 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     ) throws DAOException {
         try {
             Database db = this.getDb();
-
             String query = "DELETE FROM votes_comments "
                     + "WHERE username = ? AND comment_id = ?";
 

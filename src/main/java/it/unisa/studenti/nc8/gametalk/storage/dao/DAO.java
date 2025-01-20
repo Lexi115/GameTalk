@@ -10,6 +10,7 @@ import java.util.List;
  * con il tipo generico {@code T}.
  *
  * @param <T> il tipo dell'entità gestita dal DAO.
+ * @param <K> il tipo della chiave primaria dell'entità.
  */
 public interface DAO<T, K> {
 

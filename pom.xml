@@ -85,6 +85,13 @@
             <artifactId>guava</artifactId>
             <version>32.1.3-jre</version>
         </dependency>
+
+        <!-- Gson (per JSON parsing) -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.11.0</version>
+        </dependency>
     </dependencies>
 
     <!-- SERVONO SUREFIRE E FAILSAFE QUI PER FAR FUNZIONARE MAVEN SU GITHUB ACTIONS -->
