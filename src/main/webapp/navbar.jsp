@@ -7,13 +7,16 @@
     <div class="container-fluid row p-0 m-0">
 
         <div class="col-md-3 col-6 order-0">
-            <span class="fs-3 ps-3">GameTalk</span>
+            <a href="index.jsp" class="text-decoration-none text-light fs-3 ps-3">GameTalk</a>
         </div>
 
         <div class="col-md-6 col-12 order-2 order-md-1 mt-3 mt-md-0">
-            <form class="form-floating">
-                <input type="text" class="form-control" id="searchbar" placeholder="name@example.com" value="">
-                <label for="searchbar">ricerca</label>
+            <form id="searchbarForm">
+                <div class="input-group form-floating">
+                    <input type="text" class="form-control" id="searchbar" placeholder="name@example.com" aria-describedby="filter">
+                    <a href="search.jsp" class="btn px-4 btn-secondary rounded-end text-center align-items-center justify-content-center d-inline-flex" type="button" id="filter">filtri</a>
+                    <label for="searchbar">ricerca</label>
+                </div>
             </form>
         </div>
 
@@ -22,3 +25,18 @@
         </div>
     </div>
 </nav>
+
+<!--
+<form id="searchbarForm">
+<div class="input-group form-floating">
+<input type="text" class="form-control" id="searchbar" placeholder="name@example.com" aria-describedby="button-addon2">
+<a href="search.jsp" class="btn btn-secondary" type="button" id="button-addon2">Filtri</a>
+<label for="searchbar">ricerca</label>
+</div>
+</form>
+
+<form id="searchbarForm" class="form-floating">
+<input type="text" class="form-control" id="searchbar" placeholder="name@example.com" value="">
+<label for="searchbar">ricerca</label>
+</form>
+-->
