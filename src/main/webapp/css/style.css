@@ -28,3 +28,10 @@
     top: 256px;
     background-image: radial-gradient(closest-side, rgba(119,245,221,0.3), transparent);
 }
+
+body,html{
+    min-height: 100%;
+}
+body{
+    position: relative !important;
+}

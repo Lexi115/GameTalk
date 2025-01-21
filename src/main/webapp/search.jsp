@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html class="h-100">
+<html>
 <head>
     <title>GameTalk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/search.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body data-bs-theme="dark" class="d-flex flex-column h-100 bg-main">
+<body data-bs-theme="dark" class="d-flex flex-column bg-main">
     <div id="bg-balls">
         <span id="bg-ball1"></span>
         <span id="bg-ball2"></span>
@@ -55,6 +55,42 @@
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="container mt-3" id="threadsContainer" data-bs-theme="light">
+            <ul class="list-group mb-5" id="threadsList">
+                <li class="list-group-item">
+                    <a href="#" class="text-decoration-none text-dark">
+                        <div class="row p-2 mt-2">
+                            <div class="col-md-4">
+                                <img src="..." class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
+                                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="#" class="text-decoration-none text-dark">
+                        <div class="row p-2 mt-2">
+                            <div class="col-md-4">
+                                <img src="..." class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
+                                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
         </div>
     </main>
     <jsp:include page="footer.jsp"/>
