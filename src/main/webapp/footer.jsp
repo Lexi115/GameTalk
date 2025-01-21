@@ -17,3 +17,4 @@
     </ul>
     <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
 </footer>
+<script src="js/footer.js"></script>

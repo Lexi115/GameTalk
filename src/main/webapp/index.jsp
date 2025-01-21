@@ -8,11 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body data-bs-theme="dark" class="d-flex flex-column bg-main">
-    <div id="bg-balls">
-        <span id="bg-ball1"></span>
-        <span id="bg-ball2"></span>
-    </div>
+<body data-bs-theme="dark">
     <jsp:include page="navbar.jsp"/>
     <main class="flex-shrink-0">
         <div class="container"></div>

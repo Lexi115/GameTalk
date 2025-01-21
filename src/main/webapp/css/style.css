@@ -2,36 +2,27 @@
     background-color: #07083F;
 }
 
-#bg-balls{
+html, body{
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: #07083F;
+    position: relative;
+}
+
+/*body::before{
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-#bg-ball1, #bg-ball2{
-    position: absolute;
-    height: 1024px;
-    width: 1024px;
-}
-
-#bg-ball1{
-    left: -128px;
-    top: -128px;
-    background-image: radial-gradient(closest-side, rgba(84,47,176,0.4), transparent);
-}
-
-#bg-ball2{
-    right: -128px;
-    top: 256px;
-    background-image: radial-gradient(closest-side, rgba(119,245,221,0.3), transparent);
-}
-
-body,html{
-    min-height: 100%;
-}
-body{
-    position: relative !important;
-}
+    width: 30%;
+    aspect-ratio: 1;
+    z-index: -1;
+    background-color: aquamarine;
+    border-radius: 50%;
+    box-shadow: 0px 0px 20px 20px aquamarine;
+    opacity: 0.7;
+}*/
