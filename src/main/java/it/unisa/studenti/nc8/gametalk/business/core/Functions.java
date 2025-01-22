@@ -7,6 +7,7 @@ import it.unisa.studenti.nc8.gametalk.business.adapters.json.LocalDateAdapter;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -94,5 +95,27 @@ public abstract class Functions {
         cookie.setHttpOnly(true); // Inaccessibile da JS
         cookie.setPath("/"); // Valido per tutto il sito
         return cookie;
+
+    /**
+     * Recupera un cookie che ha un certo nome.
+     *
+     * @param name Il nome del cookie da cercare.
+     * @param request La request http in cui cercare.
+     * @return Il cookie con quel nome, <code>null</code> altrimenti.
+     */
+    public static Cookie getCookie(
+            final String name,
+            final HttpServletRequest request
+    ) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(name)) {
+                    return cookie;
+                }
+            }
+        }
+
+        return null;
     }
 }

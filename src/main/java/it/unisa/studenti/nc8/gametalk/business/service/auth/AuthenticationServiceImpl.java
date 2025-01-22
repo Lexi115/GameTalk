@@ -96,7 +96,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         try (db) {
             db.connect();
-            User user = userDAO.getUserByToken(token);
+            //Effettuo il secondo hash del token
+            String hashedToken = Functions.hash(token);
+            User user = userDAO.getUserByToken(hashedToken);
             if (user == null) {
                 throw new AuthenticationException("Utente non trovato");
             }

@@ -19,7 +19,7 @@ public class CommentServiceImplTest {
 
     @Test
     void createComment() throws ServiceException {
-        commentService.addComment(7,"ApexLegends","Bel post");
+        commentService.addComment(7,"BlazeX","schifo piu cacca");
     }
 
     @Test
@@ -30,6 +30,7 @@ public class CommentServiceImplTest {
 
     @Test
     void getCommentsByThread() throws ServiceException {
-        System.out.println(commentService.findCommentsByThreadId(7,1,12));
+        System.out.println(commentService.findCommentsFromThreadId(7,null,1, 12));
     }
+
 }
