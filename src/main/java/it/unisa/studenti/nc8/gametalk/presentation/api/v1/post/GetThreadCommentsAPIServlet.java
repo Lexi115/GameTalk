@@ -41,7 +41,7 @@ public class GetThreadCommentsAPIServlet extends HttpServlet {
     @Override
     public void init() {
         this.commentService = new CommentServiceImpl(
-                Functions.getContextDatabase(this));
+                Functions.getContextDatabase(this.getServletContext()));
     }
 
     /**

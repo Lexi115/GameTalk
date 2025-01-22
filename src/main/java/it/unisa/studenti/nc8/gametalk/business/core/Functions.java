@@ -5,7 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.unisa.studenti.nc8.gametalk.business.adapters.json.LocalDateAdapter;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.Cookie;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -21,12 +22,13 @@ public abstract class Functions {
     /**
      * Recupera il database dal contesto della servlet.
      *
-     * @param servlet la servlet da cui ottenere il contesto.
-     * @return il database dal contesto della servlet,
+     * @param servletContext il context.
+     * @return il database dal servlet context
      * oppure {@code null} se non trovato.
      */
-    public static Database getContextDatabase(final HttpServlet servlet) {
-        Object obj = servlet.getServletContext().getAttribute("db");
+    public static Database getContextDatabase(
+            final ServletContext servletContext) {
+        Object obj = servletContext.getAttribute("db");
         return obj == null ? null : (Database) obj;
     }
 
@@ -71,5 +73,26 @@ public abstract class Functions {
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
         return gson.toJson(obj);
+    }
+
+    /**
+     * Crea un cookie sicuro con le opzioni di protezione abilitate.
+     *
+     * @param name   il nome del cookie
+     * @param value  il valore del cookie
+     * @param expiry il tempo di scadenza del cookie in secondi
+     * @return un oggetto {@link Cookie} sicuro
+     */
+    public static Cookie createSecureCookie(
+            final String name,
+            final String value,
+            final int expiry
+    ) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setSecure(true); // Solo HTTPS
+        cookie.setMaxAge(expiry); // Scadenza in secondi
+        cookie.setHttpOnly(true); // Inaccessibile da JS
+        cookie.setPath("/"); // Valido per tutto il sito
+        return cookie;
     }
 }
