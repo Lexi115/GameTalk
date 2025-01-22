@@ -1,3 +1,21 @@
 .bg-nav {
     background-color: #22236D;
 }
+
+nav{
+    position: relative;
+}
+
+.navDrop{
+    animation-name: navbarDrop;
+    animation-fill-mode: forwards;
+}
+
+@keyframes navbarDrop {
+    0%{
+        top: -25%;
+    }
+    100%{
+        top: 0;
+    }
+}

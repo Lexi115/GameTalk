@@ -10,9 +10,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body data-bs-theme="dark">
-    <jsp:include page="navbar.jsp"/>
-    <main class="flex-shrink-0">
-        <div class="container card py-3 mt-5">
+    <div class="a-block-zone">
+        <jsp:include page="navbar.jsp"/>
+    </div>
+    <main>
+        <div class="container card py-3 mt-5 mb-3 animate-4 a-delay-2 fadeIn">
             <div class="row">
                 <div class="col-10 offset-1 bg-dark">
                     <form id="searchForm">

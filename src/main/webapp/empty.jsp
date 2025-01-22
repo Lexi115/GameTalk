@@ -9,7 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body data-bs-theme="dark">
-    <jsp:include page="navbar.jsp"/>
+    <div class="a-block-zone">
+        <jsp:include page="navbar.jsp"/>
+    </div>
     <main class="flex-shrink-0">
         <div class="container"></div>
     </main>

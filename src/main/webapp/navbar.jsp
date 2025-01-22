@@ -1,16 +1,13 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <link rel="stylesheet" href="css/navbar.css">
-
-<nav class="navbar navbar-expand-lg  navbar-dark shadow bg-nav">
+<nav class="navbar navbar-expand-lg  navbar-dark shadow bg-nav animate-1 navDrop">
     <div class="container-fluid row p-0 m-0">
 
         <div class="col-md-3 col-6 order-0">
-            <a href="index.jsp" class="text-decoration-none text-light fs-3 ps-3">GameTalk</a>
+            <a href="index.jsp" class="text-decoration-none text-light fs-3 ps-3 animate-2 fadeIn a-delay-1">GameTalk</a>
         </div>
 
-        <div class="col-md-6 col-12 order-2 order-md-1 mt-3 mt-md-0">
+        <div class="col-md-6 col-12 order-2 order-md-1 mt-3 mt-md-0 fadeIn animate-2 a-delay-2">
             <form id="searchbarForm">
                 <div class="input-group form-floating">
                     <input type="text" class="form-control" id="searchbar" placeholder="name@example.com" aria-describedby="filter">
@@ -20,7 +17,7 @@
             </form>
         </div>
 
-        <div class="col-md-3 d-flex justify-content-end pe-3 fs-3 col-6 order-1 order-md-2">
+        <div class="col-md-3 d-flex justify-content-end pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
             <i class="bi bi-person-circle"></i>
         </div>
     </div>
