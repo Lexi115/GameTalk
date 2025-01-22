@@ -12,7 +12,7 @@
     <jsp:include page="navbar.jsp"/>
     <main class="flex-shrink-0">
         <div class="container">
-            <div id="gameCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div id="gameCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                     <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -36,11 +36,11 @@
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
                     <span class="visually-hidden">Precedente</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#gameCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
                     <span class="visually-hidden">Successivo</span>
                 </button>
             </div>
