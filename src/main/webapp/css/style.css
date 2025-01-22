@@ -20,11 +20,17 @@ body {
 
 .card {
     height: 8rem;
+    background: linear-gradient(135deg, #22236D, #2d3784);
+}
+
+.card-title{
+    color: white;
 }
 
 .col{
     max-width: 20rem;
 }
+
 
 @media (max-width: 576px) {
     .card {
