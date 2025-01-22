@@ -50,6 +50,8 @@ public interface CommentService {
      * Recupera i commenti di un thread, con supporto per la paginazione.
      *
      * @param threadId Il ID del thread di cui recuperare i commenti.
+     * @param userName Il nome utente del richiedente <code>null</code>
+     *                 se non è loggato.
      * @param page     Il numero della pagina da recuperare.
      * @param pageSize Il numero di commenti per pagina.
      * @return Una lista di commenti del thread specificato.
@@ -59,6 +61,7 @@ public interface CommentService {
      */
     List<Comment> findCommentsFromThreadId(
             long threadId,
+            String userName,
             int page,
             int pageSize
     ) throws ServiceException;

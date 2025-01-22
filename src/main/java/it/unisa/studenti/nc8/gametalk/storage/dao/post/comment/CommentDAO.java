@@ -22,14 +22,20 @@ public interface CommentDAO extends DAO<Comment, Long> {
      * con supporto per la paginazione.
      *
      * @param threadId l'ID del thread per cui recuperare i commenti
+     * @param username Il nome utente del richiedente, vuoto
+     *                 se non è loggato.
      * @param page il numero della pagina da recuperare
      * @param limit il numero massimo di commenti per pagina
      * @return una lista di commenti del thread specificato
      * @throws DAOException se si verifica un errore durante
      * l'esecuzione della query
      */
-    List<Comment> getCommentsByThreadId(long threadId, int page, int limit)
-            throws DAOException;
+    List<Comment> getCommentsByThreadId(
+            long threadId,
+            String username,
+            int page,
+            int limit
+    ) throws DAOException;
 
     /**
      * Vota un commento associato al suo ID.

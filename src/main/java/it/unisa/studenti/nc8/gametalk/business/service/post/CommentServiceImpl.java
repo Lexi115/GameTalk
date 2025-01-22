@@ -202,6 +202,8 @@ public class CommentServiceImpl implements CommentService {
      * Recupera i commenti di un thread, con supporto per la paginazione.
      *
      * @param threadId Il ID del thread di cui recuperare i commenti.
+     * @param userName Il nome utente del richiedente <code>null</code>
+     *                 se non è loggato.
      * @param page     Il numero della pagina da recuperare.
      * @param pageSize Il numero di commenti per pagina.
      * @return Una lista di commenti del thread specificato.
@@ -212,6 +214,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> findCommentsFromThreadId(
             final long threadId,
+            final String userName,
             final int page,
             final int pageSize
     ) throws ServiceException {
@@ -219,6 +222,7 @@ public class CommentServiceImpl implements CommentService {
         //Sanificazione TODO da spostare
         int realPage = Math.max(page, 1);
 
+        String realUserName = (userName == null) ? "" : userName;
         //Verifica id valido
         if (threadId <= 0) {
             throw new IllegalArgumentException(
@@ -231,6 +235,7 @@ public class CommentServiceImpl implements CommentService {
             db.connect();
             return commentDAO.getCommentsByThreadId(
                     threadId,
+                    realUserName,
                     realPage,
                     pageSize);
 

@@ -160,6 +160,8 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      * con supporto per la paginazione.
      *
      * @param threadId l'ID del thread per cui recuperare i commenti.
+     * @param username Il nome utente del richiedente, vuoto
+     *                 se non è loggato.
      * @param page il numero della pagina.
      * @param limit il numero massimo di commenti per pagina.
      * @return una lista di commenti del thread specificato.
@@ -169,6 +171,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     @Override
     public List<Comment> getCommentsByThreadId(
             final long threadId,
+            final String username,
             final int page,
             final int limit
     ) throws DAOException {
@@ -177,9 +180,16 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
         try {
             Database db = this.getDb();
             String query = "SELECT * FROM comments WHERE thread_id = ? "
-                    + "ORDER BY creation_date DESC LIMIT ? OFFSET ?";
+                    + "ORDER BY (username = ?) DESC, creation_date DESC "
+                    + "LIMIT ? OFFSET ?";
 
-            ResultSet rs = db.executeQuery(query, threadId, limit, offset);
+            ResultSet rs = db.executeQuery(
+                    query,
+                    threadId,
+                    username,
+                    limit,
+                    offset
+            );
             return this.getMapper().map(rs);
         } catch (SQLException e) {
             throw new DAOException(
