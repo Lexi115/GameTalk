@@ -18,6 +18,20 @@ body {
     color: white;
 }
 
+.card {
+    height: 8rem;
+}
+
+.col{
+    max-width: 20rem;
+}
+
+@media (max-width: 576px) {
+    .card {
+        height: 4rem;
+    }
+}
+
 
 /*body::before{
     content: '';

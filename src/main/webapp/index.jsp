@@ -12,7 +12,7 @@
     <jsp:include page="navbar.jsp"/>
     <main class="flex-shrink-0">
         <div class="container">
-            <div id="gameCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div id="gameCarousel mt-3 mb-3" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                     <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -34,6 +34,7 @@
                         <div class="carousel-caption d-none d-md-block">
                         </div>
                     </div>
+
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
@@ -43,6 +44,80 @@
                     <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
                     <span class="visually-hidden">Successivo</span>
                 </button>
+            </div>
+        </div>
+        <div id="categories" class="row row-cols-2 row-cols-md-4 justify-content-center g-4 ps-3 pe-3">
+            <div class="col">
+                <div class="card text-center">
+                    <a href="#" class="stretched-link text-decoration-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 1</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col ">
+                <div class="card text-center">
+                    <a href="#" class="stretched-link text-decoration-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 2</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center">
+                    <a href="#" class="stretched-link text-decoration-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 3</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center">
+                    <a href="#" class="stretched-link text-decoration-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 4</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center">
+                    <a href="#" class="stretched-link text-decoration-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 5</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center">
+                    <a href="#" class="stretched-link text-decoration-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 6</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center">
+                    <a href="#" class="stretched-link text-decoration-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 7</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center">
+                    <a href="#" class="stretched-link text-decoration-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 8</h5>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </main>
