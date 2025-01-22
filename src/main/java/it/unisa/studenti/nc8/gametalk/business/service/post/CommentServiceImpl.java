@@ -1,20 +1,20 @@
 package it.unisa.studenti.nc8.gametalk.business.service.post;
 
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.comment.CommentValidator;
+import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAO;
+import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
-import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.comment.CommentMapper;
-import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.thread.ThreadMapper;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
@@ -212,13 +212,12 @@ public class CommentServiceImpl implements CommentService {
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public List<Comment> findCommentsFromThreadId(
+    public List<Comment> findCommentsByThreadId(
             final long threadId,
             final String userName,
             final int page,
             final int pageSize
     ) throws ServiceException {
-
         //Sanificazione TODO da spostare
         int realPage = Math.max(page, 1);
 
@@ -231,7 +230,6 @@ public class CommentServiceImpl implements CommentService {
 
         //Recupero commenti dal thread
         try (db) {
-
             db.connect();
             return commentDAO.getCommentsByThreadId(
                     threadId,
@@ -242,6 +240,36 @@ public class CommentServiceImpl implements CommentService {
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante il recupero dei "
+                            + "commenti appartenenti al thread " + threadId, e);
+        }
+    }
+
+    /**
+     * Restituisce il numero totale di commenti di un thread.
+     *
+     * @param threadId Il ID del thread di cui recuperare i commenti.
+     * @return il numero totale di commenti del thread.
+     * @throws IllegalArgumentException se il <code>threadId</code>
+     *                                  è minore o uguale a 0
+     * @throws ServiceException         se si è verificato un errore.
+     */
+    @Override
+    public long countCommentsByThreadId(
+            final long threadId
+    ) throws ServiceException {
+        // Verifica id valido
+        if (threadId <= 0) {
+            throw new IllegalArgumentException(
+                    "threadId deve essere maggiore di 0");
+        }
+
+        // Recupero commenti dal thread
+        try (db) {
+            db.connect();
+            return commentDAO.countCommentsByThreadId(threadId);
+        } catch (SQLException | DAOException e) {
+            throw new ServiceException(
+                    "Errore durante il conteggio dei "
                             + "commenti appartenenti al thread " + threadId, e);
         }
     }

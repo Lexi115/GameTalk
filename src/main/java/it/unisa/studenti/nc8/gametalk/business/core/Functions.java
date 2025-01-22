@@ -1,12 +1,16 @@
 package it.unisa.studenti.nc8.gametalk.business.core;
 
 import com.google.common.hash.Hashing;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.unisa.studenti.nc8.gametalk.business.adapters.json.LocalDateAdapter;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,13 +23,12 @@ public abstract class Functions {
     /**
      * Recupera il database dal contesto della servlet.
      *
-     * @param servletContext la servlet da cui ottenere il contesto.
-     * @return il database dal contesto della servlet,
+     * @param servletContext il context.
+     * @return il database dal servlet context
      * oppure {@code null} se non trovato.
      */
     public static Database getContextDatabase(
-            final ServletContext servletContext
-    ) {
+            final ServletContext servletContext) {
         Object obj = servletContext.getAttribute("db");
         return obj == null ? null : (Database) obj;
     }
@@ -56,6 +59,42 @@ public abstract class Functions {
                 .hashString(input, StandardCharsets.UTF_8)
                 .toString();
     }
+
+    /**
+     * Serializza un oggetto in una stringa JSON.
+     *
+     * @param obj L'oggetto da serializzare.
+     * @return la stringa JSON corrispondente.
+     */
+    public static String toJson(final Object obj) {
+        Gson gson = new GsonBuilder()
+                // Adattatore per LocalDate
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .setPrettyPrinting()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+        return gson.toJson(obj);
+    }
+
+    /**
+     * Crea un cookie sicuro con le opzioni di protezione abilitate.
+     *
+     * @param name   il nome del cookie
+     * @param value  il valore del cookie
+     * @param expiry il tempo di scadenza del cookie in secondi
+     * @return un oggetto {@link Cookie} sicuro
+     */
+    public static Cookie createSecureCookie(
+            final String name,
+            final String value,
+            final int expiry
+    ) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setSecure(true); // Solo HTTPS
+        cookie.setMaxAge(expiry); // Scadenza in secondi
+        cookie.setHttpOnly(true); // Inaccessibile da JS
+        cookie.setPath("/"); // Valido per tutto il sito
+        return cookie;
 
     /**
      * Recupera un cookie che ha un certo nome.

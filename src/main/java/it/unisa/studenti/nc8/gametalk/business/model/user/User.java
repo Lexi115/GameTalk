@@ -133,7 +133,7 @@ public class User {
      *
      * @param authToken il token da assegnare all'utente.
      */
-    public void setAuthToken(String authToken) {
+    public void setAuthToken(final String authToken) {
         this.authToken = authToken;
     }
 }

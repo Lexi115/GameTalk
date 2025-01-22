@@ -59,12 +59,23 @@ public interface CommentService {
      * <code>page</code> o <code>pageSize</code> sono minori o uguali a 0
      * @throws ServiceException se si è verificato un errore.
      */
-    List<Comment> findCommentsFromThreadId(
+    List<Comment> findCommentsByThreadId(
             long threadId,
             String userName,
             int page,
             int pageSize
     ) throws ServiceException;
+
+    /**
+     * Restituisce il numero totale di commenti di un thread.
+     *
+     * @param threadId Il ID del thread di cui recuperare i commenti.
+     * @return il numero totale di commenti del thread.
+     * @throws IllegalArgumentException se il <code>threadId</code>
+     * è minore o uguale a 0
+     * @throws ServiceException se si è verificato un errore.
+     */
+    long countCommentsByThreadId(long threadId) throws ServiceException;
 
     /**
      * Permette a un utente di votare un commento, con la possibilità di

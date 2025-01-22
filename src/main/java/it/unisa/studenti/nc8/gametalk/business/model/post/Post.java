@@ -1,5 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.model.post;
 
+import com.google.gson.annotations.Expose;
+
 import java.time.LocalDate;
 
 /**
@@ -9,18 +11,23 @@ import java.time.LocalDate;
 public abstract class Post {
 
     /** Identificativo univoco del post. */
+    @Expose
     private long id;
 
     /** Identificativo dell'utente che ha creato il post. */
+    @Expose
     private String username;
 
     /** Contenuto testuale del post. */
+    @Expose
     private String body;
 
     /** Numero di voti ricevuti dal post. */
+    @Expose
     private int votes;
 
     /** Data di creazione del post. */
+    @Expose
     private LocalDate creationDate;
     /**
      * Restituisce l'ID del post.
