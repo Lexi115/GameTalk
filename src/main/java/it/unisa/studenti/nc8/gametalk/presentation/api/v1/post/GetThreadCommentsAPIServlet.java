@@ -2,12 +2,14 @@ package it.unisa.studenti.nc8.gametalk.presentation.api.v1.post;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.business.model.user.User;
 import it.unisa.studenti.nc8.gametalk.business.service.post.CommentService;
 import it.unisa.studenti.nc8.gametalk.business.service.post.CommentServiceImpl;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,6 +62,7 @@ public class GetThreadCommentsAPIServlet extends HttpServlet {
     ) throws IOException {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
+        HttpSession session = req.getSession();
         Writer writer = resp.getWriter();
 
         // ID del thread
@@ -72,6 +75,10 @@ public class GetThreadCommentsAPIServlet extends HttpServlet {
             writer.write("{\"error\": \"ID del thread non valido\"}");
             return;
         }
+
+        //Username richiedente
+        User user = (User) session.getAttribute("user");
+        String username = (user != null) ? user.getUsername() : null;
 
         // Parametri di paginazione
         String pageParam = req.getParameter("page");
@@ -96,7 +103,7 @@ public class GetThreadCommentsAPIServlet extends HttpServlet {
         try {
             // Ottieni i commenti del thread
             List<Comment> comments = commentService.findCommentsByThreadId(
-                    threadId, page, pageSize);
+                    threadId, username, page, pageSize);
             long totalComments =
                     commentService.countCommentsByThreadId(threadId);
 

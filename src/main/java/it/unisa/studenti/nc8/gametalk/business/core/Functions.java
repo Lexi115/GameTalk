@@ -95,6 +95,7 @@ public abstract class Functions {
         cookie.setHttpOnly(true); // Inaccessibile da JS
         cookie.setPath("/"); // Valido per tutto il sito
         return cookie;
+    }
 
     /**
      * Recupera un cookie che ha un certo nome.

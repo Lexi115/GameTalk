@@ -30,7 +30,7 @@ public class CommentServiceImplTest {
 
     @Test
     void getCommentsByThread() throws ServiceException {
-        System.out.println(commentService.findCommentsFromThreadId(7,null,1, 12));
+        System.out.println(commentService.findCommentsByThreadId(7,null,1, 12));
     }
 
 }
