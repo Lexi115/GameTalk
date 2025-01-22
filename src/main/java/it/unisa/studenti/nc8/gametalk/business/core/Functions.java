@@ -2,7 +2,9 @@ package it.unisa.studenti.nc8.gametalk.business.core;
 
 import com.google.common.hash.Hashing;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
@@ -17,12 +19,14 @@ public abstract class Functions {
     /**
      * Recupera il database dal contesto della servlet.
      *
-     * @param servlet la servlet da cui ottenere il contesto.
+     * @param servletContext la servlet da cui ottenere il contesto.
      * @return il database dal contesto della servlet,
      * oppure {@code null} se non trovato.
      */
-    public static Database getContextDatabase(final HttpServlet servlet) {
-        Object obj = servlet.getServletContext().getAttribute("db");
+    public static Database getContextDatabase(
+            final ServletContext servletContext
+    ) {
+        Object obj = servletContext.getAttribute("db");
         return obj == null ? null : (Database) obj;
     }
 
@@ -51,5 +55,28 @@ public abstract class Functions {
         return Hashing.sha256()
                 .hashString(input, StandardCharsets.UTF_8)
                 .toString();
+    }
+
+    /**
+     * Recupera un cookie che ha un certo nome.
+     *
+     * @param name Il nome del cookie da cercare.
+     * @param request La request http in cui cercare.
+     * @return Il cookie con quel nome, <code>null</code> altrimenti.
+     */
+    public static Cookie getCookie(
+            final String name,
+            final HttpServletRequest request
+    ) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(name)) {
+                    return cookie;
+                }
+            }
+        }
+
+        return null;
     }
 }
