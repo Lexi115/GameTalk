@@ -2,7 +2,7 @@
     background-color: #07083F;
 }
 
-body, html{
+html, body{
     height: 100%;
 }
 
@@ -13,76 +13,7 @@ body {
     position: relative;
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    color: white;
-}
 
-/*.card {
-    height: 8rem;
-}
-
-.col{
-    max-width: 20rem;
-}
-
-@media (max-width: 576px) {
-    .card {
-        height: 4rem;
-    }
-}*/
-
-.fadeIn{
-    opacity: 0;
-    animation-name: fadeIn;
-    animation-fill-mode: forwards;
-}
-
-.animate-1{
-    animation-duration: 0.25s;
-}
-
-.animate-2{
-    animation-duration: 0.5s;
-}
-
-.animate-3{
-    animation-duration: 0.75s;
-}
-
-.animate-4{
-    animation-duration: 1s;
-}
-
-.a-delay-1{
-    animation-delay: 0.25s;
-}
-
-.a-delay-2{
-    animation-delay: 0.5s;
-}
-
-.a-delay-3{
-    animation-delay: 0.75s;
-}
-
-.a-delay-4{
-    animation-delay: 1s;
-}
-
-.a-block-zone * {
-    animation: none !important;
-    opacity: 1;
-}
-
-@keyframes fadeIn {
-    0%{
-        opacity: 0;
-    }
-    100%{
-        opacity: 1;
-    }
-}
 
 /*body::before{
     content: '';

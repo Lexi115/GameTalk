@@ -1,0 +1,19 @@
+
+.categoryCard {
+    height: 8rem;
+    background: linear-gradient(135deg, #22236D, #2d3784);
+}
+
+.categoryCard-title{
+    color: white;
+}
+
+.categoryCol{
+    max-width: 20rem;
+}
+
+@media (max-width: 576px) {
+    .categoryCard {
+        height: 4rem;
+    }
+}
