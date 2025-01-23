@@ -10,9 +10,9 @@
     if (pageName.equalsIgnoreCase(pageToAnimate) || pageName.equalsIgnoreCase(pageBase)){
 %>
 
-<nav class="navbar navbar-expand-lg  navbar-dark shadow bg-nav animate-1 navDrop">
+<nav class="navbar navbar-expand-lg  navbar-dark shadow bg-nav animate-2 navDrop">
 <%}else{%>
-<nav class="navbar navbar-expand-lg  navbar-dark shadow bg-nav animate-1 a-block-zone">
+<nav class="navbar navbar-expand-lg  navbar-dark shadow bg-nav a-block-zone">
 <%}%>
     <div class="container-fluid row p-0 m-0">
         <div class="col-md-3 col-6 order-0">

@@ -3,7 +3,12 @@
 }
 
 nav{
-    position: relative;
+    z-index: 100;
+}
+
+nav:not(.navDrop){
+    position: sticky;
+    top: 0;
 }
 
 .navDrop{
@@ -13,9 +18,14 @@ nav{
 
 @keyframes navbarDrop {
     0%{
-        top: -25%;
+        position: relative;
+        top: -250px;
+    }
+    99%{
+        position: relative;
     }
     100%{
+        position: sticky;
         top: 0;
     }
 }
