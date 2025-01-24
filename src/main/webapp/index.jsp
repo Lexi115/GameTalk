@@ -20,6 +20,9 @@
                     <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
                     <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
                     <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="5"
+                            aria-label="Slide 6"></button>
+
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -47,6 +50,11 @@
                         <div class="carousel-caption d-none d-md-block">
                         </div>
                     </div>
+                    <div class="carousel-item">
+                        <img src="images/slide6.png" class="d-block w-100" alt="Slide 6">
+                        <div class="carousel-caption d-none d-md-block">
+                        </div>
+                    </div>
 
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
@@ -56,6 +64,7 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </button>
             </div>
+
             <div id="categories" class="row row-cols-2 row-cols-md-4 justify-content-center g-4 ps-3 pe-3">
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
@@ -74,55 +83,133 @@
                             </div>
                         </a>
                     </div>
-                </div><div class="col categoryCol">
-                <div class="card categoryCard text-center justify-content-center">
-                    <a href="#" class="stretched-link text-decoration-none">
-                        <div class="card-body categoryCard-body justify-content-center">
-                            <h3 class="card-title categoryCard-title m-0">Help</h3>
-                        </div>
-                    </a>
                 </div>
-            </div><div class="col categoryCol">
-                <div class="card categoryCard text-center justify-content-center">
-                    <a href="#" class="stretched-link text-decoration-none">
-                        <div class="card-body categoryCard-body justify-content-center">
-                            <h3 class="card-title categoryCard-title m-0">Guides</h3>
-                        </div>
-                    </a>
+                <div class="col categoryCol">
+                    <div class="card categoryCard text-center justify-content-center">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body categoryCard-body justify-content-center">
+                                <h3 class="card-title categoryCard-title m-0">Help</h3>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div><div class="col categoryCol">
-                <div class="card categoryCard text-center justify-content-center">
-                    <a href="#" class="stretched-link text-decoration-none">
-                        <div class="card-body categoryCard-body justify-content-center">
-                            <h3 class="card-title categoryCard-title m-0">Bugs</h3>
-                        </div>
-                    </a>
+                <div class="col categoryCol">
+                    <div class="card categoryCard text-center justify-content-center">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body categoryCard-body justify-content-center">
+                                <h3 class="card-title categoryCard-title m-0">Guides</h3>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div><div class="col categoryCol">
-                <div class="card categoryCard text-center justify-content-center">
-                    <a href="#" class="stretched-link text-decoration-none">
-                        <div class="card-body categoryCard-body justify-content-center">
-                            <h3 class="card-title categoryCard-title m-0">Memes</h3>
-                        </div>
-                    </a>
+                <div class="col categoryCol">
+                    <div class="card categoryCard text-center justify-content-center">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body categoryCard-body justify-content-center">
+                                <h3 class="card-title categoryCard-title m-0">Bugs</h3>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div><div class="col categoryCol">
-                <div class="card categoryCard text-center justify-content-center">
-                    <a href="#" class="stretched-link text-decoration-none">
-                        <div class="card-body categoryCard-body justify-content-center">
-                            <h3 class="card-title categoryCard-title m-0">News</h3>
-                        </div>
-                    </a>
+                <div class="col categoryCol">
+                    <div class="card categoryCard text-center justify-content-center">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body categoryCard-body justify-content-center">
+                                <h3 class="card-title categoryCard-title m-0">Memes</h3>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div><div class="col categoryCol">
-                <div class="card categoryCard text-center justify-content-center">
-                    <a href="#" class="stretched-link text-decoration-none">
-                        <div class="card-body categoryCard-body justify-content-center">
-                            <h3 class="card-title categoryCard-title m-0">Other</h3>
-                        </div>
-                    </a>
+                <div class="col categoryCol">
+                    <div class="card categoryCard text-center justify-content-center">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body categoryCard-body justify-content-center">
+                                <h3 class="card-title categoryCard-title m-0">News</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col categoryCol">
+                    <div class="card categoryCard text-center justify-content-center">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body categoryCard-body justify-content-center">
+                                <h3 class="card-title categoryCard-title m-0">Other</h3>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
+
+
+            <div id="threads" class="row row-cols-1 row-cols-md-2 justify-content-center mt-4 g-4 p-3">
+                <div class="col threadCol order-0 order-md-0">
+                    <h3 class="card-title mb-2">IMPORTANTE</h3>
+                    <div class="card threadCard">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body threadCard-body">
+                                <h5 class="card-title threadCard-titles">Importante 1</h5>
+                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
+                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col threadCol order-3 order-md-1">
+                    <h3 class="card-title mb-2">NOVITA'</h3>
+                    <div class="card threadCard">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body threadCard-body ">
+                                <h5 class="card-title threadCard-titles">Novità 1</h5>
+                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
+                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col threadCol order-1 order-md-2">
+                    <div class="card threadCard">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body threadCard-body ">
+                                <h5 class="card-title threadCard-titles">Importante 2</h5>
+                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
+                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col threadCol order-4 order-md-3">
+                    <div class="card threadCard">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body threadCard-body ">
+                                <h5 class="card-title threadCard-titles">Novità 2</h5>
+                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
+                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col threadCol order-2 order-md-4">
+                    <div class="card threadCard">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body threadCard-body ">
+                                <h5 class="card-title threadCard-titles">Importante 3</h5>
+                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
+                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col threadCol order-5 order-md-5">
+                    <div class="card threadCard">
+                        <a href="#" class="stretched-link text-decoration-none">
+                            <div class="card-body threadCard-body ">
+                                <h5 class="card-title threadCard-titles">Novità 3</h5>
+                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
+                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

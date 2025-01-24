@@ -4,6 +4,7 @@
     background: linear-gradient(135deg, #22236D, #2d3784);
 }
 
+
 .categoryCard-title{
     color: white;
 }
@@ -17,3 +18,5 @@
         height: 4rem;
     }
 }
+
+
