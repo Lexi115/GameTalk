@@ -11,7 +11,7 @@
 </head>
 <body data-bs-theme="dark">
     <jsp:include page="navbar.jsp"/>
-    <main class="flex-shrink-0">
+    <main>
         <div class="container">
             <div id="gameCarousel" class="carousel slide pt-4 pb-4" data-bs-ride="carousel" data-bs-interval="5000">
                 <div class="carousel-indicators ">

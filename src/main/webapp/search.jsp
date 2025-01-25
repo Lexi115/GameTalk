@@ -59,20 +59,27 @@
             <%
                 for (int i = 0; i < 10; i++) {
             %>
-            <a class="text-decoration-none" href="#">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <span class="fs-4 fw-bolder">title</span>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text text-truncate-3">With supporting text below as a natural lead-in to additional content.</p>
-                    </div>
-                    <div class="card-footer text-body-secondary row">
-                        <div class="col-6 text-start ps-4">date</div>
-                        <div class="col-6 text-end pe-4">up votes- down votes</div>
-                    </div>
+            <div class="row">
+                <div class="col-1 d-flex justify-content-center align-items-center flex-column">
+                    <button class="btn btn-success"><i class="bi bi-caret-up-fill"></i></button>
+                    <div>255</div>
+                    <button class="btn btn-outline-danger"><i class="bi bi-caret-down-fill"></i></button>
                 </div>
-            </a>
+                <a class="text-decoration-none col-11" href="thread.jsp">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <span class="fs-4 fw-bolder">title</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text text-truncate-3">With supporting text below as a natural lead-in to additional content.</p>
+                        </div>
+                        <div class="card-footer text-body-secondary row">
+                            <div class="col-6 text-start ps-4">username</div>
+                            <div class="col-6 text-end pe-4">date</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
             <%}%>
         </div>
     </main>
