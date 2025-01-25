@@ -4,6 +4,10 @@
     background: linear-gradient(135deg, #22236D, #2d3784);
 }
 
+.categoryCard:hover {
+    background: linear-gradient(135deg, #4055a2, #5b67b8);
+}
+
 .categoryCard-title{
     color: white;
 }
@@ -17,3 +21,17 @@
         height: 4rem;
     }
 }
+
+.threadCard{
+    background: linear-gradient(135deg, #22236D, #2d3784);
+}
+
+.threadCard-title{
+    color: white;
+}
+
+.threadCard-text{
+    color: white;
+}
+
+
