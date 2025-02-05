@@ -77,14 +77,15 @@ public class CommentServiceImpl implements CommentService {
      * @param username L'ID dell'utente che ha scritto il commento.
      * @param body Il corpo del commento.
      *
-     * @throws ServiceException Se il commento non è valido o se si verifica
-     *                          un errore durante il salvataggio nel database.
+     * @throws ServiceException Se si verifica un errore durante il
+     * salvataggio nel database.
+     * @throws IllegalArgumentException Se il commento non è valido.
      */
     public void addComment(
             final long threadId,
             final String username,
             final String body
-    ) throws ServiceException {
+    ) throws ServiceException, IllegalArgumentException {
 
         //Inizializzazione oggetto Comment
         Comment newComment = new Comment();
@@ -96,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
 
         //Validazione commento
         if (!commentValidator.validate(newComment)) {
-            throw new ServiceException("Commento non valido");
+            throw new IllegalArgumentException("Commento non valido");
         }
 
         //Salvataggio comment

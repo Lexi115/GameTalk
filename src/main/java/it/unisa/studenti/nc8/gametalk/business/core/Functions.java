@@ -5,10 +5,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.unisa.studenti.nc8.gametalk.business.adapters.json.LocalDateAdapter;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
@@ -118,5 +122,31 @@ public abstract class Functions {
         }
 
         return null;
+    }
+
+    /**
+     * Gestisce gli errori mostrando una pagina di errore personalizzata.
+     * Imposta il codice di stato e passa il messaggio di errore alla vista.
+     *
+     * @param req     L'oggetto HTTP request.
+     * @param resp    L'oggetto HTTP response.
+     * @param status  Il codice di stato HTTP da impostare nella risposta.
+     * @param message Il messaggio di errore da mostrare all'utente.
+     * @throws ServletException Se si verifica un errore generico.
+     * @throws IOException      Se si verifica un errore I/O.
+     */
+    public static void handleError(
+            final HttpServletRequest req,
+            final HttpServletResponse resp,
+            final int status,
+            final String message
+    ) throws ServletException, IOException {
+        req.setAttribute("errorMessage", message);
+        req.setAttribute("errorCode", status);
+        resp.setStatus(status);
+
+        RequestDispatcher dispatcher =
+                req.getRequestDispatcher("/WEB-INF/views/error.jsp");
+        dispatcher.forward(req, resp);
     }
 }
