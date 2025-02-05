@@ -52,6 +52,8 @@ public class UserServiceImpl implements UserService {
      * @param username L'username dell'utente.
      * @param password La password dell'utente.
      * @throws ServiceException se si è verificato un errore.
+     * @throws IllegalArgumentException se l'username e/o password
+     * sono incorretti.
      */
     @Override
     public void createUser(
@@ -70,13 +72,14 @@ public class UserServiceImpl implements UserService {
 
             // Valida username e password
             if (!userValidator.validate(user)) {
-                throw new ServiceException("Username o password incorretti");
+                throw new IllegalArgumentException(
+                        "Username o password incorretti");
             }
 
             // Verifica esistenza di un utente con lo stesso username
             User existingUser = userDAO.get(username);
             if (existingUser != null) {
-                throw new ServiceException("Username già in uso.");
+                throw new IllegalArgumentException("Username già in uso.");
             }
 
             // Salva nuovo utente

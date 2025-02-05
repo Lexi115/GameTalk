@@ -1,0 +1,100 @@
+package it.unisa.studenti.nc8.gametalk.presentation.servlets;
+
+import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.service.user.UserService;
+import it.unisa.studenti.nc8.gametalk.business.service.user.UserServiceImpl;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Servlet per gestire la registrazione degli utenti.
+ * Riceve username e password.
+ */
+@WebServlet("/signup")
+public class SignupServlet extends HttpServlet {
+
+    /** Logger. **/
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    /** La classe di servizio per creare l'utente. */
+    private UserService userService;
+
+    /**
+     * Init.
+     */
+    @Override
+    public void init() {
+        this.userService = new UserServiceImpl(
+                Functions.getContextDatabase(this.getServletContext()));
+    }
+
+    /**
+     * Gestisce la richiesta GET per visualizzare la pagina di registrazione.
+     *
+     * @param req  l'oggetto HttpServletRequest contenente i
+     *             parametri della richiesta
+     * @param resp l'oggetto HttpServletResponse per inviare
+     *             la risposta al client
+     * @throws IOException se si verifica un errore.
+     */
+    @Override
+    protected void doGet(
+            final HttpServletRequest req,
+            final HttpServletResponse resp
+    ) throws ServletException, IOException {
+        RequestDispatcher rd = req.getRequestDispatcher("signup.jsp");
+        rd.forward(req, resp);
+    }
+
+    /**
+     * Gestisce la richiesta POST per registrare l'utente.
+     *
+     * @param req  l'oggetto HttpServletRequest contenente i
+     *             parametri della richiesta
+     * @param resp l'oggetto HttpServletResponse per inviare
+     *             la risposta al client
+     * @throws IOException se si verifica un errore.
+     */
+    @Override
+    protected void doPost(
+            final HttpServletRequest req,
+            final HttpServletResponse resp
+    ) throws ServletException, IOException {
+        // Lista di eventuali errori.
+        List<String> errors = new ArrayList<>();
+        req.setAttribute("errors", errors);
+
+        // Parametri di registrazione (username e password)
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+
+        try {
+            userService.createUser(username, password);
+
+            // Reindirizza sulla pagina di login dopo la creazione dell'utente
+            resp.sendRedirect(req.getContextPath() + "/login");
+
+        } catch (ServiceException e) {
+            LOGGER.error("Errore con servizio di registrazione", e);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            errors.add("Errore interno del server.");
+            doGet(req, resp);
+
+        } catch (IllegalArgumentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            errors.add(e.getMessage());
+            doGet(req, resp);
+        }
+    }
+}

@@ -17,6 +17,8 @@ public interface UserService {
      * @param username L'username dell'utente.
      * @param password La password dell'utente.
      * @throws ServiceException se si è verificato un errore.
+     * @throws IllegalArgumentException se l'username e/o password
+     * sono incorretti.
      */
     void createUser(String username, String password) throws ServiceException;
 
