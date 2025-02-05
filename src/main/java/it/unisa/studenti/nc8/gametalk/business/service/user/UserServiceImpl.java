@@ -117,6 +117,7 @@ public class UserServiceImpl implements UserService {
      * @param username L'ID dell'utente.
      * @param password La nuova password dell'utente.
      * @throws ServiceException se si è verificato un errore.
+     * @throws IllegalArgumentException se la password fornita non è valida.
      */
     @Override
     public void updatePassword(
@@ -138,7 +139,7 @@ public class UserServiceImpl implements UserService {
 
             // Valida password
             if (!userValidator.validate(user)) {
-                throw new ServiceException("Password non valida");
+                throw new IllegalArgumentException("Password non valida");
             }
 
             // Aggiorna utente
@@ -196,7 +197,8 @@ public class UserServiceImpl implements UserService {
      * Trova un utente per il suo ID.
      *
      * @param username L'ID dell'utente.
-     * @return L'utente con l'ID specificato.
+     * @return L'utente con l'ID specificato o <code>null</code>
+     * se non trovato.
      * @throws ServiceException se si è verificato un errore.
      */
     @Override

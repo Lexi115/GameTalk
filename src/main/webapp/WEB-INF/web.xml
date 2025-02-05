@@ -26,6 +26,17 @@
         <url-pattern>/*</url-pattern> <!-- Si applica filter a tutto il sito -->
     </filter-mapping>
 
+    <!-- Pagine di errore -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/errors/notFound.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/errors/error.jsp</location>
+    </error-page>
+
     <!-- Credenziali per accesso al database -->
     <context-param>
         <param-name>dbHost</param-name>

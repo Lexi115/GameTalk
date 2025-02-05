@@ -86,7 +86,7 @@ public class SignupServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/login");
 
         } catch (ServiceException e) {
-            LOGGER.error("Errore con servizio di registrazione", e);
+            LOGGER.error("Errore con il servizio di registrazione", e);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             errors.add("Errore interno del server.");
             doGet(req, resp);
