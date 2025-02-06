@@ -1,5 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.model.post;
 
+import com.google.gson.annotations.Expose;
+
 import java.time.LocalDate;
 
 /**
@@ -9,20 +11,24 @@ import java.time.LocalDate;
 public abstract class Post {
 
     /** Identificativo univoco del post. */
+    @Expose
     private long id;
 
     /** Identificativo dell'utente che ha creato il post. */
-    private long userId;
+    @Expose
+    private String username;
 
     /** Contenuto testuale del post. */
+    @Expose
     private String body;
 
     /** Numero di voti ricevuti dal post. */
+    @Expose
     private int votes;
 
     /** Data di creazione del post. */
+    @Expose
     private LocalDate creationDate;
-
     /**
      * Restituisce l'ID del post.
      *
@@ -46,17 +52,17 @@ public abstract class Post {
      *
      * @return l'ID dell'utente.
      */
-    public long getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * Imposta l'ID dell'utente che ha creato il post.
      *
-     * @param userId l'ID dell'utente da assegnare.
+     * @param username l'ID dell'utente da assegnare.
      */
-    public void setUserId(final long userId) {
-        this.userId = userId;
+    public void setUsername(final String username) {
+        this.username = username;
     }
 
     /**
@@ -122,7 +128,7 @@ public abstract class Post {
     public String toString() {
         return "Post{"
                 + "id=" + id
-                + ", userId=" + userId
+                + ", username=" + username
                 + ", body='" + body + '\''
                 + ", votes=" + votes
                 + ", creationDate=" + creationDate

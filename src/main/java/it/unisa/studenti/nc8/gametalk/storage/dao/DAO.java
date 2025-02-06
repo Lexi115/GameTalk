@@ -10,8 +10,9 @@ import java.util.List;
  * con il tipo generico {@code T}.
  *
  * @param <T> il tipo dell'entità gestita dal DAO.
+ * @param <K> il tipo della chiave primaria dell'entità.
  */
-public interface DAO<T> {
+public interface DAO<T, K> {
 
     /**
      * Recupera un'entità dal sistema di persistenza in base al suo
@@ -23,7 +24,7 @@ public interface DAO<T> {
      * @throws DAOException se si verifica un errore durante l'interazione con
      * il sistema di persistenza.
      */
-    T get(long id) throws DAOException;
+    T get(K id) throws DAOException;
 
     /**
      * Recupera tutte le entità del tipo specificato dal sistema di persistenza.
@@ -44,7 +45,7 @@ public interface DAO<T> {
      * @throws DAOException se si verifica un errore durante l'interazione con
      * il sistema di persistenza.
      */
-    long save(T entity) throws DAOException;
+    K save(T entity) throws DAOException;
 
     /**
      * Aggiorna i dati di un'entità esistente nel sistema di persistenza.
@@ -67,5 +68,5 @@ public interface DAO<T> {
      * @throws DAOException se si verifica un errore durante l'interazione con
      * il sistema di persistenza.
      */
-    boolean delete(long id) throws DAOException;
+    boolean delete(K id) throws DAOException;
 }

@@ -35,7 +35,7 @@ public class ThreadMapper implements ResultSetMapper<Thread> {
         while (rs.next()) {
             Thread thread = new Thread();
             thread.setId(rs.getLong("id"));
-            thread.setUserId(rs.getLong("user_id"));
+            thread.setUsername(rs.getString("username"));
             thread.setTitle(rs.getString("title"));
             thread.setBody(rs.getString("body"));
             thread.setVotes(rs.getInt("votes"));

@@ -2,6 +2,7 @@ package it.unisa.studenti.nc8.gametalk.business.service.user;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
+import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
 
 import java.util.List;
 
@@ -14,36 +15,54 @@ public interface UserService {
     /**
      * Aggiunge un nuovo utente.
      *
-     * @param user L'utente da aggiungere.
-     * @throws ServiceException se si è verificato un errore.
+     * @param username L'username dell'utente.
+     * @param password La password dell'utente.
+     * @throws ServiceException         se si è verificato un errore.
+     * @throws IllegalArgumentException se l'username e/o password
+     * sono incorretti.
      */
-    void addUser(User user) throws ServiceException;
+    void createUser(String username, String password) throws ServiceException;
 
     /**
      * Rimuove un utente esistente.
      *
-     * @param id l'ID dell'utente da rimuovere.
+     * @param username l'ID dell'utente da rimuovere.
      * @throws IllegalArgumentException se l'ID è minore o uguale a 0.
      * @throws ServiceException se si è verificato un errore.
      */
-    void removeUser(long id) throws ServiceException;
+    void removeUser(String username) throws ServiceException;
 
     /**
-     * Aggiorna un utente esistente.
+     * Aggiorna la password di un utente esistente.
      *
-     * @param user L'utente da aggiornare.
+     * @param username Lo username dell'utente da aggiornare
+     * @param password La nuova password dell'utente.
+     * @throws ServiceException se si è verificato un errore.
+     * @throws IllegalArgumentException se la password fornita non è valida.
+     */
+    void updatePassword(
+            String username,
+            String password
+    ) throws ServiceException;
+
+    /**
+     * Aggiorna il token di un utente.
+     *
+     * @param username Lo username dell'utente da aggiornare
+     * @param token Il nuovo token dell'utente.
      * @throws ServiceException se si è verificato un errore.
      */
-    void updateUser(User user) throws ServiceException;
+    void updateToken(String username, String token) throws ServiceException;
 
     /**
      * Trova un utente per il suo ID.
      *
-     * @param id L'ID dell'utente.
-     * @return L'utente con l'ID specificato.
+     * @param username L'ID dell'utente.
+     * @return L'utente con l'ID specificato o <code>null</code>
+     * se non trovato.
      * @throws ServiceException se si è verificato un errore.
      */
-    User findUserById(long id) throws ServiceException;
+    User findUserByUsername(String username) throws ServiceException;
 
     /**
      * Trova gli utenti per nome utente con supporto per la paginazione.
@@ -58,18 +77,6 @@ public interface UserService {
             throws ServiceException;
 
     /**
-     * Trova gli utenti che hanno ricevuto un certo numero di "strikes", con
-     * supporto per la paginazione.
-     *
-     * @param page     Il numero della pagina da recuperare.
-     * @param pageSize Il numero di risultati per pagina.
-     * @return Una lista di utenti con "strikes".
-     * @throws ServiceException se si è verificato un errore.
-     */
-    List<User> findStruckUsers(int page, int pageSize)
-            throws ServiceException;
-
-    /**
      * Trova gli utenti bannati, con supporto per la paginazione.
      *
      * @param page     Il numero della pagina da recuperare.
@@ -79,4 +86,17 @@ public interface UserService {
      */
     List<User> findBannedUsers(int page, int pageSize)
             throws ServiceException;
+
+    /**
+     * Banna/Unbanna un utente dato il suo nome utente.
+     *
+     * @param username il nome utente dell'utente da bannare/unbannare.
+     * @param banned Indica come aggiornare lo stato dell'utente.
+     * @throws IllegalArgumentException se l'username è <code>null</code>
+     * o non valido.
+     * @throws ServiceException se si verifica un errore durante l'operazione.
+     * @throws NotFoundException se non è stato trovato nessun utente.
+     */
+    void banUser(String username, boolean banned)
+            throws ServiceException, NotFoundException;
 }

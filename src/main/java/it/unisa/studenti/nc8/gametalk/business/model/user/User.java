@@ -10,9 +10,6 @@ import java.time.LocalDate;
  */
 public class User {
 
-    /** Identificativo univoco dell'utente. */
-    private long id;
-
     /** Nome utente scelto dall'utente. */
     private String username;
 
@@ -25,32 +22,14 @@ public class User {
     /** Indica se l'utente è bannato. */
     private boolean banned;
 
-    /** Numero di avvertimenti ricevuti dall'utente. */
-    private int strikes;
-
     /** Ruolo associato all'utente. */
     private Role role;
 
-    /**
-     * Restituisce l'ID dell'utente.
-     *
-     * @return l'ID dell'utente.
-     */
-    public long getId() {
-        return id;
-    }
+    /** Token di autenticazione associato all'utente. */
+    private String authToken;
 
     /**
-     * Imposta l'ID dell'utente.
-     *
-     * @param id l'ID da assegnare all'utente.
-     */
-    public void setId(final long id) {
-        this.id = id;
-    }
-
-    /**
-     * Restituisce il nome utente.
+     * Restituisce il nome utente (ID).
      *
      * @return il nome utente.
      */
@@ -59,7 +38,7 @@ public class User {
     }
 
     /**
-     * Imposta il nome utente.
+     * Imposta il nome utente (ID).
      *
      * @param username il nome utente da assegnare.
      */
@@ -81,7 +60,7 @@ public class User {
      *
      * @param password la password da assegnare.
      */
-    public void setPasswordHash(final String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -123,24 +102,6 @@ public class User {
     }
 
     /**
-     * Restituisce il numero di avvertimenti dell'utente.
-     *
-     * @return il numero di avvertimenti.
-     */
-    public int getStrikes() {
-        return strikes;
-    }
-
-    /**
-     * Imposta il numero di avvertimenti dell'utente.
-     *
-     * @param strikes il numero di avvertimenti da assegnare.
-     */
-    public void setStrikes(final int strikes) {
-        this.strikes = strikes;
-    }
-
-    /**
      * Restituisce il ruolo dell'utente.
      *
      * @return il ruolo dell'utente.
@@ -156,5 +117,23 @@ public class User {
      */
     public void setRole(final Role role) {
         this.role = role;
+    }
+
+    /**
+     * Restituisce il token dell'utente.
+     *
+     * @return il token dell'utente.
+     */
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    /**
+     * Imposta il token dell'utente.
+     *
+     * @param authToken il token da assegnare all'utente.
+     */
+    public void setAuthToken(final String authToken) {
+        this.authToken = authToken;
     }
 }

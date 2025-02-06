@@ -39,20 +39,9 @@ public class UserValidator implements Validator<User> {
             return false;
         }
 
-        return isIdValid(user.getId())
-                && isUsernameValid(user.getUsername())
+        return isUsernameValid(user.getUsername())
                 && isPasswordValid(user.getPassword())
                 && isCreationDateValid(user.getCreationDate());
-    }
-
-    /**
-     * Verifica se l'ID dell'utente è valido.
-     *
-     * @param id L'ID da validare.
-     * @return {@code true} se l'ID è maggiore di 0, {@code false} altrimenti.
-     */
-    private boolean isIdValid(final long id) {
-        return id > 0;
     }
 
     /**

@@ -4,6 +4,8 @@ import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
+
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -16,24 +18,20 @@ public interface ThreadService {
      * Crea un nuovo thread con i dati forniti e lo salva nel database.
      * Il thread viene validato prima di essere salvato.
      *
-     * @param userId L'ID dell'utente che sta creando il thread.
+     * @param username L'ID dell'utente che sta creando il thread.
      * @param title Il titolo del nuovo thread.
      * @param body Il corpo del nuovo thread.
-     * @param votes Il numero iniziale di voti del thread.
-     * @param archived Indica se il thread è archiviato al
-     *                 momento della creazione.
      * @param category La categoria del nuovo thread.
      *
+     * @return l'id del Thread appena creato
      * @throws ServiceException Se il thread non è valido o se si
      *                          verifica un errore durante
      *                          il salvataggio nel database.
      */
-    void createThread(
-            long userId,
+    long createThread(
+            String username,
             String title,
             String body,
-            int votes,
-            boolean archived,
             Category category
     ) throws ServiceException;
 
@@ -51,26 +49,22 @@ public interface ThreadService {
      * Il thread viene validato prima di essere salvato nel database.
      *
      * @param id L'ID del thread da aggiornare.
-     * @param userId L'ID dell'utente che ha effettuato l'aggiornamento.
+     * @param username L'ID dell'utente che ha effettuato l'aggiornamento.
      * @param title Il nuovo titolo del thread.
      * @param body Il nuovo corpo del thread.
-     * @param votes Il nuovo numero di voti del thread.
-     * @param archived Indica se il thread deve essere archiviato.
      * @param category La nuova categoria del thread.
      *
-     * @throws ServiceException Se il thread non è valido o se
-     *                          si verifica un errore durante
-     *                          il salvataggio nel database.
+     * @throws ServiceException Se si verifica
+     * un errore durante il salvataggio nel database.
+     * @throws IllegalArgumentException Se il thread non è valido.
      */
     void updateThread(
             long id,
-            long userId,
+            String username,
             String title,
             String body,
-            int votes,
-            boolean archived,
             Category category
-    ) throws ServiceException;
+    ) throws ServiceException, IllegalArgumentException;
 
     /**
      * Restituisce un thread dato il suo ID.
@@ -95,6 +89,10 @@ public interface ThreadService {
      * @param pageSize Il numero di thread per pagina.
      * @param order Ordinamento della lista (più recenti,
      *              più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate La data di fine da cui cercare thread, può
+     *                essere {@code null}
      * @return Una lista di thread che corrispondono ai criteri di ricerca.
      * @throws IllegalArgumentException se il <code>title</code>
      * è <code>null</code>, <code>page</code>
@@ -106,6 +104,81 @@ public interface ThreadService {
             Category category,
             int page,
             int pageSize,
+            Order order,
+            LocalDate startDate,
+            LocalDate endDate
+    ) throws ServiceException;
+
+    /**
+     * Recupera i thread pubblicati da un utente, con opzioni di paginazione.
+     *
+     * @param username Il nome dell'utente.
+     * @param page     Il numero della pagina da recuperare.
+     * @param pageSize Il numero di thread per pagina.
+     * @param order Ordinamento della lista (più recenti,
+     *              più vecchi, più votati).
+     * @return Una lista di thread pubblicati dall'utente.
+     * @throws IllegalArgumentException se lo <code>username</code>
+     * è <code>null</code>, <code>page</code>
+     * o <code>pageSize</code> sono minori o uguali a 0
+     * @throws ServiceException se si è verificato un errore.
+     */
+    List<Thread> findThreadsByUsername(
+            String username,
+            int page,
+            int pageSize,
             Order order
     ) throws ServiceException;
+
+    /**
+     * Permette a un utente di votare un thread, con la possibilità di rimuovere
+     * un voto esistente (impostando il voto a 0). In caso di voto invalido, o
+     * se il thread non esiste, viene sollevata un'eccezione.
+     *
+     * @param threadId ID del thread da votare.
+     * @param username Nome utente dell'utente che sta effettuando il voto.
+     * @param vote Valore del voto da assegnare al thread, deve essere:
+     *             <ul>
+     *             <li>-1: Downvote.</li>
+     *             <li>0: Rimozione del voto esistente (se presente).</li>
+     *             <li>1: Upvote.</li>
+     *             </ul>
+     *
+     * @throws ServiceException Se si verifica un errore durante l'elaborazione
+     * del voto, come:
+     * <ul>
+     * <li>Il thread con l'ID specificato non esiste.</li>
+     * <li>Errore durante l'aggiunta del voto.</li>
+     * </ul>
+     * @throws IllegalArgumentException Se il valore del voto non è valido
+     * (diverso da -1, 0, 1).
+     *
+     */
+    void rateThread(
+            long threadId,
+            String username,
+            int vote
+    ) throws ServiceException;
+
+    /**
+     * Sposta un thread in una nuova categoria.
+     *
+     * @param threadId L'ID del thread da spostare.
+     * @param category La nuova categoria in cui spostare il thread.
+     *                 Non può essere {@code null}.
+     * @throws IllegalArgumentException Se la categoria fornita è {@code null}.
+     * @throws ServiceException Se si verifica un errore durante l'operazione.
+     */
+    void updateThreadCategory(
+            long threadId,
+            Category category
+    ) throws ServiceException;
+
+    /**
+     * Archivia un thread.
+     *
+     * @param threadId L'ID del thread da archiviare.
+     * @throws ServiceException Se si verifica un errore durante l'operazione.
+     */
+    void archiveThread(long threadId) throws ServiceException;
 }
