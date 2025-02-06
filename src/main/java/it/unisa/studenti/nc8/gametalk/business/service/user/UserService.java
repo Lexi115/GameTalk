@@ -2,6 +2,7 @@ package it.unisa.studenti.nc8.gametalk.business.service.user;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
+import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface UserService {
      *
      * @param username L'username dell'utente.
      * @param password La password dell'utente.
-     * @throws ServiceException se si è verificato un errore.
+     * @throws ServiceException         se si è verificato un errore.
      * @throws IllegalArgumentException se l'username e/o password
      * sono incorretti.
      */
@@ -91,7 +92,11 @@ public interface UserService {
      *
      * @param username il nome utente dell'utente da bannare/unbannare.
      * @param banned Indica come aggiornare lo stato dell'utente.
+     * @throws IllegalArgumentException se l'username è <code>null</code>
+     * o non valido.
      * @throws ServiceException se si verifica un errore durante l'operazione.
+     * @throws NotFoundException se non è stato trovato nessun utente.
      */
-    void banUser(String username, boolean banned) throws ServiceException;
+    void banUser(String username, boolean banned)
+            throws ServiceException, NotFoundException;
 }

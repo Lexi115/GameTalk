@@ -1,5 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.presentation.filters;
 
+import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -9,24 +11,23 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Filtro che intercetta le richieste HTTP per garantire che solo gli utenti
- * autenticati possano accedere ad alcune pagine (ad esempio
- * il proprio profilo).
+ * Filtro che permette solo agli utenti moderatori di accedere
+ * a determinate pagine o compiere certe azioni.
  * <p>
- * Se l'utente non è autenticato, viene reindirizzato alla pagina di login.
+ * Se l'utente non è autenticato o non ha il ruolo richiesto,
+ * viene reindirizzato a una pagina di errore.
  * </p>
  */
-@WebFilter(filterName = "AuthFilter")
-public class AuthFilter implements Filter {
+@WebFilter(filterName = "ModFilter")
+public class ModFilter implements Filter {
 
     /**
      * Intercetta le richieste HTTP per verificare che l'utente sia
-     * autenticato. Nel caso non lo sia, viene reindirizzato alla pagina
-     * di login.
+     * un moderatore. Se non è autorizzato,
+     * viene reindirizzato a una pagina di errore.
      *
      * @param request  la richiesta HTTP in entrata.
      * @param response la risposta HTTP in uscita.
@@ -42,13 +43,12 @@ public class AuthFilter implements Filter {
     ) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        HttpSession session = req.getSession(false);
+        User user = (User) req.getSession(false).getAttribute("user");
 
-        User user = (session != null)
-                ? (User) session.getAttribute("user") : null;
-
-        if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
+        if (user.getRole() != Role.Moderator) {
+            Functions.handleError(
+                    req, resp, HttpServletResponse.SC_FORBIDDEN,
+                    "Accesso negato!");
             return;
         }
 

@@ -4,6 +4,7 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
+import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
@@ -69,6 +70,7 @@ public class UserServiceImpl implements UserService {
             user.setUsername(username);
             user.setPassword(password);
             user.setCreationDate(LocalDate.now());
+            user.setBanned(false);
 
             // Valida username e password
             if (!userValidator.validate(user)) {
@@ -258,13 +260,16 @@ public class UserServiceImpl implements UserService {
      *
      * @param username il nome utente dell'utente da bannare/unbannare.
      * @param banned Indica come aggiornare lo stato dell'utente.
+     * @throws IllegalArgumentException se l'username è <code>null</code>
+     * o non valido.
      * @throws ServiceException se si verifica un errore durante l'operazione.
+     * @throws NotFoundException se non è stato trovato nessun utente.
      */
     @Override
     public void banUser(
             final String username,
             final boolean banned
-    ) throws ServiceException {
+    ) throws ServiceException, NotFoundException {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username non valido");
         }
@@ -275,7 +280,7 @@ public class UserServiceImpl implements UserService {
 
             User user = userDAO.get(username);
             if (user == null) {
-                throw new ServiceException("Utente non trovato");
+                throw new NotFoundException("Utente non trovato");
             }
 
             user.setBanned(banned);

@@ -14,8 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Servlet per gestire la registrazione degli utenti.
@@ -71,10 +69,6 @@ public class SignupServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
-        // Lista di eventuali errori.
-        List<String> errors = new ArrayList<>();
-        req.setAttribute("errors", errors);
-
         // Parametri di registrazione (username e password)
         String username = req.getParameter("username");
         String password = req.getParameter("password");
@@ -87,13 +81,14 @@ public class SignupServlet extends HttpServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di registrazione", e);
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            errors.add("Errore interno del server.");
-            doGet(req, resp);
+            Functions.handleError(
+                    req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    e.getMessage()
+            );
 
         } catch (IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            errors.add(e.getMessage());
+            req.setAttribute("error", e.getMessage());
             doGet(req, resp);
         }
     }
