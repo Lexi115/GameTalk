@@ -73,7 +73,7 @@ public class ThreadServiceImpl implements ThreadService {
      *                          errore durante il salvataggio nel database.
      */
     @Override
-    public void createThread(
+    public long createThread(
             final String username,
             final String title,
             final String body,
@@ -99,7 +99,7 @@ public class ThreadServiceImpl implements ThreadService {
         try (db) {
 
             db.connect();
-            threadDAO.save(newThread);
+            return threadDAO.save(newThread);
 
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
@@ -141,8 +141,9 @@ public class ThreadServiceImpl implements ThreadService {
      * @param title    Il nuovo titolo del thread.
      * @param body     Il nuovo corpo del thread.
      * @param category La nuova categoria del thread.
-     * @throws ServiceException Se il thread non è valido o se si verifica
+     * @throws ServiceException Se si verifica
      *                          un errore durante il salvataggio nel database.
+     * @throws IllegalArgumentException Se il thread non è valido.
      */
     @Override
     public void updateThread(
@@ -151,7 +152,7 @@ public class ThreadServiceImpl implements ThreadService {
             final String title,
             final String body,
             final Category category
-    ) throws ServiceException {
+    ) throws ServiceException, IllegalArgumentException {
         //Operazioni di aggiornamento
         try {
             db.connect();
@@ -160,12 +161,12 @@ public class ThreadServiceImpl implements ThreadService {
             //Verifico se esiste un thread con quell'id e lo recupero
             Thread updatedThread = threadDAO.get(id);
             if (updatedThread == null) {
-                throw new ServiceException(
+                throw new IllegalArgumentException(
                         "Nessun thread trovato con id " + id);
             }
 
             if (updatedThread.isArchived()) {
-                throw new ServiceException("Thread è archiviato");
+                throw new IllegalArgumentException("Thread è archiviato");
             }
 
             //Aggiorno i campi

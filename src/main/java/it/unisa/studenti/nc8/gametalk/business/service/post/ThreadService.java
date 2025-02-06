@@ -23,11 +23,12 @@ public interface ThreadService {
      * @param body Il corpo del nuovo thread.
      * @param category La categoria del nuovo thread.
      *
+     * @return l'id del Thread appena creato
      * @throws ServiceException Se il thread non è valido o se si
      *                          verifica un errore durante
      *                          il salvataggio nel database.
      */
-    void createThread(
+    long createThread(
             String username,
             String title,
             String body,
@@ -53,9 +54,9 @@ public interface ThreadService {
      * @param body Il nuovo corpo del thread.
      * @param category La nuova categoria del thread.
      *
-     * @throws ServiceException Se il thread non è valido o se
-     *                          si verifica un errore durante
-     *                          il salvataggio nel database.
+     * @throws ServiceException Se si verifica
+     * un errore durante il salvataggio nel database.
+     * @throws IllegalArgumentException Se il thread non è valido.
      */
     void updateThread(
             long id,
@@ -63,7 +64,7 @@ public interface ThreadService {
             String title,
             String body,
             Category category
-    ) throws ServiceException;
+    ) throws ServiceException, IllegalArgumentException;
 
     /**
      * Restituisce un thread dato il suo ID.
