@@ -21,7 +21,14 @@ import java.io.IOException;
  * </p>
  */
 @WebFilter({
-        "/editProfile"
+        "/editProfile",
+        "/editThread",
+        "/addThread",
+        "/addComment",
+        "/removeThread",
+        "/removeComment",
+        "/voteThread",
+        "/voteComment"
 })
 public class AuthFilter implements Filter {
 
