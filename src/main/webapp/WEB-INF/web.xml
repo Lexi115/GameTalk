@@ -23,6 +23,13 @@
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/editProfile</url-pattern>
+        <url-pattern>/editThread</url-pattern>
+        <url-pattern>/addThread</url-pattern>
+        <url-pattern>/addComment</url-pattern>
+        <url-pattern>/removeThread</url-pattern>
+        <url-pattern>/removeComment</url-pattern>
+        <url-pattern>/voteThread</url-pattern>
+        <url-pattern>/voteComment</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>ModFilter</filter-name>
