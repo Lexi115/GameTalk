@@ -17,6 +17,8 @@ public interface UserService {
      * @param username L'username dell'utente.
      * @param password La password dell'utente.
      * @throws ServiceException se si è verificato un errore.
+     * @throws IllegalArgumentException se l'username e/o password
+     * sono incorretti.
      */
     void createUser(String username, String password) throws ServiceException;
 
@@ -35,6 +37,7 @@ public interface UserService {
      * @param username Lo username dell'utente da aggiornare
      * @param password La nuova password dell'utente.
      * @throws ServiceException se si è verificato un errore.
+     * @throws IllegalArgumentException se la password fornita non è valida.
      */
     void updatePassword(
             String username,
@@ -54,7 +57,8 @@ public interface UserService {
      * Trova un utente per il suo ID.
      *
      * @param username L'ID dell'utente.
-     * @return L'utente con l'ID specificato.
+     * @return L'utente con l'ID specificato o <code>null</code>
+     * se non trovato.
      * @throws ServiceException se si è verificato un errore.
      */
     User findUserByUsername(String username) throws ServiceException;

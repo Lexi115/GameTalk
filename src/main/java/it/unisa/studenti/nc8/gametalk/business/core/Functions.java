@@ -146,7 +146,7 @@ public abstract class Functions {
         resp.setStatus(status);
 
         RequestDispatcher dispatcher =
-                req.getRequestDispatcher("/WEB-INF/views/error.jsp");
+                req.getRequestDispatcher("/WEB-INF/views/errors/error.jsp");
         dispatcher.forward(req, resp);
     }
 }
