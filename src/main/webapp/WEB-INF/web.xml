@@ -10,20 +10,23 @@
         <servlet-class>it.unisa.studenti.nc8.gametalk.business.core.Main</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>Main</servlet-name>
         <url-pattern>/main</url-pattern>
     </servlet-mapping>
 
-    <filter>
-        <filter-name>HttpFilter</filter-name>
-        <filter-class>it.unisa.studenti.nc8.gametalk.presentation.filters.HttpFilter</filter-class>
-    </filter>
-
+    <!-- Filtri -->
     <filter-mapping>
         <filter-name>HttpFilter</filter-name>
         <url-pattern>/*</url-pattern> <!-- Si applica filter a tutto il sito -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/editProfile</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ModFilter</filter-name>
+        <url-pattern>/mod/*</url-pattern>
     </filter-mapping>
 
     <!-- Pagine di errore -->
@@ -31,7 +34,6 @@
         <error-code>404</error-code>
         <location>/WEB-INF/views/errors/notFound.jsp</location>
     </error-page>
-
     <error-page>
         <error-code>500</error-code>
         <location>/WEB-INF/views/errors/error.jsp</location>

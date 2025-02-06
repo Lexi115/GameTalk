@@ -7,7 +7,12 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.model.user.User;
 import it.unisa.studenti.nc8.gametalk.business.service.auth.AuthenticationService;
 import it.unisa.studenti.nc8.gametalk.business.service.auth.AuthenticationServiceImpl;
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,13 +21,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Filtro che intercetta le richieste HTTP per gestire il login automatico e
  * controlla gli accessi alle pagine riservate ai moderatori.
  */
+@WebFilter(filterName = "HttpFilter")
 public class HttpFilter implements Filter {
 
     /** Logger per la gestione dei log. */
@@ -82,20 +86,6 @@ public class HttpFilter implements Filter {
                 }
 
             }
-        }
-
-        //controllo accesso alle funzioni da moderator
-        String path = req.getRequestURI()
-                .substring(req.getContextPath().length());
-        boolean isModPage = path.startsWith("/moderator");
-        boolean isModerator = (boolean) session.getAttribute("isModerator");
-
-        if (isModPage && !isModerator) {
-            //non può entrare, redirect a login
-            List<String> errors = new ArrayList<>();
-            errors.add("Accesso negato.");
-            session.setAttribute("error", errors);
-            res.sendRedirect(req.getContextPath() + "/login");
         }
 
         chain.doFilter(req, res);

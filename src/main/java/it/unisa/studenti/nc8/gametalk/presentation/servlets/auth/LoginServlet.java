@@ -20,8 +20,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Servlet per gestire il login degli utenti.
@@ -86,17 +84,13 @@ public class LoginServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-
-        // Lista di eventuali errori.
-        List<String> errors = new ArrayList<>();
-        req.setAttribute("errors", errors);
-
         // Parametri di login (username e password)
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
         try {
+            HttpSession session = req.getSession();
+
             // Autentica l'utente
             User loggedUser = authenticationService.login(username, password);
 
@@ -113,20 +107,19 @@ public class LoginServlet extends HttpServlet {
 
             // Imposta utente nella sessione
             session.setAttribute("user", loggedUser);
-
-            resp.setStatus(HttpServletResponse.SC_OK);
             resp.addCookie(authTokenCookie);
             resp.sendRedirect(req.getContextPath() + "/");
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con servizio di autenticazione", e);
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            errors.add("Errore interno del server.");
-            doGet(req, resp);
+            Functions.handleError(
+                    req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    e.getMessage()
+            );
 
         } catch (AuthenticationException | IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            errors.add("Credenziali non valide.");
+            req.setAttribute("error", e.getMessage());
             doGet(req, resp);
         }
     }
