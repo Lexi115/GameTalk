@@ -14,14 +14,22 @@
     <main>
         <div class="container">
             <div id="gameCarousel" class="carousel slide pt-4 pb-4" data-bs-ride="carousel" data-bs-interval="5000">
-                <div class="carousel-indicators ">
-                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
-                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="6" aria-label="Slide 7"></button>
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="0" class="active bg-white"
+                            aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#gameCarousel" class=
+                            "bg-white" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#gameCarousel" class=
+                            "bg-white" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#gameCarousel" class=
+                            "bg-white" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                    <button type="button" data-bs-target="#gameCarousel" class=
+                            "bg-white" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                    <button type="button" data-bs-target="#gameCarousel" class=
+                            "bg-white" data-bs-slide-to="5" aria-label="Slide 6"></button>
+                    <button type="button" data-bs-target="#gameCarousel" class=
+                            "bg-white" data-bs-slide-to="6" aria-label="Slide 7"></button>
 
                 </div>
                 <div class="carousel-inner">
@@ -63,10 +71,11 @@
 
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
+                    <i class="bi bi-chevron-left fs-3 text-white"></i>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#gameCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <button class="carousel-control-next" type="button" data-bs-target="#gameCarousel"
+                        data-bs-slide="next">
+                    <i class="bi bi-chevron-right fs-3 text-white"></i>
                 </button>
             </div>
             <div id="categories" class="row row-cols-2 row-cols-md-4 justify-content-center g-4 ps-3 pe-3">
