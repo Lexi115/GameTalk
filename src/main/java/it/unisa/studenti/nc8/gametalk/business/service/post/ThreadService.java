@@ -94,8 +94,7 @@ public interface ThreadService {
      * @param endDate La data di fine da cui cercare thread, può
      *                essere {@code null}
      * @return Una lista di thread che corrispondono ai criteri di ricerca.
-     * @throws IllegalArgumentException se il <code>title</code>
-     * è <code>null</code>, <code>page</code>
+     * @throws IllegalArgumentException se <code>page</code>
      * o <code>pageSize</code> sono minori o uguali a 0
      * @throws ServiceException se si è verificato un errore.
      */

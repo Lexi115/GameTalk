@@ -239,6 +239,8 @@ public class ThreadServiceImpl implements ThreadService {
      * @param endDate La data di fine da cui cercare thread, può
      *                essere {@code null}
      * @return Una lista di thread che corrispondono ai criteri di ricerca.
+     * @throws IllegalArgumentException se <code>page</code>
+     * o <code>pageSize</code> sono minori o uguali a 0
      * @throws ServiceException se si è verificato un errore.
      */
     public List<Thread> findThreads(
@@ -250,29 +252,26 @@ public class ThreadServiceImpl implements ThreadService {
             final LocalDate startDate,
             final LocalDate endDate
     ) throws ServiceException {
-
-        //Sanificazione TODO da spostare
         int realPage = Math.max(page, 1);
 
         //Definizione decisioni
         boolean isCategoryNull = category == null;
         boolean isTitleEmpty = title == null || title.isBlank();
 
-        LocalDate actualStartDate = LocalDate.of(1000,01,01);
-        LocalDate actualEndDate = LocalDate.of(9999,12,31);
+        LocalDate actualStartDate = LocalDate.of(1000, 01, 01);
+        LocalDate actualEndDate = LocalDate.of(9999, 12, 31);
 
-        //Controllo data inizio
+        // Controllo data inizio
         if (startDate != null && startDate.isAfter(actualStartDate)) {
             actualStartDate = startDate;
         }
 
+        // Controllo data fine
         if (endDate != null && endDate.isBefore(actualEndDate)) {
             actualEndDate = endDate;
         }
 
-
-
-        //Ricerca per generica
+        //Ricerca generica
         if (isCategoryNull && isTitleEmpty) {
             try (db) {
 
