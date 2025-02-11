@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.user;
 
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
-import it.unisa.studenti.nc8.gametalk.business.model.user.User;
+import it.unisa.studenti.nc8.gametalk.business.models.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.DatabaseImpl;

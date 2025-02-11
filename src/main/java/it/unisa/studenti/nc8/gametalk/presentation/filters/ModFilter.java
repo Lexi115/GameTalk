@@ -2,7 +2,7 @@ package it.unisa.studenti.nc8.gametalk.presentation.filters;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
-import it.unisa.studenti.nc8.gametalk.business.model.user.User;
+import it.unisa.studenti.nc8.gametalk.business.models.user.User;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

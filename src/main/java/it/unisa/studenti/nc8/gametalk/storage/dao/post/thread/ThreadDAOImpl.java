@@ -6,7 +6,7 @@ import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
-import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.business.models.post.thread.Thread;
 
 import java.math.BigInteger;
 import java.sql.ResultSet;

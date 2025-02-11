@@ -1,10 +1,11 @@
 package it.unisa.studenti.nc8.gametalk.storage.persistence;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.jdbc.pool.DataSource;
-import org.apache.tomcat.jdbc.pool.PoolProperties;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,7 +21,7 @@ import java.util.TimeZone;
  * con un database SQL. Utilizza un pool di connessioni per
  * migliorare le prestazioni.
  *
- * @version 1.0
+ * @version 2.0
  */
 public class DatabaseImpl implements Database {
     /** Logger per registrare eventi e errori. */
@@ -42,19 +43,16 @@ public class DatabaseImpl implements Database {
     private final String databaseName;
 
     /** Pool di connessioni per gestire le connessioni al database. */
-    private static DataSource dataSource;
-
-    /** Connessione attuale al database. */
-    private Connection connection;
+    private final DataSource dataSource;
 
     /**
      * Costruttore.
      *
      * @param host         Host del database (es. localhost).
-     * @param port          Porta del database (es. 3306).
-     * @param username      Nome utente per accedere al database.
-     * @param password      Password per accedere al database.
-     * @param databaseName  Nome del database da utilizzare.
+     * @param port         Porta del database (es. 3306).
+     * @param username     Nome utente per accedere al database.
+     * @param password     Password per accedere al database.
+     * @param databaseName Nome del database da utilizzare.
      */
     public DatabaseImpl(
             final String host,
@@ -68,61 +66,18 @@ public class DatabaseImpl implements Database {
         this.username = username;
         this.password = password;
         this.databaseName = databaseName;
+        this.dataSource = initDataSource();
     }
 
-    /**
-     * Crea una connessione al database.
-     *
-     * @throws SQLException Se la connessione fallisce.
-     */
     @Override
-    public void connect() throws SQLException {
-        try {
-            this.connection = this.getConnection();
-        } catch (SQLException e) {
-            LOGGER.error("Connessione al database fallita!", e);
-            throw new SQLException("Impossibile connettersi al database.", e);
-        }
-    }
-
-    /**
-     * Controlla se la connessione al database è attiva.
-     *
-     * @return <code>true</code> se la connessione è attiva,
-     * <code>false</code> altrimenti.
-     */
-    @Override
-    public boolean isConnected() {
-        try {
-            return this.connection != null && !this.connection.isClosed();
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Chiude la connessione al database.
-     *
-     * @throws SQLException Se si verifica un errore durante la chiusura.
-     */
-    @Override
-    public void close() throws SQLException {
-        if (this.isConnected()) {
-            try {
-                connection.close();
-                connection = null;
-                LOGGER.info("Connessione al database chiusa.");
-            } catch (SQLException e) {
-                LOGGER.error("Errore durante la chiusura del database.", e);
-                throw new SQLException(
-                        "Errore durante la chiusura del database.", e);
-            }
-        }
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 
     /**
      * Esegue una query SELECT sul database.
      *
+     * @param connection La connessione al database.
      * @param query      La query SQL da eseguire.
      * @param parameters Parametri da inserire nella query.
      * @return Il risultato della query come ResultSet.
@@ -130,12 +85,12 @@ public class DatabaseImpl implements Database {
      */
     @Override
     public ResultSet executeQuery(
+            final Connection connection,
             final String query,
             final Object... parameters
     ) throws SQLException {
-        try {
-            PreparedStatement statement = this.prepareStatement(
-                    query, parameters);
+        try (PreparedStatement statement =
+                     prepareStatement(connection, query, parameters)) {
             return statement.executeQuery();
         } catch (SQLException e) {
             LOGGER.error(
@@ -148,6 +103,7 @@ public class DatabaseImpl implements Database {
     /**
      * Esegue una query di tipo INSERT, UPDATE o DELETE sul database.
      *
+     * @param connection La connessione al database.
      * @param query      La query SQL da eseguire.
      * @param parameters Parametri da inserire nella query.
      * @return Il numero di righe modificate.
@@ -155,12 +111,12 @@ public class DatabaseImpl implements Database {
      */
     @Override
     public int executeUpdate(
+            final Connection connection,
             final String query,
             final Object... parameters
     ) throws SQLException {
-        try (PreparedStatement statement = this.prepareStatement(
-                query, parameters)) {
-            System.out.println(statement.toString());
+        try (PreparedStatement statement =
+                     prepareStatement(connection, query, parameters)) {
             return statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(
@@ -173,6 +129,7 @@ public class DatabaseImpl implements Database {
     /**
      * Esegue una query di tipo INSERT e restituisce le chiavi generate.
      *
+     * @param connection La connessione al database.
      * @param query      La query SQL da eseguire.
      * @param parameters Parametri da inserire nella query.
      * @return Una lista di tutte le chiavi generate.
@@ -180,20 +137,14 @@ public class DatabaseImpl implements Database {
      */
     @Override
     public List<Object> executeInsert(
+            final Connection connection,
             final String query,
             final Object... parameters
     ) throws SQLException {
-        try (PreparedStatement statement = this.prepareStatement(
-                query, true, parameters)) {
+        try (PreparedStatement statement =
+                     prepareStatement(connection, query, true, parameters)) {
             statement.executeUpdate();
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                List<Object> keys = new ArrayList<>();
-                while (generatedKeys.next()) {
-                    keys.add(generatedKeys.getObject(1));
-                }
-                return keys;
-            }
+            return getGeneratedKeys(statement);
         } catch (SQLException e) {
             LOGGER.error(
                     "Errore durante l'esecuzione dell'insert: {}", query, e);
@@ -202,23 +153,94 @@ public class DatabaseImpl implements Database {
         }
     }
 
-    private Connection getConnection() throws SQLException {
-        if (dataSource == null) {
-            PoolProperties p = new PoolProperties();
-            p.setUrl(this.getUrl());
-            p.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            p.setUsername(username);
-            p.setPassword(password);
-            p.setMaxActive(100);
-            p.setInitialSize(10);
-            p.setMinIdle(10);
-            p.setRemoveAbandonedTimeout(60);
-            p.setRemoveAbandoned(true);
-            dataSource = new DataSource();
-            dataSource.setPoolProperties(p);
-        }
+    /**
+     * Avvia una nuova transazione.
+     * <p>
+     * Questo metodo prepara il contesto per eseguire una serie di operazioni
+     * come un'unica unità di lavoro. Le modifiche non saranno persistenti
+     * fino a quando non viene eseguito il commit.
+     *
+     * @param connection    La connessione al database.
+     * @throws SQLException Se si verifica un errore durante
+     * l'avvio della transazione.
+     */
+    @Override
+    public void beginTransaction(
+            final Connection connection
+    ) throws SQLException {
+        connection.setAutoCommit(false);
+    }
 
-        return dataSource.getConnection();
+    /**
+     * Conferma la transazione corrente.
+     * <p>
+     * Questo metodo applica in modo permanente tutte le operazioni eseguite
+     * durante la transazione corrente. Dopo il commit, le modifiche non possono
+     * essere annullate.
+     *
+     * @param connection    La connessione al database.
+     * @throws SQLException Se si verifica un errore durante
+     * il commit della transazione.
+     */
+    @Override
+    public void commit(
+            final Connection connection
+    ) throws SQLException {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            LOGGER.error("Errore durante il commit della transazione", e);
+            throw new SQLException(
+                    "Errore durante il commit della transazione", e);
+        }
+    }
+
+    /**
+     * Annulla la transazione corrente.
+     * <p>
+     * Questo metodo annulla tutte le operazioni eseguite durante la transazione
+     * corrente, ripristinando lo stato precedente.
+     *
+     * @param connection    La connessione al database.
+     * @throws SQLException Se si verifica un errore durante il rollback
+     * della transazione.
+     */
+    @Override
+    public void rollback(
+            final Connection connection
+    ) throws SQLException {
+        try {
+            connection.rollback();
+        } catch (SQLException e) {
+            LOGGER.error("Errore durante il rollback della transazione", e);
+            throw new SQLException(
+                    "Errore durante il rollback della transazione", e);
+        }
+    }
+
+    private HikariDataSource initDataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(getUrl());
+        config.setUsername(username);
+        config.setPassword(password);
+        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+
+        config.setMaximumPoolSize(100);
+        config.setMinimumIdle(10);
+        config.setIdleTimeout(60000);
+        config.setMaxLifetime(1800000);
+        config.setConnectionTimeout(30000);
+        config.setValidationTimeout(2500);
+        config.setLeakDetectionThreshold(5000);
+        config.setConnectionTestQuery("SELECT 1");
+
+        // Ottimizzazioni
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+
+        return new HikariDataSource(config);
     }
 
     /**
@@ -244,21 +266,24 @@ public class DatabaseImpl implements Database {
     /**
      * Prepara una query SQL con i parametri forniti.
      *
+     * @param connection La connessione al database.
      * @param query      La query SQL da preparare.
      * @param parameters I parametri da inserire.
      * @return L'oggetto PreparedStatement pronto per l'esecuzione.
      * @throws SQLException Se si verifica un errore durante la preparazione.
      */
     private PreparedStatement prepareStatement(
+            final Connection connection,
             final String query,
             final Object[] parameters
     ) throws SQLException {
-        return this.prepareStatement(query, false, parameters);
+        return this.prepareStatement(connection, query, false, parameters);
     }
 
     /**
      * Prepara una query SQL con opzione per ottenere chiavi generate.
      *
+     * @param connection          La connessione al database.
      * @param query               La query SQL da preparare.
      * @param returnGeneratedKeys true se si vogliono restituire
      *                            chiavi generate.
@@ -267,19 +292,28 @@ public class DatabaseImpl implements Database {
      * @throws SQLException Se si verifica un errore durante la preparazione.
      */
     private PreparedStatement prepareStatement(
+            final Connection connection,
             final String query,
             final boolean returnGeneratedKeys,
             final Object[] parameters
     ) throws SQLException {
-        if (!this.isConnected()) {
-            throw new SQLException("Connessione al database non attiva.");
-        }
-
         PreparedStatement statement = connection.prepareStatement(
                 query, returnGeneratedKeys
-                ? Statement.RETURN_GENERATED_KEYS
+                        ? Statement.RETURN_GENERATED_KEYS
                         : Statement.NO_GENERATED_KEYS);
         return this.fillParameters(statement, parameters);
+    }
+
+    private List<Object> getGeneratedKeys(
+            final PreparedStatement statement
+    ) throws SQLException {
+        List<Object> keys = new ArrayList<>();
+        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            while (generatedKeys.next()) {
+                keys.add(generatedKeys.getObject(1));
+            }
+        }
+        return keys;
     }
 
     /**
@@ -291,97 +325,5 @@ public class DatabaseImpl implements Database {
         return "jdbc:mysql://" + host + ":" + port + "/"
                 + databaseName + "?serverTimezone="
                 + TimeZone.getDefault().getID();
-    }
-
-    /**
-     * Restituisce l'hostname di connessione JDBC per il database.
-     * @return L'hostname per la connessione.
-     */
-    public String getHost() {
-        return host;
-    }
-
-    /**
-     * Restituisce la porta di connessione JDBC per il database.
-     * @return La porta per la connessione.
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Restituisce l'username di connessione JDBC per il database.
-     * @return L'username per la connessione.
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * Restituisce la password di connessione JDBC per il database.
-     * @return La porta per la connessione.
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Restituisce il nome del database con il quale interagire.
-     * @return Il nome del database.
-     */
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    /**
-     * Avvia una nuova transazione.
-     * <p>
-     * Questo metodo prepara il contesto per eseguire una serie di operazioni
-     * come un'unica unità di lavoro. Le modifiche non saranno persistenti
-     * fino a quando non viene eseguito il commit.
-     *
-     * @throws SQLException Se si verifica un errore durante
-     * l'avvio della transazione.
-     */
-    @Override
-    public void beginTransaction() throws SQLException {
-        if (connection.getAutoCommit()) {
-            connection.setAutoCommit(false);
-        }
-    }
-
-    /**
-     * Conferma la transazione corrente.
-     * <p>
-     * Questo metodo applica in modo permanente tutte le operazioni eseguite
-     * durante la transazione corrente. Dopo il commit, le modifiche non possono
-     * essere annullate.
-     *
-     * @throws SQLException Se si verifica un errore durante
-     * il commit della transazione.
-     */
-    @Override
-    public void commit() throws SQLException {
-        if (!connection.getAutoCommit()) {
-            connection.commit();
-            connection.setAutoCommit(true);
-        }
-    }
-
-    /**
-     * Annulla la transazione corrente.
-     * <p>
-     * Questo metodo annulla tutte le operazioni eseguite durante la transazione
-     * corrente, ripristinando lo stato precedente.
-     *
-     * @throws SQLException Se si verifica un errore durante il rollback
-     * della transazione.
-     */
-    @Override
-    public void rollback() throws SQLException {
-        if (!connection.getAutoCommit()) {
-            connection.rollback();
-            connection.setAutoCommit(true);
-        }
     }
 }

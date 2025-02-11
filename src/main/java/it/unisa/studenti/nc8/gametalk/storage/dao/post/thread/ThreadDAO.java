@@ -4,7 +4,7 @@ import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
-import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.business.models.post.thread.Thread;
 
 import java.time.LocalDate;
 import java.util.List;

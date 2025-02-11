@@ -2,8 +2,8 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserServiceImpl;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserServiceImpl;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
