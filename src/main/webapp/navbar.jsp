@@ -30,10 +30,64 @@
         </div>
 
         <div class="col-md-3 d-flex justify-content-end pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
-            <i class="bi bi-person-circle"></i>
+            <i class="bi bi-person-circle" style="cursor: pointer;" onclick="toggleLoginOverlay()"></i>
         </div>
     </div>
 </nav>
+
+    <div id="loginOverlay" class="overlay">
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <h2>Accedi</h2>
+            </div>
+            <form action="login.jsp" method="post">
+                <div class="mb-3">
+                    <label for="usernameLogin" class="form-label">Username</label>
+                    <input type ="text" class="form-control" id="usernameLogin" name="username" required>
+                </div>
+                <div class = "mb-3">
+                    <label for="passwordLogin" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="passwordLogin" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+        </div>
+
+        <span class="m-4"></span>
+
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <h2>Iscriviti</h2>
+                <span class="close-btn" onclick="toggleLoginOverlay()">&times</span>
+            </div>
+            <form action="signup.jsp" method="post">
+                <div class="mb-3">
+                    <label for="usernameSignup" class="form-label">Username</label>
+                    <input type ="text" class="form-control" id="usernameSignup" name="username" required>
+                </div>
+                <div class = "mb-3">
+                    <label for="passwordSignup" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="passwordSignup" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Sign-up</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script>
+        function toggleLoginOverlay() {
+            let overlay = document.getElementById("loginOverlay");
+            overlay.style.display = (overlay.style.display === "flex") ? "none" : "flex";
+        }
+    </script>
+
+
+
+
+
+
 
 <!--
 <form id="searchbarForm">
