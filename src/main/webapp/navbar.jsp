@@ -51,7 +51,7 @@
                 <h2>Accedi</h2>
                 <span class="close-btn" onclick="toggleLoginOverlay()">&times</span>
             </div>
-            <form action="login.jsp" method="post">
+            <form action="log-in" method="post">
                 <div class="mb-3">
                     <label for="usernameLogin" class="form-label">Username</label>
                     <input type ="text" class="form-control" id="usernameLogin" name="username" required>
@@ -71,7 +71,7 @@
                 <h2>Iscriviti</h2>
                 <span class="close-btn" onclick="toggleSignupOverlay()">&times</span>
             </div>
-            <form action="signup.jsp" method="post">
+            <form action="new-user" method="post">
                 <div class="mb-3">
                     <label for="usernameSignup" class="form-label">Username</label>
                     <input type ="text" class="form-control" id="usernameSignup" name="username" required>
