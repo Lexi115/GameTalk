@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <link rel="stylesheet" href="css/navbar.css">
@@ -30,7 +31,16 @@
         </div>
 
         <div class="col-md-3 d-flex justify-content-end pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
-            <i class="bi bi-person-circle" style="cursor: pointer;" onclick="toggleLoginOverlay()"></i>
+            <c:choose>
+            <c:when test="${sessionScope.user != null}">
+                <i class="bi bi-person-circle" style="cursor: pointer;" onclick="toggleLoginOverlay()"></i>
+            </c:when>
+                <c:otherwise>
+                    <h5 style="text-decoration : underline; cursor: pointer" onclick="toggleLoginOverlay()">Login</h5>
+                    <h5>/</h5>
+                    <h5 style="text-decoration : underline; cursor: pointer" onclick="toggleSignupOverlay()">SignUp</h5>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </nav>
@@ -39,6 +49,7 @@
         <div class="overlay-content">
             <div class="overlay-header">
                 <h2>Accedi</h2>
+                <span class="close-btn" onclick="toggleLoginOverlay()">&times</span>
             </div>
             <form action="login.jsp" method="post">
                 <div class="mb-3">
@@ -52,13 +63,13 @@
                 <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
         </div>
+    </div>
 
-        <span class="m-4"></span>
-
+    <div id="signupOverlay" class="overlay">
         <div class="overlay-content">
             <div class="overlay-header">
                 <h2>Iscriviti</h2>
-                <span class="close-btn" onclick="toggleLoginOverlay()">&times</span>
+                <span class="close-btn" onclick="toggleSignupOverlay()">&times</span>
             </div>
             <form action="signup.jsp" method="post">
                 <div class="mb-3">
@@ -79,6 +90,13 @@
     <script>
         function toggleLoginOverlay() {
             let overlay = document.getElementById("loginOverlay");
+            overlay.style.display = (overlay.style.display === "flex") ? "none" : "flex";
+        }
+    </script>
+
+    <script>
+        function toggleSignupOverlay() {
+            let overlay = document.getElementById("signupOverlay");
             overlay.style.display = (overlay.style.display === "flex") ? "none" : "flex";
         }
     </script>
