@@ -2,6 +2,7 @@
     background-color: #22236D;
 }
 
+
 nav{
     z-index: 100;
 }
@@ -14,6 +15,14 @@ nav:not(.navDrop){
 .navDrop{
     animation-name: navbarDrop;
     animation-fill-mode: forwards;
+}
+
+
+
+.navbar .col-md-3 h5 {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
 }
 
 @keyframes navbarDrop {
@@ -53,7 +62,7 @@ nav:not(.navDrop){
 }
 
 .form-control{
-    background: #22236D;
+    background: #22236D !important;
 }
 
 .overlay-header {

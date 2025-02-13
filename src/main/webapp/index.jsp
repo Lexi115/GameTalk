@@ -18,8 +18,7 @@
                     <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="0" class="active bg-white"
                             aria-current="true" aria-label="Slide 1"></button>
                     <button type="button" data-bs-target="#gameCarousel" class=
-                            "bg-white" data-bs-slide-to="1"
-                            aria-label="Slide 2"></button>
+                            "bg-white" data-bs-slide-to="1" aria-label="Slide 2"></button>
                     <button type="button" data-bs-target="#gameCarousel" class=
                             "bg-white" data-bs-slide-to="2" aria-label="Slide 3"></button>
                     <button type="button" data-bs-target="#gameCarousel" class=
@@ -30,6 +29,8 @@
                             "bg-white" data-bs-slide-to="5" aria-label="Slide 6"></button>
                     <button type="button" data-bs-target="#gameCarousel" class=
                             "bg-white" data-bs-slide-to="6" aria-label="Slide 7"></button>
+                    <button type="button" data-bs-target="#gameCarousel" class=
+                            "bg-white" data-bs-slide-to="7" aria-label="Slide 8"></button>
 
                 </div>
                 <div class="carousel-inner">
@@ -65,6 +66,11 @@
                     </div>
                     <div class="carousel-item">
                         <img src="images/slide7.png" class="d-block w-100" alt="Slide 7">
+                        <div class="carousel-caption d-none d-md-block">
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="images/slide8.png" class="d-block w-100" alt="Slide 8">
                         <div class="carousel-caption d-none d-md-block">
                         </div>
                     </div>

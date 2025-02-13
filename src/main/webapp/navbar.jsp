@@ -30,7 +30,7 @@
             </form>
         </div>
 
-        <div class="col-md-3 d-flex justify-content-end pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
+        <div class="col-md-3 d-flex justify-content-end align-items-center pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
             <c:choose>
             <c:when test="${sessionScope.user != null}">
                 <i class="bi bi-person-circle" style="cursor: pointer;" onclick="toggleLoginOverlay()"></i>
