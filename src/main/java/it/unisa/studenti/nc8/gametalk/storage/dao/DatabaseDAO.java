@@ -3,6 +3,8 @@ package it.unisa.studenti.nc8.gametalk.storage.dao;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
+import java.sql.Connection;
+
 /**
  * Classe astratta che rappresenta un DAO generico per la gestione
  * dell'accesso ai dati tramite un database.
@@ -18,6 +20,8 @@ public abstract class DatabaseDAO<T> {
     /** Il database utilizzato per le operazioni di accesso ai dati. */
     private final Database db;
 
+    private Connection connection;
+
     /** Il mapper utilizzato per convertire i {@link java.sql.ResultSet}
      * in oggetti di tipo {@code T}. */
     private final ResultSetMapper<T> mapper;
@@ -29,8 +33,13 @@ public abstract class DatabaseDAO<T> {
      * @param mapper Mapper per convertire un {@link java.sql.ResultSet}
      *               in un oggetto entità.
      */
-    public DatabaseDAO(final Database db, final ResultSetMapper<T> mapper) {
+    public DatabaseDAO(
+            final Database db,
+            final Connection connection,
+            final ResultSetMapper<T> mapper
+    ) {
         this.db = db;
+        this.connection = connection;
         this.mapper = mapper;
     }
 
@@ -39,8 +48,12 @@ public abstract class DatabaseDAO<T> {
      *
      * @return Il database.
      */
-    protected Database getDb() {
+    protected Database getDatabase() {
         return db;
+    }
+
+    protected Connection getConnection() {
+        return connection;
     }
 
     /**

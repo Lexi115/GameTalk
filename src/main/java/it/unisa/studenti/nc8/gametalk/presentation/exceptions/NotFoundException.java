@@ -4,7 +4,7 @@ package it.unisa.studenti.nc8.gametalk.presentation.exceptions;
  * Eccezione lanciata quando una risorsa
  * non viene trovata.
  */
-public class NotFoundException extends Exception {
+public class NotFoundException extends RuntimeException {
     /**
      * Costruttore.
      *

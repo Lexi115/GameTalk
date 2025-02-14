@@ -40,7 +40,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     @Override
     public Comment get(final Long id) throws DAOException {
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query = "SELECT * FROM comments WHERE id = ?";
 
             ResultSet rs = db.executeQuery(query, id);
@@ -61,7 +61,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     @Override
     public List<Comment> getAll() throws DAOException {
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query = "SELECT * FROM comments";
 
             ResultSet rs = db.executeQuery(query);
@@ -83,7 +83,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     @Override
     public Long save(final Comment entity) throws DAOException {
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query = "INSERT INTO comments (thread_id, username, body, "
                     + "votes, creation_date) VALUES (?, ?, ?, ?, ?)";
 
@@ -115,7 +115,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     @Override
     public boolean update(final Comment entity) throws DAOException {
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query = "UPDATE comments SET thread_id = ?, username = ?, "
                     + "body = ?, votes = ?, creation_date = ? WHERE id = ?";
 
@@ -146,7 +146,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     @Override
     public boolean delete(final Long id) throws DAOException {
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query = "DELETE FROM comments WHERE id = ?";
 
             return db.executeUpdate(query, id) > 0;
@@ -178,7 +178,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
         int offset = (page - 1) * limit;
 
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query = "SELECT * FROM comments WHERE thread_id = ? "
                     + "ORDER BY (username = ?) DESC, creation_date DESC "
                     + "LIMIT ? OFFSET ?";
@@ -209,7 +209,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     public long countCommentsByThreadId(
             final long threadId) throws DAOException {
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query = "SELECT COUNT(id) FROM comments WHERE thread_id = ?";
 
             ResultSet rs = db.executeQuery(query, threadId);
@@ -245,7 +245,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             final int vote
     ) throws DAOException {
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query =
                     "INSERT INTO votes_comments (username, comment_id, vote)"
                     + " VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE vote = ?";
@@ -275,7 +275,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             final String username
     ) throws DAOException {
         try {
-            Database db = this.getDb();
+            Database db = this.getDatabase();
             String query = "DELETE FROM votes_comments "
                     + "WHERE username = ? AND comment_id = ?";
 
@@ -298,7 +298,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      * conteggio dei voti nel database.
      */
     private void updateCommentVotes(final long commentId) throws SQLException {
-        Database db = this.getDb();
+        Database db = this.getDatabase();
         String updateVotesQuery = "UPDATE comments SET votes = "
                 + "COALESCE((SELECT SUM(vote) "
                 + "FROM votes_comments WHERE comment_id = ?), 0)"

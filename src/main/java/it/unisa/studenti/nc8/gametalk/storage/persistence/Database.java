@@ -1,7 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.storage.persistence;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  */
 public interface Database {
 
-    Connection getConnection() throws SQLException;
+    Connection connect() throws SQLException;
 
     /**
      * Esegue una query SELECT sul database.
@@ -21,10 +20,10 @@ public interface Database {
      * @param connection La connessione al database.
      * @param query      La query SQL da eseguire.
      * @param parameters Parametri da inserire nella query.
-     * @return Il risultato della query come ResultSet.
+     * @return Il risultato della query.
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
-    ResultSet executeQuery(
+    QueryResult executeQuery(
             Connection connection, String query, Object... parameters)
             throws SQLException;
 
@@ -53,42 +52,4 @@ public interface Database {
     List<Object> executeInsert(
             Connection connection, String query, Object... parameters)
             throws SQLException;
-
-    /**
-     * Avvia una nuova transazione.
-     * <p>
-     * Questo metodo prepara il contesto per eseguire una serie di operazioni
-     * come un'unica unità di lavoro. Le modifiche non saranno persistenti
-     * fino a quando non viene eseguito il commit.
-     *
-     * @param connection    La connessione al database.
-     * @throws SQLException Se si verifica un errore durante
-     * l'avvio della transazione.
-     */
-    void beginTransaction(Connection connection) throws SQLException;
-
-    /**
-     * Conferma la transazione corrente.
-     * <p>
-     * Questo metodo applica in modo permanente tutte le operazioni eseguite
-     * durante la transazione corrente. Dopo il commit, le modifiche non possono
-     * essere annullate.
-     *
-     * @param connection    La connessione al database.
-     * @throws SQLException Se si verifica un errore durante
-     * il commit della transazione.
-     */
-    void commit(Connection connection) throws SQLException;
-
-    /**
-     * Annulla la transazione corrente.
-     * <p>
-     * Questo metodo annulla tutte le operazioni eseguite durante la transazione
-     * corrente, ripristinando lo stato precedente.
-     *
-     * @param connection    La connessione al database.
-     * @throws SQLException Se si verifica un errore durante il rollback
-     * della transazione.
-     */
-    void rollback(Connection connection) throws SQLException;
 }

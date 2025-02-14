@@ -3,10 +3,11 @@ package it.unisa.studenti.nc8.gametalk.storage.dao.user;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
 import it.unisa.studenti.nc8.gametalk.business.models.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,12 +25,14 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     /**
      * Costruttore.
      *
-     * @param db     Istanza di {@link Database} per la connessione al database.
-     * @param mapper Mapper per convertire un {@link ResultSet}
-     *               in un oggetto {@link User}.
+     * @param db         Il database.
+     * @param connection La connessione al database.
      */
-    public UserDAOImpl(final Database db, final ResultSetMapper<User> mapper) {
-        super(db, mapper);
+    public UserDAOImpl(
+            final Database db,
+            final Connection connection
+    ) {
+        super(db, connection, new UserMapper());
     }
 
     /**
@@ -44,14 +47,14 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      */
     @Override
     public User get(final String username) throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM users WHERE username = ?";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "SELECT * FROM users WHERE username = ?";
 
-            ResultSet rs = db.executeQuery(query, username);
-            List<User> users = this.getMapper().map(rs);
+        try (QueryResult qr = db.executeQuery(connection, query, username)) {
+            List<User> users = this.getMapper().map(qr.getResultSet());
             return !users.isEmpty() ? users.getFirst() : null;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new DAOException("Errore recupero utente: ", e);
         }
     }
@@ -66,13 +69,13 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      */
     @Override
     public List<User> getAll() throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM users";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "SELECT * FROM users";
 
-            ResultSet rs = db.executeQuery(query);
-            return this.getMapper().map(rs);
-        } catch (SQLException e) {
+        try (QueryResult qr = db.executeQuery(connection, query)) {
+            return this.getMapper().map(qr.getResultSet());
+        } catch (Exception e) {
             throw new DAOException("Errore recupero utenti: ", e);
         }
     }
@@ -88,22 +91,23 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      */
     @Override
     public String save(final User entity) throws DAOException {
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "INSERT INTO users (username, password_hash, "
+                + "creation_date, banned, role, auth_token) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        Object[] params = {
+                entity.getUsername(),
+                entity.getPassword(),
+                entity.getCreationDate(),
+                entity.isBanned(),
+                entity.getRole().toString(),
+                entity.getAuthToken()
+        };
+
         try {
-            Database db = this.getDb();
-            String query = "INSERT INTO users (username, password_hash, "
-                    + "creation_date, banned, role, auth_token) "
-                    + "VALUES (?, ?, ?, ?, ?, ?)";
-
-            Object[] params = {
-                    entity.getUsername(),
-                    entity.getPassword(),
-                    entity.getCreationDate(),
-                    entity.isBanned(),
-                    entity.getRole().toString(),
-                    entity.getAuthToken()
-            };
-
-            List<Object> keys = db.executeInsert(query, params);
+            List<Object> keys = db.executeInsert(connection, query, params);
             return !keys.isEmpty() ? (String) keys.getFirst() : null;
         } catch (SQLException e) {
             throw new DAOException("Errore salvataggio utente: ", e);
@@ -121,22 +125,23 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      */
     @Override
     public boolean update(final User entity) throws DAOException {
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "UPDATE users SET "
+                + "password_hash = ?, creation_date = ?, banned = ?, "
+                + "roles = ?, auth_token = ? WHERE username = ?";
+
+        Object[] params = {
+                entity.getPassword(),
+                entity.getCreationDate(),
+                entity.isBanned(),
+                entity.getRole().toString(),
+                entity.getAuthToken(),
+                entity.getUsername()
+        };
+
         try {
-            Database db = this.getDb();
-            String query = "UPDATE users SET "
-                    + "password_hash = ?, creation_date = ?, banned = ?, "
-                    + "roles = ?, auth_token = ? WHERE username = ?";
-
-            Object[] params = {
-                    entity.getPassword(),
-                    entity.getCreationDate(),
-                    entity.isBanned(),
-                    entity.getRole().toString(),
-                    entity.getAuthToken(),
-                    entity.getUsername()
-            };
-
-            return db.executeUpdate(query, params) > 0;
+            return db.executeUpdate(connection, query, params) > 0;
         } catch (SQLException e) {
             throw new DAOException("Errore aggiornamento utente: ", e);
         }
@@ -154,11 +159,12 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      */
     @Override
     public boolean delete(final String id) throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "DELETE FROM users WHERE username = ?";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "DELETE FROM users WHERE username = ?";
 
-            return db.executeUpdate(query, id) > 0;
+        try {
+            return db.executeUpdate(connection, query, id) > 0;
         } catch (SQLException e) {
             throw new DAOException("Errore rimozione utente: ", e);
         }
@@ -184,20 +190,19 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             final int limit
     ) throws DAOException {
         if (page < 1 || limit < 1) {
-            throw new IllegalArgumentException(
-                    "Valori page / limit non validi");
+            throw new IllegalArgumentException("Valori page/limit non validi");
         }
 
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
         int offset = (page - 1) * limit;
+        String query = "SELECT * FROM users WHERE username LIKE ? "
+                + "LIMIT ? OFFSET ?";
 
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM users WHERE username LIKE ? "
-                    + "LIMIT ? OFFSET ?";
-
-            ResultSet rs = db.executeQuery(query, username, limit, offset);
-            return this.getMapper().map(rs);
-        } catch (SQLException e) {
+        try (QueryResult qr = db.executeQuery(
+                connection, query, username, limit, offset)) {
+            return this.getMapper().map(qr.getResultSet());
+        } catch (Exception e) {
             throw new DAOException(
                     "Errore recupero lista utenti per username: ", e);
         }
@@ -220,20 +225,18 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             final int limit
     ) throws DAOException {
         if (page < 1 || limit < 1) {
-            throw new IllegalArgumentException(
-                    "Valori page / limit non validi");
+            throw new IllegalArgumentException("Valori page/limit non validi");
         }
 
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
         int offset = (page - 1) * limit;
+        String query = "SELECT * FROM users WHERE banned = 1 LIMIT ? OFFSET ?";
 
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM users WHERE banned = 1 "
-                    + "LIMIT ? OFFSET ?";
-
-            ResultSet rs = db.executeQuery(query, limit, offset);
-            return this.getMapper().map(rs);
-        } catch (SQLException e) {
+        try (QueryResult qs = db.executeQuery(
+                connection, query, limit, offset)) {
+            return this.getMapper().map(qs.getResultSet());
+        } catch (Exception e) {
             throw new DAOException("Errore recupero utenti bannati: ", e);
         }
     }
@@ -250,14 +253,14 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      */
     @Override
     public User getUserByToken(final String token) throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM users WHERE auth_token = ?";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "SELECT * FROM users WHERE auth_token = ?";
 
-            ResultSet rs = db.executeQuery(query, token);
-            List<User> users = this.getMapper().map(rs);
+        try (QueryResult qs = db.executeQuery(connection, query, token)) {
+            List<User> users = this.getMapper().map(qs.getResultSet());
             return !users.isEmpty() ? users.getFirst() : null;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new DAOException("Errore recupero utente con token", e);
         }
     }

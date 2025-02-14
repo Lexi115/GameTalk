@@ -29,6 +29,7 @@ public interface UserService {
      * @param username l'ID dell'utente da rimuovere.
      * @throws IllegalArgumentException se l'ID è minore o uguale a 0.
      * @throws ServiceException se si è verificato un errore.
+     * @throws NotFoundException se l'utente non è stato trovato.
      */
     void removeUser(String username) throws ServiceException;
 
@@ -39,6 +40,7 @@ public interface UserService {
      * @param password La nuova password dell'utente.
      * @throws ServiceException se si è verificato un errore.
      * @throws IllegalArgumentException se la password fornita non è valida.
+     * @throws NotFoundException se l'utente non è stato trovato.
      */
     void updatePassword(
             String username,
@@ -51,6 +53,7 @@ public interface UserService {
      * @param username Lo username dell'utente da aggiornare
      * @param token Il nuovo token dell'utente.
      * @throws ServiceException se si è verificato un errore.
+     * @throws NotFoundException se l'utente non è stato trovato.
      */
     void updateToken(String username, String token) throws ServiceException;
 
@@ -95,8 +98,8 @@ public interface UserService {
      * @throws IllegalArgumentException se l'username è <code>null</code>
      * o non valido.
      * @throws ServiceException se si verifica un errore durante l'operazione.
-     * @throws NotFoundException se non è stato trovato nessun utente.
+     * @throws NotFoundException se l'utente non è stato trovato.
      */
     void banUser(String username, boolean banned)
-            throws ServiceException, NotFoundException;
+            throws ServiceException;
 }

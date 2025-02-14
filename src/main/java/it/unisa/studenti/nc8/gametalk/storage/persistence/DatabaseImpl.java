@@ -24,7 +24,8 @@ import java.util.TimeZone;
  * @version 2.0
  */
 public class DatabaseImpl implements Database {
-    /** Logger per registrare eventi e errori. */
+
+    /** Logger. */
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Host del database. */
@@ -42,7 +43,7 @@ public class DatabaseImpl implements Database {
     /** Nome del database a cui connettersi. */
     private final String databaseName;
 
-    /** Pool di connessioni per gestire le connessioni al database. */
+    /** Pool per gestire le connessioni al database. */
     private final DataSource dataSource;
 
     /**
@@ -70,7 +71,7 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection connect() throws SQLException {
         return dataSource.getConnection();
     }
 
@@ -80,18 +81,20 @@ public class DatabaseImpl implements Database {
      * @param connection La connessione al database.
      * @param query      La query SQL da eseguire.
      * @param parameters Parametri da inserire nella query.
-     * @return Il risultato della query come ResultSet.
+     * @return Il risultato della query.
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
     @Override
-    public ResultSet executeQuery(
+    public QueryResult executeQuery(
             final Connection connection,
             final String query,
             final Object... parameters
     ) throws SQLException {
-        try (PreparedStatement statement =
-                     prepareStatement(connection, query, parameters)) {
-            return statement.executeQuery();
+        try {
+            PreparedStatement statement =
+                    prepareStatement(connection, query, parameters);
+            ResultSet resultSet = statement.executeQuery();
+            return new QueryResultImpl(resultSet, statement);
         } catch (SQLException e) {
             LOGGER.error(
                     "Errore durante l'esecuzione della query: {}", query, e);
@@ -153,72 +156,7 @@ public class DatabaseImpl implements Database {
         }
     }
 
-    /**
-     * Avvia una nuova transazione.
-     * <p>
-     * Questo metodo prepara il contesto per eseguire una serie di operazioni
-     * come un'unica unità di lavoro. Le modifiche non saranno persistenti
-     * fino a quando non viene eseguito il commit.
-     *
-     * @param connection    La connessione al database.
-     * @throws SQLException Se si verifica un errore durante
-     * l'avvio della transazione.
-     */
-    @Override
-    public void beginTransaction(
-            final Connection connection
-    ) throws SQLException {
-        connection.setAutoCommit(false);
-    }
-
-    /**
-     * Conferma la transazione corrente.
-     * <p>
-     * Questo metodo applica in modo permanente tutte le operazioni eseguite
-     * durante la transazione corrente. Dopo il commit, le modifiche non possono
-     * essere annullate.
-     *
-     * @param connection    La connessione al database.
-     * @throws SQLException Se si verifica un errore durante
-     * il commit della transazione.
-     */
-    @Override
-    public void commit(
-            final Connection connection
-    ) throws SQLException {
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            LOGGER.error("Errore durante il commit della transazione", e);
-            throw new SQLException(
-                    "Errore durante il commit della transazione", e);
-        }
-    }
-
-    /**
-     * Annulla la transazione corrente.
-     * <p>
-     * Questo metodo annulla tutte le operazioni eseguite durante la transazione
-     * corrente, ripristinando lo stato precedente.
-     *
-     * @param connection    La connessione al database.
-     * @throws SQLException Se si verifica un errore durante il rollback
-     * della transazione.
-     */
-    @Override
-    public void rollback(
-            final Connection connection
-    ) throws SQLException {
-        try {
-            connection.rollback();
-        } catch (SQLException e) {
-            LOGGER.error("Errore durante il rollback della transazione", e);
-            throw new SQLException(
-                    "Errore durante il rollback della transazione", e);
-        }
-    }
-
-    private HikariDataSource initDataSource() {
+    private DataSource initDataSource() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(getUrl());
         config.setUsername(username);
@@ -239,6 +177,7 @@ public class DatabaseImpl implements Database {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.setConnectionInitSql("SET autocommit=true");
 
         return new HikariDataSource(config);
     }
@@ -259,7 +198,6 @@ public class DatabaseImpl implements Database {
         for (int i = 0; i < parameters.length; i++) {
             statement.setObject(i + 1, parameters[i]);
         }
-
         return statement;
     }
 

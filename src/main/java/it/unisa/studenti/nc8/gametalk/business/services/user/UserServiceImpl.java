@@ -1,5 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.business.services.user;
 
+import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.models.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
@@ -9,8 +10,10 @@ import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.Transaction;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.TransactionImpl;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -26,12 +29,6 @@ public class UserServiceImpl implements UserService {
     private final Database db;
 
     /**
-     * Il DAO utilizzato per effettuare operazioni CRUD
-     * su oggetti {@link User}.
-     */
-    private final UserDAO userDAO;
-
-    /**
      * L'oggetto che valida i campi di {@link User}.
      */
     private final Validator<User> userValidator;
@@ -43,7 +40,6 @@ public class UserServiceImpl implements UserService {
      */
     public UserServiceImpl(final Database db) {
         this.db = db;
-        this.userDAO = new UserDAOImpl(db, new UserMapper());
         this.userValidator = new UserValidator();
     }
 
@@ -61,38 +57,37 @@ public class UserServiceImpl implements UserService {
             final String username,
             final String password
     ) throws ServiceException {
-        try (db) {
-            db.connect();
-            db.beginTransaction();
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
 
-            // Crea nuovo utente
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(password);
-            user.setCreationDate(LocalDate.now());
-            user.setBanned(false);
+            try (Transaction tx = new TransactionImpl(connection)) {
+                // Crea nuovo utente
+                User user = new User();
+                user.setUsername(username);
+                user.setPassword(password);
+                user.setCreationDate(LocalDate.now());
+                user.setBanned(false);
 
-            // Valida username e password
-            if (!userValidator.validate(user)) {
-                throw new IllegalArgumentException(
-                        "Username o password incorretti");
+                // Valida username e password
+                if (!userValidator.validate(user)) {
+                    throw new IllegalArgumentException(
+                            "Username o password incorretti");
+                }
+
+                // Verifica esistenza di un utente con lo stesso username
+                User existingUser = userDAO.get(username);
+                if (existingUser != null) {
+                    throw new IllegalArgumentException("Username già in uso.");
+                }
+
+                // Hash della password
+                user.setPassword(Functions.hash(password));
+
+                // Salva nuovo utente
+                userDAO.save(user);
+                tx.commit();
             }
-
-            // Verifica esistenza di un utente con lo stesso username
-            User existingUser = userDAO.get(username);
-            if (existingUser != null) {
-                throw new IllegalArgumentException("Username già in uso.");
-            }
-
-            // Salva nuovo utente
-            userDAO.save(user);
-            db.commit();
         } catch (SQLException | DAOException e) {
-            try {
-                db.rollback();
-            } catch (SQLException e1) {
-                throw new ServiceException("Errore rollback", e1);
-            }
             throw new ServiceException("Errore creazione utente", e);
         }
     }
@@ -102,12 +97,19 @@ public class UserServiceImpl implements UserService {
      *
      * @param username l'id dell'utente da rimuovere.
      * @throws ServiceException se si è verificato un errore.
+     * @throws NotFoundException se l'utente non è stato trovato.
      */
     @Override
     public void removeUser(final String username) throws ServiceException {
-        try (db) {
-            db.connect();
-            userDAO.delete(username);
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
+
+            try (Transaction tx = new TransactionImpl(connection)) {
+                if (!userDAO.delete(username)) {
+                    throw new NotFoundException("Utente non trovato");
+                }
+                tx.commit();
+            }
         } catch (SQLException | DAOException e) {
             throw new ServiceException("Errore rimozione utente", e);
         }
@@ -120,40 +122,32 @@ public class UserServiceImpl implements UserService {
      * @param password La nuova password dell'utente.
      * @throws ServiceException se si è verificato un errore.
      * @throws IllegalArgumentException se la password fornita non è valida.
+     * @throws NotFoundException se l'utente non è stato trovato.
      */
     @Override
     public void updatePassword(
             final String username,
             final String password
     ) throws ServiceException {
-        try (db) {
-            db.connect();
-            db.beginTransaction();
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
 
-            // Trova utente già esistente
-            User user = userDAO.get(username);
-            if (user == null) {
-                throw new ServiceException("Utente non trovato");
+            try (Transaction tx = new TransactionImpl(connection)) {
+                User user = userDAO.get(username);
+                if (user == null) {
+                    throw new NotFoundException("Utente non trovato");
+                }
+
+                user.setPassword(password);
+                if (!userValidator.validate(user)) {
+                    throw new IllegalArgumentException("Password non valida");
+                }
+
+                userDAO.update(user);
+                tx.commit();
             }
-
-            // Aggiorna campi utente
-            user.setPassword(password);
-
-            // Valida password
-            if (!userValidator.validate(user)) {
-                throw new IllegalArgumentException("Password non valida");
-            }
-
-            // Aggiorna utente
-            userDAO.update(user);
-            db.commit();
         } catch (SQLException | DAOException e) {
-            try {
-                db.rollback();
-            } catch (SQLException e1) {
-                throw new ServiceException("Errore rollback", e1);
-            }
-            throw new ServiceException("Errore aggiornamento utente", e);
+            throw new ServiceException("Errore aggiornamento password", e);
         }
     }
 
@@ -163,37 +157,31 @@ public class UserServiceImpl implements UserService {
      * @param username L'ID dell'utente.
      * @param token Il nuovo token dell'utente.
      * @throws ServiceException se si è verificato un errore.
+     * @throws NotFoundException se l'utente non è stato trovato.
      */
     @Override
     public void updateToken(
             final String username,
             final String token
     ) throws ServiceException {
-        try (db) {
-            db.connect();
-            db.beginTransaction();
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
 
-            // Trova utente già esistente
-            User user = userDAO.get(username);
-            if (user == null) {
-                throw new ServiceException("Utente non trovato");
+            try (Transaction tx = new TransactionImpl(connection)) {
+                User user = userDAO.get(username);
+                if (user == null) {
+                    throw new NotFoundException("Utente non trovato");
+                }
+
+                user.setAuthToken(token);
+                userDAO.update(user);
+                tx.commit();
             }
-
-            // Aggiorna campi utente
-            user.setAuthToken(token);
-
-            // Aggiorna utente
-            userDAO.update(user);
-            db.commit();
         } catch (SQLException | DAOException e) {
-            try {
-                db.rollback();
-            } catch (SQLException ex) {
-                throw new ServiceException("Errore rollback", ex);
-            }
-            throw new ServiceException("Errore aggiornamento utente", e);
+            throw new ServiceException("Errore aggiornamento token", e);
         }
     }
+
 
     /**
      * Trova un utente per il suo ID.
@@ -204,10 +192,15 @@ public class UserServiceImpl implements UserService {
      * @throws ServiceException se si è verificato un errore.
      */
     @Override
-    public User findUserByUsername(final String username)
-            throws ServiceException {
-        List<User> users = this.findUsersByUsername(username, 1, 1);
-        return !users.isEmpty() ? users.getFirst() : null;
+    public User findUserByUsername(
+            final String username
+    ) throws ServiceException {
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
+            return userDAO.get(username);
+        } catch (SQLException | DAOException e) {
+            throw new ServiceException("Errore recupero utente", e);
+        }
     }
 
     /**
@@ -226,11 +219,11 @@ public class UserServiceImpl implements UserService {
             final int page,
             final int pageSize
     ) throws ServiceException {
-        try (db) {
-            db.connect();
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
             return userDAO.getUsersByUsername(username, page, pageSize);
         } catch (SQLException | DAOException e) {
-            throw new ServiceException("Errore recupero utenti", e);
+            throw new ServiceException("Errore ricerca utenti", e);
         }
     }
 
@@ -247,8 +240,8 @@ public class UserServiceImpl implements UserService {
             final int page,
             final int pageSize
     ) throws ServiceException {
-        try (db) {
-            db.connect();
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
             return userDAO.getBannedUsers(page, pageSize);
         } catch (SQLException | DAOException e) {
             throw new ServiceException("Errore recupero utenti bannati", e);
@@ -269,31 +262,22 @@ public class UserServiceImpl implements UserService {
     public void banUser(
             final String username,
             final boolean banned
-    ) throws ServiceException, NotFoundException {
-        if (username == null || username.isBlank()) {
-            throw new IllegalArgumentException("Username non valido");
-        }
+    ) throws ServiceException {
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
 
+            try (Transaction tx = new TransactionImpl(connection)) {
+                User user = userDAO.get(username);
+                if (user == null) {
+                    throw new NotFoundException("Utente non trovato");
+                }
 
-        try (db) {
-            db.connect();
-            db.beginTransaction();
-
-            User user = userDAO.get(username);
-            if (user == null) {
-                throw new NotFoundException("Utente non trovato");
+                user.setBanned(banned);
+                userDAO.update(user);
+                tx.commit();
             }
-
-            user.setBanned(banned);
-            userDAO.update(user);
-            db.commit();
         } catch (SQLException | DAOException e) {
-            try {
-                db.rollback();
-            } catch (SQLException ex) {
-                throw new ServiceException("Errore rollback", ex);
-            }
-            throw new ServiceException("Errore aggiornamento utente", e);
+            throw new ServiceException("Errore ban/unban utente", e);
         }
     }
 }
