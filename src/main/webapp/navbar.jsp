@@ -17,7 +17,9 @@
 <%}%>
     <div class="container-fluid row p-0 m-0">
         <div class="col-md-3 col-6 order-0">
-            <a href="index.jsp" class="text-decoration-none text-light fs-3 ps-3 animate-2 fadeIn a-delay-1">GameTalk</a>
+            <img href="index.jsp" class="m-2 fs-3 ps-3 animate-2 fadeIn a-delay-1"
+                 style="height: 25px "
+                 alt="logo" src="images/logo.svg">
         </div>
 
         <div class="col-md-6 col-12 order-2 order-md-1 mt-3 mt-md-0 fadeIn animate-2 a-delay-2">
@@ -36,9 +38,12 @@
                 <i class="bi bi-person-circle" style="cursor: pointer;" onclick="toggleLoginOverlay()"></i>
             </c:when>
                 <c:otherwise>
-                    <h5 style="text-decoration : underline; cursor: pointer" onclick="toggleLoginOverlay()">Login</h5>
-                    <h5>/</h5>
-                    <h5 style="text-decoration : underline; cursor: pointer" onclick="toggleSignupOverlay()">SignUp</h5>
+                    <h5 class="text" style="text-decoration : underline; cursor: pointer;"
+                        onclick="toggleLoginOverlay()">Login
+                    </h5>
+                    <h5 class="text">/</h5>
+                    <h5 class="text" style="text-decoration : underline; cursor: pointer"
+                        onclick="toggleSignupOverlay()">SignUp</h5>
                 </c:otherwise>
             </c:choose>
         </div>

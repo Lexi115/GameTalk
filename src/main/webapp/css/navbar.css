@@ -17,6 +17,9 @@ nav:not(.navDrop){
     animation-fill-mode: forwards;
 }
 
+.text{
+    font-size: 17px; !important;
+}
 
 
 .navbar .col-md-3 h5 {
