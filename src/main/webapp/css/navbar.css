@@ -64,10 +64,6 @@ nav:not(.navDrop){
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.form-control{
-    background: #22236D !important;
-}
-
 .overlay-header {
     display: flex;
     justify-content: space-between;

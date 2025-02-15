@@ -56,6 +56,18 @@ body {
     opacity: 1;
 }
 
+.bg-card {
+    background: linear-gradient(135deg, #22236D, #2d3784) !important;
+}
+
+.bg-card-light{
+    background: linear-gradient(135deg, #4055a2, #5b67b8) !important;
+}
+
+.label-bg-none{
+    --bs-body-bg: transparent !important;
+}
+
 @keyframes fadeIn {
     0%{
         opacity: 0;

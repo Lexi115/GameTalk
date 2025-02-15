@@ -12,73 +12,74 @@
 <body data-bs-theme="dark">
     <jsp:include page="navbar.jsp"/>
     <main>
-        <div class="container card py-3 mt-5 mb-3 animate-2 a-delay-1 fadeIn">
-            <div class="row">
-                <div class="col-10 offset-1 bg-dark">
+        <div class="container mt-5 mb-3 animate-2 a-delay-1 fadeIn">
+            <div class="bg-card-light card p-3">
+                <div class="card-body">
                     <form id="searchForm">
                         <div class="row my-2">
                             <div class="p-0 form-floating input-group">
-                                <input type="text" class="form-control" id="searchbar" aria-describedby="search">
-                                <button class="btn btn-secondary rounded-end px-4 " type="button" id="search"><i class="bi bi-search"></i></button>
-                                <label for="searchbar">ricerca</label>
+                                <input type="text" class="form-control bg-card" id="searchbar" aria-describedby="search">
+                                <button class="btn btn-secondary rounded-end px-4" type="button" id="search"><i class="bi bi-search"></i></button>
+                                <label for="searchbar" class="label-bg-none">ricerca</label>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-3 p-0 form-floating">
-                                <select name="category" class="form-select" id="category">
+                            <div class="col-md-3 p-0 form-floating">
+                                <select name="category" class="form-select bg-card" id="category">
                                     <option selected>null</option>
                                     <option value="1">One</option>
                                     <option value="2">Two</option>
                                     <option value="3">Three</option>
                                 </select>
-                                <label for="category">category</label>
+                                <label for="category" class="label-bg-none">category</label>
                             </div>
-                            <div class="col-3 p-0 form-floating">
-                                <select name="order" class="form-select" id="order">
+                            <div class="col-md-3 p-0 form-floating">
+                                <select name="order" class="form-select bg-card" id="order">
                                     <option selected>null</option>
                                     <option value="1">One</option>
                                     <option value="2">Two</option>
                                     <option value="3">Three</option>
                                 </select>
-                                <label for="order">order</label>
+                                <label for="order" class="label-bg-none">order</label>
                             </div>
-                            <div class="col-3 p-0 form-floating">
-                                <input name="dateFrom" type="date" class="form-control" id="dateFrom">
-                                <label for="dateFrom">select dateFrom</label>
+                            <div class="col-md-3 p-0 form-floating">
+                                <input name="dateFrom" type="date" class="form-control bg-card" id="dateFrom">
+                                <label for="dateFrom" class="label-bg-none">select dateFrom</label>
                             </div>
-                            <div class="col-3 p-0 form-floating">
-                                <input name="dateTo" type="date" class="form-control" id="dateTo">
-                                <label for="dateTo">select dateTo</label>
+                            <div class="col-md-3 p-0 form-floating">
+                                <input name="dateTo" type="date" class="form-control bg-card" id="dateTo">
+                                <label for="dateTo" class="label-bg-none">select dateTo</label>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="container mt-5" id="threadsContainer" data-bs-theme="light">
+        <div class="container mt-5" id="threadsContainer">
             <%
                 for (int i = 0; i < 10; i++) {
             %>
             <div class="row">
-                <div class="col-1 d-flex justify-content-center align-items-center flex-column">
-                    <button class="btn btn-success"><i class="bi bi-caret-up-fill"></i></button>
-                    <div>255</div>
-                    <button class="btn btn-outline-danger"><i class="bi bi-caret-down-fill"></i></button>
-                </div>
-                <a class="text-decoration-none col-11" href="thread.jsp">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <span class="fs-4 fw-bolder">title</span>
+                <div class="card bg-card mb-3">
+                    <div class="card-header row">
+                        <div class="fs-4 col-8 fw-bolder">title</div>
+                        <div class="col-4 fs-5 d-flex justify-content-end">
+                            <button class="btn btn-outline-danger fs-6 me-4"><i class=" bi bi-caret-down-fill"></i></button>
+                            <div id="votes">255</div>
+                            <button class="btn btn-success fs-6 ms-4"><i class="bi bi-caret-up-fill"></i></button>
                         </div>
-                        <div class="card-body">
+                    </div>
+                    <a class="text-decoration-none" href="thread.jsp">
+                        <div class="card-body text-white">
                             <p class="card-text text-truncate-3">With supporting text below as a natural lead-in to additional content.</p>
                         </div>
                         <div class="card-footer text-body-secondary row">
                             <div class="col-6 text-start ps-4">username</div>
                             <div class="col-6 text-end pe-4">date</div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
+
             </div>
             <%}%>
         </div>

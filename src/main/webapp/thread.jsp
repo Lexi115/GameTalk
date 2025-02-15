@@ -11,14 +11,9 @@
 <body data-bs-theme="dark">
 <jsp:include page="navbar.jsp"/>
 <main>
-    <div class="container-fluid mt-4 row" data-bs-theme="light">
-        <div class="col-1 d-flex align-items-end flex-column fs-3">
-            <button class="btn btn-success"><i class="bi bi-caret-up-fill"></i></button>
-            <div>255</div>
-            <button class="btn btn-outline-danger"><i class="bi bi-caret-down-fill"></i></button>
-        </div>
-        <div id="thread" class="card col-10">
-            <div class="card-header row">
+    <div class="container mt-4">
+        <div id="thread" class="card bg-card">
+            <div class="card-header row px-0 mx-0">
                 <div class="col-6 text-start ps-4">username</div>
                 <div class="col-6 text-end pe-4">date</div>
             </div>
@@ -30,24 +25,29 @@
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam corporis delectus eveniet in iusto molestiae mollitia nesciunt quis, recusandae sit tempora totam ullam velit veniam vero? Consequatur nostrum perferendis possimus!</p>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam corporis delectus eveniet in iusto molestiae mollitia nesciunt quis, recusandae sit tempora totam ullam velit veniam vero? Consequatur nostrum perferendis possimus!</p>
             </div>
+            <div class="card-footer d-flex justify-content-end fs-5">
+                <button class="btn btn-outline-danger fs-6 me-4"><i class=" bi bi-caret-down-fill"></i></button>
+                <div id="votes">255</div>
+                <button class="btn btn-success fs-6 ms-4"><i class="bi bi-caret-up-fill"></i></button>
+            </div>
         </div>
     </div>
-    <div class=" offset-1 fs-3">Comments</div>
-    <div class="container " id="comments" data-bs-theme="light">
+    <div class="container mt-4" id="comments" data-bs-theme="light">
+        <div class="fs-3 mb-3">Comments</div>
         <%for (int i = 0; i < 10; i++) {%>
-        <div class="row mb-4">
-            <div class="col-1 d-flex justify-content-center align-items-end flex-column fs-3">
-                <button class="btn btn-success"><i class="bi bi-caret-up-fill"></i></button>
-                <div>255</div>
-                <button class="btn btn-outline-danger"><i class="bi bi-caret-down-fill"></i></button>
-            </div>
-            <div class="col-11 card">
-                <h5 class="card-header">Featured</h5>
-                <div class="card-body">
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias eum incidunt inventore neque nulla perspiciatis quas quidem repellat sit vitae. Architecto deleniti excepturi harum ipsa ipsum, nemo omnis recusandae temporibus.</p>
+        <div class="card bg-card mb-4 text-white">
+            <div class="card-header row">
+                <div class="fs-4 col-8 fw-bolder">Featured</div>
+                <div class="col-4 fs-5 d-flex justify-content-end">
+                    <button class="btn btn-outline-danger fs-6 me-4"><i class=" bi bi-caret-down-fill"></i></button>
+                    <div id="votes">255</div>
+                    <button class="btn btn-success fs-6 ms-4"><i class="bi bi-caret-up-fill"></i></button>
                 </div>
-                <div class="card-footer">date</div>
             </div>
+            <div class="card-body">
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias eum incidunt inventore neque nulla perspiciatis quas quidem repellat sit vitae. Architecto deleniti excepturi harum ipsa ipsum, nemo omnis recusandae temporibus.</p>
+            </div>
+            <div class="card-footer">date</div>
         </div>
         <%}%>
     </div>
