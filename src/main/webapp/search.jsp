@@ -62,11 +62,11 @@
             <div class="row">
                 <div class="card bg-card mb-3">
                     <div class="card-header row">
-                        <div class="fs-4 col-8 fw-bolder">title</div>
-                        <div class="col-4 fs-5 d-flex justify-content-end">
-                            <button class="btn btn-outline-danger fs-6 me-4"><i class=" bi bi-caret-down-fill"></i></button>
-                            <div id="votes">255</div>
-                            <button class="btn btn-success fs-6 ms-4"><i class="bi bi-caret-up-fill"></i></button>
+                        <div class="fs-4 col-7 col-md-8 fw-bolder">title</div>
+                        <div class="col-5 col-md-4 fs-5 d-flex justify-content-end px-0">
+                            <button class="btn btn-outline-danger btn-sm fs-6 me-1 me-md-4"><i class=" bi bi-caret-down-fill"></i></button>
+                            <div class="d-flex align-items-center" id="votes">255</div>
+                            <button class="btn btn-success btn-sm fs-6 ms-1 ms-md-4"><i class="bi bi-caret-up-fill"></i></button>
                         </div>
                     </div>
                     <a class="text-decoration-none" href="thread.jsp">
