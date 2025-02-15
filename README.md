@@ -1,9 +1,11 @@
-# Gaming Forum
+# 🎮 GameTalk 🕹️
 
 Forum da gaming
 
 ## Componenti del gruppo
+### Back-end:
 - CAPPIELLO Carmelo
-- RAGUSA Francesco
 - SICA Alessio
+### Front-end:
+- RAGUSA Francesco
 - ZAPPILE Antonino
