@@ -20,7 +20,8 @@ public abstract class DatabaseDAO<T> {
     /** Il database utilizzato per le operazioni di accesso ai dati. */
     private final Database db;
 
-    private Connection connection;
+    /** La connessione al database. */
+    private final Connection connection;
 
     /** Il mapper utilizzato per convertire i {@link java.sql.ResultSet}
      * in oggetti di tipo {@code T}. */
@@ -29,9 +30,10 @@ public abstract class DatabaseDAO<T> {
     /**
      * Costruttore.
      *
-     * @param db     Istanza di {@link Database} per la connessione al database.
-     * @param mapper Mapper per convertire un {@link java.sql.ResultSet}
-     *               in un oggetto entità.
+     * @param db         Il database.
+     * @param connection La connessione al database.
+     * @param mapper     Mapper per convertire un {@link java.sql.ResultSet}
+     *                   in un oggetto entità.
      */
     public DatabaseDAO(
             final Database db,
@@ -52,6 +54,11 @@ public abstract class DatabaseDAO<T> {
         return db;
     }
 
+    /**
+     * Restituisce la connessione al database.
+     *
+     * @return La connessione al database.
+     */
     protected Connection getConnection() {
         return connection;
     }

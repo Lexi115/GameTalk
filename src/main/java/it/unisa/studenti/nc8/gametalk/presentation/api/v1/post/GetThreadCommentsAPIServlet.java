@@ -1,8 +1,8 @@
 package it.unisa.studenti.nc8.gametalk.presentation.api.v1.post;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
-import it.unisa.studenti.nc8.gametalk.business.models.post.comment.Comment;
-import it.unisa.studenti.nc8.gametalk.business.models.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentServiceImpl;
 import jakarta.servlet.annotation.WebServlet;

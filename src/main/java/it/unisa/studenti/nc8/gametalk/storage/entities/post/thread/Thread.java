@@ -1,7 +1,7 @@
-package it.unisa.studenti.nc8.gametalk.business.models.post.thread;
+package it.unisa.studenti.nc8.gametalk.storage.entities.post.thread;
 
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
-import it.unisa.studenti.nc8.gametalk.business.models.post.Post;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.Post;
 
 /**
  * Classe che rappresenta un thread.

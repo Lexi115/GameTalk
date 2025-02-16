@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.services.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.models.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 
 import java.util.List;
 

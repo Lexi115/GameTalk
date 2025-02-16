@@ -12,6 +12,13 @@ import java.util.List;
  */
 public interface Database {
 
+    /**
+     * Restituisce una connessione dalla pool.
+     * <p>
+     * @return Una connessione al database.
+     * @throws SQLException Se si verifica un errore durante il
+     * recupero della connessione.
+     */
     Connection connect() throws SQLException;
 
     /**

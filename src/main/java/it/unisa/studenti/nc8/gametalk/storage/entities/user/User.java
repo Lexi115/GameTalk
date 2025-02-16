@@ -1,4 +1,4 @@
-package it.unisa.studenti.nc8.gametalk.business.models.user;
+package it.unisa.studenti.nc8.gametalk.storage.entities.user;
 
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 

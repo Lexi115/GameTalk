@@ -1,4 +1,4 @@
-package it.unisa.studenti.nc8.gametalk.business.models.post;
+package it.unisa.studenti.nc8.gametalk.storage.entities.post;
 
 import com.google.gson.annotations.Expose;
 

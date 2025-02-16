@@ -8,11 +8,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Serial;
-import java.sql.SQLException;
 
 /**
  * Classe principale dell'applicazione che si occupa di
- * inizializzare le risorse necessarie (es. database).
+ * inizializzare le risorse necessarie (es. Database).
  */
 public class Main extends HttpServlet {
     @Serial
@@ -45,15 +44,11 @@ public class Main extends HttpServlet {
             String dbName = ctx.getInitParameter("dbName");
             String dbUser = ctx.getInitParameter("dbUser");
             String dbPassword = ctx.getInitParameter("dbPass");
+            String dbType = ctx.getInitParameter("dbType");
             database = new DatabaseImpl(
-                    dbHost, dbPort, dbUser, dbPassword, dbName);
-
-            // Test connessione
-            database.connect();
-            LOGGER.info("Test Connessione al database: OK!");
-            database.close();
+                    dbHost, dbPort, dbUser, dbPassword, dbName, dbType);
             ctx.setAttribute("db", database);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             LOGGER.error("Errore durante l'inizializzazione del database", e);
         }
     }
@@ -65,7 +60,6 @@ public class Main extends HttpServlet {
     public void destroy() {
         try {
             if (database != null) {
-                database.close();
                 ctx.removeAttribute("db");
             }
         } catch (Exception e) {

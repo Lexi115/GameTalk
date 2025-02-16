@@ -1,8 +1,8 @@
 package it.unisa.studenti.nc8.gametalk.business.services.user;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.models.user.User;
 import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 
 import java.util.List;
 

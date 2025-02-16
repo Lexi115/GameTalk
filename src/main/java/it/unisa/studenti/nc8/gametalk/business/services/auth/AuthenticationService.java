@@ -2,7 +2,7 @@ package it.unisa.studenti.nc8.gametalk.business.services.auth;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.models.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 
 /**
  * Interfaccia per la gestione dell'autenticazione utente.

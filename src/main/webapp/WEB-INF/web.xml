@@ -67,4 +67,8 @@
         <param-name>dbPort</param-name>
         <param-value>3306</param-value>
     </context-param>
+    <context-param>
+        <param-name>dbType</param-name>
+        <param-value>mysql</param-value>
+    </context-param>
 </web-app>

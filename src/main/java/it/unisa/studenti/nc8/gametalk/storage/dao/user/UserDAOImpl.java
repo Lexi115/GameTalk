@@ -4,7 +4,7 @@ import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
-import it.unisa.studenti.nc8.gametalk.business.models.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
 import java.sql.Connection;
@@ -28,10 +28,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      * @param db         Il database.
      * @param connection La connessione al database.
      */
-    public UserDAOImpl(
-            final Database db,
-            final Connection connection
-    ) {
+    public UserDAOImpl(final Database db, final Connection connection) {
         super(db, connection, new UserMapper());
     }
 
@@ -50,11 +47,10 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
         Database db = this.getDatabase();
         Connection connection = this.getConnection();
         String query = "SELECT * FROM users WHERE username = ?";
-
         try (QueryResult qr = db.executeQuery(connection, query, username)) {
             List<User> users = this.getMapper().map(qr.getResultSet());
             return !users.isEmpty() ? users.getFirst() : null;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DAOException("Errore recupero utente: ", e);
         }
     }
@@ -75,7 +71,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
 
         try (QueryResult qr = db.executeQuery(connection, query)) {
             return this.getMapper().map(qr.getResultSet());
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DAOException("Errore recupero utenti: ", e);
         }
     }

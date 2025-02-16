@@ -11,7 +11,7 @@ public class CommentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db");
+        Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db", "mysql");
         commentService = new CommentServiceImpl(db);
     }
 
@@ -30,5 +30,4 @@ public class CommentServiceImplTest {
     void getCommentsByThread() throws ServiceException {
         System.out.println(commentService.findCommentsByThreadId(7,null,1, 12));
     }
-
 }

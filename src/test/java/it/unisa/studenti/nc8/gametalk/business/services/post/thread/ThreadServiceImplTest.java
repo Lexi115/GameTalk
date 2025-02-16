@@ -3,7 +3,7 @@ package it.unisa.studenti.nc8.gametalk.business.services.post.thread;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.models.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.DatabaseImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +14,11 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ThreadServiceImplTest {
-
     private ThreadService threadService;
 
     @BeforeEach
     void setUp() {
-        Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db");
+        Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db", "mysql");
         threadService = new ThreadServiceImpl(db);
     }
 

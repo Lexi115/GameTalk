@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
-import it.unisa.studenti.nc8.gametalk.business.models.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

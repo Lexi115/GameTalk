@@ -3,7 +3,7 @@ package it.unisa.studenti.nc8.gametalk.business.services.post.thread;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.models.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.thread.ThreadValidator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
@@ -12,10 +12,11 @@ import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.post.thread.ThreadMapper;
-import it.unisa.studenti.nc8.gametalk.business.models.post.thread.Thread;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.Transaction;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.TransactionImpl;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,17 +32,6 @@ public class ThreadServiceImpl implements ThreadService {
      * con cui interagire.
      */
     private final Database db;
-    /**
-     * Il DAO utilizzato per effettuare operazioni CRUD
-     * su oggetti {@link Thread}.
-     */
-    private final ThreadDAO threadDAO;
-
-    /**
-     * Il DAO utilizzato per effettuare operazioni CRUD
-     * su oggetti {@link User}.
-     */
-    private final UserDAO userDAO;
 
     /**
      * Il validator che valida i dati contenuti in
@@ -56,8 +46,6 @@ public class ThreadServiceImpl implements ThreadService {
      */
     public ThreadServiceImpl(final Database db) {
         this.db = db;
-        this.threadDAO = new ThreadDAOImpl(db, new ThreadMapper());
-        this.userDAO = new UserDAOImpl(db, new UserMapper());
         this.threadValidator = new ThreadValidator();
     }
 
@@ -96,11 +84,9 @@ public class ThreadServiceImpl implements ThreadService {
         }
 
         //Salvataggio Thread
-        try (db) {
-
-            db.connect();
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
             return threadDAO.save(newThread);
-
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante il salvataggio del thread", e);
@@ -120,11 +106,10 @@ public class ThreadServiceImpl implements ThreadService {
             throw new IllegalArgumentException(
                     "Id deve essere maggiore di 0");
         }
-        try (db) {
 
-            db.connect();
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
             threadDAO.delete(id);
-
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante l'eliminazione del thread", e);
@@ -154,43 +139,36 @@ public class ThreadServiceImpl implements ThreadService {
             final Category category
     ) throws ServiceException, IllegalArgumentException {
         //Operazioni di aggiornamento
-        try {
-            db.connect();
-            db.beginTransaction();
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
 
-            //Verifico se esiste un thread con quell'id e lo recupero
-            Thread updatedThread = threadDAO.get(id);
-            if (updatedThread == null) {
-                throw new IllegalArgumentException(
-                        "Nessun thread trovato con id " + id);
+            try (Transaction tx = new TransactionImpl(connection)) {
+                //Verifico se esiste un thread con quell'id e lo recupero
+                Thread updatedThread = threadDAO.get(id);
+                if (updatedThread == null) {
+                    throw new IllegalArgumentException(
+                            "Nessun thread trovato con id " + id);
+                }
+
+                if (updatedThread.isArchived()) {
+                    throw new IllegalArgumentException("Thread è archiviato");
+                }
+
+                //Aggiorno i campi
+                updatedThread.setTitle(title);
+                updatedThread.setBody(body);
+                updatedThread.setCategory(category);
+
+                //Valido i campi aggiornati
+                if (!threadValidator.validate(updatedThread)) {
+                    throw new ServiceException("Thread non valido.");
+                }
+
+                //Aggiorno il thread sul database
+                threadDAO.update(updatedThread);
+                tx.commit();
             }
-
-            if (updatedThread.isArchived()) {
-                throw new IllegalArgumentException("Thread è archiviato");
-            }
-
-            //Aggiorno i campi
-            updatedThread.setTitle(title);
-            updatedThread.setBody(body);
-            updatedThread.setCategory(category);
-
-            //Valido i campi aggiornati
-            if (!threadValidator.validate(updatedThread)) {
-                throw new ServiceException("Thread non valido.");
-            }
-
-            //Aggiorno il thread sul database
-            threadDAO.update(updatedThread);
-            db.commit();
-
         } catch (SQLException | DAOException e) {
-            //Errore durante una delle due query
-            try {
-                db.rollback();
-            } catch (SQLException ex) {
-                throw new ServiceException("Errore durante il rollback", ex);
-            }
-
             throw new ServiceException(
                     "Errore durante il salvataggio del thread", e);
         }
@@ -210,11 +188,10 @@ public class ThreadServiceImpl implements ThreadService {
             throw new IllegalArgumentException(
                     "Id deve essere maggiore di 0");
         }
-        try (db) {
 
-            db.connect();
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
             return threadDAO.get(id);
-
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante il recupero del thread " + id + ".", e);
@@ -250,16 +227,14 @@ public class ThreadServiceImpl implements ThreadService {
             final LocalDate startDate,
             final LocalDate endDate
     ) throws ServiceException {
-
-        //Sanificazione TODO da spostare
         int realPage = Math.max(page, 1);
 
         //Definizione decisioni
         boolean isCategoryNull = category == null;
         boolean isTitleEmpty = title == null || title.isBlank();
 
-        LocalDate actualStartDate = LocalDate.of(1000,01,01);
-        LocalDate actualEndDate = LocalDate.of(9999,12,31);
+        LocalDate actualStartDate = LocalDate.of(1000, 01, 01);
+        LocalDate actualEndDate = LocalDate.of(9999, 12, 31);
 
         //Controllo data inizio
         if (startDate != null && startDate.isAfter(actualStartDate)) {
@@ -270,13 +245,11 @@ public class ThreadServiceImpl implements ThreadService {
             actualEndDate = endDate;
         }
 
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
 
-
-        //Ricerca per generica
-        if (isCategoryNull && isTitleEmpty) {
-            try (db) {
-
-                db.connect();
+            // Ricerca generica
+            if (isCategoryNull && isTitleEmpty) {
                 return threadDAO.getThreadsByTitle(
                         "",
                         realPage,
@@ -285,18 +258,10 @@ public class ThreadServiceImpl implements ThreadService {
                         actualStartDate,
                         actualEndDate
                 );
-
-            } catch (SQLException | DAOException e) {
-                throw new ServiceException(
-                        "Errore durante la ricerca generica", e);
             }
-        }
 
-        //Ricerca per titolo
-        if (isCategoryNull) {
-            try (db) {
-
-                db.connect();
+            // Ricerca per titolo
+            if (isCategoryNull) {
                 return threadDAO.getThreadsByTitle(
                         title,
                         realPage,
@@ -305,17 +270,10 @@ public class ThreadServiceImpl implements ThreadService {
                         actualStartDate,
                         actualEndDate
                 );
-            } catch (SQLException | DAOException e) {
-                throw new ServiceException(
-                        "Errore durante la ricerca per titolo", e);
             }
-        }
 
-        //Ricerca per categoria
-        if (isTitleEmpty) {
-            try (db) {
-
-                db.connect();
+            // Ricerca per categoria
+            if (isTitleEmpty) {
                 return threadDAO.getThreadsByCategory(
                         category,
                         realPage,
@@ -324,16 +282,9 @@ public class ThreadServiceImpl implements ThreadService {
                         actualStartDate,
                         actualEndDate
                 );
-            } catch (SQLException | DAOException e) {
-                throw new ServiceException(
-                        "Errore durante la ricerca per categoria", e);
             }
-        }
 
-        //Ricerca per titolo e categoria
-        try (db) {
-
-            db.connect();
+            // Ricerca per titolo e categoria
             return threadDAO.getThreadsByTitle(
                     title,
                     category,
@@ -345,7 +296,7 @@ public class ThreadServiceImpl implements ThreadService {
             );
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
-                    "Errore durante la ricerca per titolo e categoria", e);
+                    "Errore durante la ricerca thread", e);
         }
     }
 
@@ -369,7 +320,6 @@ public class ThreadServiceImpl implements ThreadService {
             final int pageSize,
             final Order order
     ) throws ServiceException {
-
         int realPage = Math.max(page, 1);
 
         if (username == null || username.isBlank()) {
@@ -377,15 +327,10 @@ public class ThreadServiceImpl implements ThreadService {
         }
 
         //Username valido, recupero i thread.
-        try (db) {
-
-            db.connect();
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
             return threadDAO.getThreadsByUsername(
-                    username,
-                    realPage,
-                    pageSize,
-                    order
-            );
+                    username, realPage, pageSize, order);
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante la ricerca per titolo", e);
@@ -420,46 +365,41 @@ public class ThreadServiceImpl implements ThreadService {
             throw new IllegalArgumentException("Voto non valido");
         }
 
-        try (db) {
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            UserDAO userDAO = new UserDAOImpl(db, connection);
 
-            db.connect();
-            db.beginTransaction();
+            try (Transaction tx = new TransactionImpl(connection)) {
+                //Verifico l'esistenza del thread
+                Thread thread = threadDAO.get(threadId);
+                if (thread == null) {
+                    throw new ServiceException(
+                            "Nessun thread trovato con id " + threadId);
+                }
 
-            //Verifico l'esistenza del thread
-            Thread thread = threadDAO.get(threadId);
-            if (thread == null) {
-                throw new ServiceException(
-                        "Nessun thread trovato con id " + threadId);
+                if (thread.isArchived()) {
+                    throw new ServiceException("Thread è archiviato");
+                }
+
+                //Verifico l'esistenza dell'utente
+                User user = userDAO.get(username);
+                if (user == null) {
+                    throw new ServiceException(
+                            "Nessun utente trovato con username " + username);
+                }
+
+                //Thread esiste, lo voto
+                if (vote == 0) {
+                    //Rimuovo il voto
+                    threadDAO.removeVoteThread(threadId, username);
+                } else {
+                    //Inserisco il voto
+                    threadDAO.voteThread(threadId, username, vote);
+                }
+
+                tx.commit();
             }
-
-            if (thread.isArchived()) {
-                throw new ServiceException("Thread è archiviato");
-            }
-
-            //Verifico l'esistenza dell'utente
-            User user = userDAO.get(username);
-            if (user == null) {
-                throw new ServiceException(
-                        "Nessun utente trovato con username " + username);
-            }
-
-            //Thread esiste, lo voto
-            if (vote == 0) {
-                //Rimuovo il voto
-                threadDAO.removeVoteThread(threadId, username);
-            } else {
-                //Inserisco il voto
-                threadDAO.voteThread(threadId, username, vote);
-            }
-
-            db.commit();
-
         } catch (SQLException | DAOException e) {
-            try {
-                db.rollback();
-            } catch (SQLException ex) {
-                throw new ServiceException(ex);
-            }
             throw new ServiceException(
                     "Errore durante l'aggiunta del voto " + vote
                             + " al thread " + threadId, e);
@@ -486,30 +426,27 @@ public class ThreadServiceImpl implements ThreadService {
             throw new IllegalArgumentException("Category non può essere null.");
         }
 
-        try (db) {
-            db.connect();
-            db.beginTransaction();
-            //Recupero thread da modificare
-            Thread thread = threadDAO.get(threadId);
-            if (thread == null) {
-                throw new ServiceException(
-                        "Nessun thread trovato con id " + threadId);
-            }
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
 
-            if (thread.isArchived()) {
-                throw new ServiceException("Thread è archiviato");
-            }
+            try (Transaction tx = new TransactionImpl(connection)) {
+                //Recupero thread da modificare
+                Thread thread = threadDAO.get(threadId);
+                if (thread == null) {
+                    throw new ServiceException(
+                            "Nessun thread trovato con id " + threadId);
+                }
 
-            //Thread esistente, aggiorno la categoria
-            thread.setCategory(category);
-            threadDAO.update(thread);
-            db.commit();
+                if (thread.isArchived()) {
+                    throw new ServiceException("Thread è archiviato");
+                }
+
+                //Thread esistente, aggiorno la categoria
+                thread.setCategory(category);
+                threadDAO.update(thread);
+                tx.commit();
+            }
         } catch (DAOException | SQLException e) {
-            try {
-                db.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
             throw new ServiceException(
                     "Errore durante lo spostamento del thread "
                             + threadId + " nella categoria " + category, e);
@@ -524,30 +461,25 @@ public class ThreadServiceImpl implements ThreadService {
      */
     @Override
     public void archiveThread(final long threadId) throws ServiceException {
-        try (db) {
-            db.connect();
-            db.beginTransaction();
-            //Recupero thread da modificare
-            Thread thread = threadDAO.get(threadId);
-            if (thread == null) {
-                throw new ServiceException(
-                        "Nessun thread trovato con id " + threadId);
-            }
+        try (Connection connection = db.connect()) {
+            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
 
-            //Archivio il thread
-            thread.setArchived(true);
-            threadDAO.update(thread);
-            db.commit();
-        } catch (DAOException | SQLException e) {
-            try {
-                db.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+            try (Transaction tx = new TransactionImpl(connection)) {
+                //Recupero thread da modificare
+                Thread thread = threadDAO.get(threadId);
+                if (thread == null) {
+                    throw new ServiceException(
+                            "Nessun thread trovato con id " + threadId);
+                }
+
+                //Archivio il thread
+                thread.setArchived(true);
+                threadDAO.update(thread);
+                tx.commit();
             }
+        } catch (DAOException | SQLException e) {
             throw new ServiceException(
                     "Errore durante l'archiviazione del thread", e);
         }
     }
-
-
 }

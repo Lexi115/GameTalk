@@ -3,29 +3,24 @@ package it.unisa.studenti.nc8.gametalk.business.services.auth;
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.models.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
  * Classe di servizio per la gestione dell'autenticazione utente.
  */
 public class AuthenticationServiceImpl implements AuthenticationService {
+
     /**
      * Il database con il quale lavorare.
      */
     private final Database db;
-
-    /**
-     * Il DAO utilizzato per effettuare operazioni CRUD
-     * su oggetti {@link User}.
-     */
-    private final UserDAO userDAO;
 
     /**
      * Costruttore.
@@ -34,7 +29,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     public AuthenticationServiceImpl(final Database db) {
         this.db = db;
-        this.userDAO = new UserDAOImpl(db, new UserMapper());
     }
 
     /**
@@ -60,8 +54,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new IllegalArgumentException("Password non valida");
         }
 
-        try (db) {
-            db.connect();
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
+
             User user = userDAO.get(username);
             if (user == null) {
                 throw new AuthenticationException("Utente non trovato");
@@ -94,8 +89,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new IllegalArgumentException("Token non valido");
         }
 
-        try (db) {
-            db.connect();
+        try (Connection connection = db.connect()) {
+            UserDAO userDAO = new UserDAOImpl(db, connection);
+
             //Effettuo il secondo hash del token
             String hashedToken = Functions.hash(token);
             User user = userDAO.getUserByToken(hashedToken);

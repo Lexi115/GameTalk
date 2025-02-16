@@ -3,7 +3,7 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets.auth;
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.models.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationServiceImpl;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;

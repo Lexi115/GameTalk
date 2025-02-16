@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
-import it.unisa.studenti.nc8.gametalk.business.models.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 
 /**

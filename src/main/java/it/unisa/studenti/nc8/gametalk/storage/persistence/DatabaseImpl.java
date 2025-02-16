@@ -43,6 +43,9 @@ public class DatabaseImpl implements Database {
     /** Nome del database a cui connettersi. */
     private final String databaseName;
 
+    /** Tipo del database a cui connettersi (es. MySQL). */
+    private final String type;
+
     /** Pool per gestire le connessioni al database. */
     private final DataSource dataSource;
 
@@ -54,22 +57,36 @@ public class DatabaseImpl implements Database {
      * @param username     Nome utente per accedere al database.
      * @param password     Password per accedere al database.
      * @param databaseName Nome del database da utilizzare.
+     * @param type         Il tipo di database (es. "mysql").
      */
     public DatabaseImpl(
             final String host,
             final int port,
             final String username,
             final String password,
-            final String databaseName
+            final String databaseName,
+            final String type
     ) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
         this.databaseName = databaseName;
-        this.dataSource = initDataSource();
+        this.type = type;
+
+        // Inizializza connection pool.
+        this.dataSource = getDataSource(
+                host, port, username, password, databaseName, type
+        );
     }
 
+    /**
+     * Restituisce una connessione dalla pool.
+     * <p>
+     * @return Una connessione al database.
+     * @throws SQLException Se si verifica un errore durante il
+     * recupero della connessione.
+     */
     @Override
     public Connection connect() throws SQLException {
         return dataSource.getConnection();
@@ -156,9 +173,16 @@ public class DatabaseImpl implements Database {
         }
     }
 
-    private DataSource initDataSource() {
+    private DataSource getDataSource(
+            final String host,
+            final int port,
+            final String username,
+            final String password,
+            final String databaseName,
+            final String type
+    ) {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(getUrl());
+        config.setJdbcUrl(getJdbcUrl(host, port, databaseName, type));
         config.setUsername(username);
         config.setPassword(password);
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -258,9 +282,19 @@ public class DatabaseImpl implements Database {
      * Restituisce l'URL di connessione JDBC per il database.
      *
      * @return L'URL JDBC per la connessione.
+     *
+     * @param host         L'hostname.
+     * @param port         Il numero di porta.
+     * @param databaseName Il nome del database.
+     * @param type         Il tipo di database (es. "mysql").
      */
-    private String getUrl() {
-        return "jdbc:mysql://" + host + ":" + port + "/"
+    private String getJdbcUrl(
+            final String host,
+            final int port,
+            final String databaseName,
+            final String type
+    ) {
+        return "jdbc:" + type + "://" + host + ":" + port + "/"
                 + databaseName + "?serverTimezone="
                 + TimeZone.getDefault().getID();
     }
