@@ -36,10 +36,11 @@ public class UserMapper implements ResultSetMapper<User> {
             while (rs.next()) {
                 User user = new User();
                 user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password_hash"));
+                user.setPassword(rs.getString("password"));
                 user.setCreationDate(rs.getDate("creation_date").toLocalDate());
                 user.setBanned(rs.getBoolean("banned"));
                 user.setRole(Role.valueOf(rs.getString("role")));
+                user.setAuthToken(rs.getString("auth_token"));
                 users.add(user);
             }
         } catch (IllegalArgumentException e) {

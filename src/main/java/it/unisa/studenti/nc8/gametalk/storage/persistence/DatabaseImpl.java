@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -50,14 +51,16 @@ public class DatabaseImpl implements Database {
     private final DataSource dataSource;
 
     /**
-     * Costruttore.
+     * Costruttore. Inizializza automaticamente il pool di
+     * connessioni.
      *
-     * @param host         Host del database (es. localhost).
-     * @param port         Porta del database (es. 3306).
-     * @param username     Nome utente per accedere al database.
-     * @param password     Password per accedere al database.
-     * @param databaseName Nome del database da utilizzare.
-     * @param type         Il tipo di database (es. "mysql").
+     * @param host              Host del database (es. localhost).
+     * @param port              Porta del database (es. 3306).
+     * @param username          Nome utente per accedere al database.
+     * @param password          Password per accedere al database.
+     * @param databaseName      Nome del database da utilizzare.
+     * @param type              Il tipo di database (es. "mysql").
+     * @throws ConnectException Se la creazione del pool fallisce.
      */
     public DatabaseImpl(
             final String host,
@@ -66,7 +69,7 @@ public class DatabaseImpl implements Database {
             final String password,
             final String databaseName,
             final String type
-    ) {
+    ) throws ConnectException {
         this.host = host;
         this.port = port;
         this.username = username;
@@ -74,10 +77,15 @@ public class DatabaseImpl implements Database {
         this.databaseName = databaseName;
         this.type = type;
 
-        // Inizializza connection pool.
-        this.dataSource = getDataSource(
-                host, port, username, password, databaseName, type
-        );
+        try {
+            // Inizializza connection pool.
+            this.dataSource = getDataSource(
+                    host, port, username, password, databaseName, type
+            );
+        } catch (Exception e) {
+            throw new ConnectException(
+                    "Connessione non riuscita: " + e.getMessage());
+        }
     }
 
     /**

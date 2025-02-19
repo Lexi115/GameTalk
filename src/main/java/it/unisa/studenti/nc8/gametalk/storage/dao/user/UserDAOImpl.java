@@ -89,7 +89,7 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
     public String save(final User entity) throws DAOException {
         Database db = this.getDatabase();
         Connection connection = this.getConnection();
-        String query = "INSERT INTO users (username, password_hash, "
+        String query = "INSERT INTO users (username, password, "
                 + "creation_date, banned, role, auth_token) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -124,8 +124,8 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
         Database db = this.getDatabase();
         Connection connection = this.getConnection();
         String query = "UPDATE users SET "
-                + "password_hash = ?, creation_date = ?, banned = ?, "
-                + "roles = ?, auth_token = ? WHERE username = ?";
+                + "password = ?, creation_date = ?, banned = ?, "
+                + "role = ?, auth_token = ? WHERE username = ?";
 
         Object[] params = {
                 entity.getPassword(),

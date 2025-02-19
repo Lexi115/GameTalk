@@ -9,6 +9,7 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.DatabaseImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.net.ConnectException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +18,7 @@ public class ThreadServiceImplTest {
     private ThreadService threadService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ConnectException {
         Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db", "mysql");
         threadService = new ThreadServiceImpl(db);
     }
