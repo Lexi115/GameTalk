@@ -58,7 +58,7 @@ class ThreadDAOImplTest {
 
     @Test
     void testGetInvalidThread() throws DAOException, SQLException {
-        long id = 0;
+        long id = -1;
 
         when(resultSet.next()).thenReturn(false);
 
@@ -100,7 +100,7 @@ class ThreadDAOImplTest {
                 .thenThrow(SQLException.class);
 
         Thread thread = new Thread();
-        thread.setId(0L);
+        thread.setId(-1L);
         thread.setCategory(Category.Welcome);
 
         assertThrows(DAOException.class, () -> threadDAO.save(thread));
@@ -124,7 +124,7 @@ class ThreadDAOImplTest {
                 .thenThrow(SQLException.class);
 
         Thread thread = new Thread();
-        thread.setId(0L); // id non valido
+        thread.setId(-1L); // id non valido
         thread.setCategory(Category.Memes);
 
         assertThrows(DAOException.class, () -> threadDAO.update(thread));
@@ -141,7 +141,7 @@ class ThreadDAOImplTest {
 
     @Test
     void testDeleteInvalidThread() throws DAOException, SQLException {
-        long id = 0;
+        long id = -1;
         when(database.executeUpdate(eq(connection), anyString(), any(Object[].class)))
                 .thenReturn(0);
 
@@ -212,8 +212,6 @@ class ThreadDAOImplTest {
         when(database.executeUpdate(eq(connection), anyString(), any(Object[].class)))
                 .thenThrow(SQLException.class);
 
-        assertThrows(DAOException.class, () -> threadDAO.removeVoteThread(0L, "user123"));
+        assertThrows(DAOException.class, () -> threadDAO.removeVoteThread(-1L, "user123"));
     }
-
-    // todo - fare gli altri test cases
 }
