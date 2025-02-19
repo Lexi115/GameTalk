@@ -39,7 +39,7 @@ class UserDAOImplTest {
     }
 
     @Test
-    void testGetUserFound() throws SQLException, DAOException {
+    void testGetValidUser() throws SQLException, DAOException {
         String username = "test_user";
 
         when(resultSet.next()).thenReturn(true).thenReturn(false);
@@ -54,7 +54,7 @@ class UserDAOImplTest {
     }
 
     @Test
-    void testGetUserNotFound() throws SQLException, DAOException {
+    void testGetInvalidUser() throws SQLException, DAOException {
         String username = "test_invalid_user";
         when(resultSet.next()).thenReturn(false);
 
