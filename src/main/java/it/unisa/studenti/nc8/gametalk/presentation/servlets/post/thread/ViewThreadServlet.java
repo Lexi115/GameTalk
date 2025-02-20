@@ -1,9 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.thread;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadService;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,6 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * Servlet per visualizzare la pagina di un thread.
+ */
 @WebServlet("/thread")
 public class ViewThreadServlet extends ThreadServlet {
 

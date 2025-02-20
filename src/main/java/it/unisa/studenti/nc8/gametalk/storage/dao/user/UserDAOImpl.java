@@ -1,10 +1,10 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.user;
 
 import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
 import java.sql.Connection;
@@ -12,13 +12,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Implementazione della classe DAO per l'entità {@link User}.
+ * Implementazione dell'interfaccia DAO per l'entità {@link User}.
  * Questa classe fornisce metodi per l'interazione con il database
  * per le operazioni CRUD relative all'entità {@link User}.
- * <p>
- * Estende {@link DatabaseDAO<User>} e implementa {@link UserDAO}.
- *
- * @version 1.0
  */
 public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
 

@@ -1,4 +1,4 @@
-package it.unisa.studenti.nc8.gametalk.business.core;
+package it.unisa.studenti.nc8.gametalk.business.utils;
 
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;

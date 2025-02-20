@@ -1,9 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/**
+ * Servlet per votare un commento.
+ * NON restituisce risposta al client.
+ */
 @WebServlet("/voteComment")
 public class VoteCommentServlet extends CommentServlet {
 
@@ -41,7 +45,6 @@ public class VoteCommentServlet extends CommentServlet {
             int vote = Integer.parseInt(voteString);
             long commentId = Long.parseLong(commentIdString);
             commentService.rateComment(commentId, usernameReq, vote);
-
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di voto commento", e);
             Functions.handleError(

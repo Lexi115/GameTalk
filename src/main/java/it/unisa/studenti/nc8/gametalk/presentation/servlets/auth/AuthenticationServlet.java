@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpServlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Servlet che si occupa dell'autenticazione di un utente.
+ */
 public abstract class AuthenticationServlet extends HttpServlet {
 
     /** Logger. **/

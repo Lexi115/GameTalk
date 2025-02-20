@@ -1,20 +1,17 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.user;
 
-import it.unisa.studenti.nc8.gametalk.storage.utils.Bindable;
-import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
+import it.unisa.studenti.nc8.gametalk.storage.utils.Bindable;
 
 import java.util.List;
 
 /**
- * Definizione dell'interfaccia DAO per l'entità {@link User}.
+ * Interfaccia DAO per l'entità {@link User}.
  * Questa interfaccia definisce metodi aggiuntivi per l'interazione
- * con il database per le operazioni CRUD relative all'entità {@link User}.
- * <p>
- * Estende {@link DAO<User>}.
- *
- * @version 1.0
+ * con il sistema di persistenza per le operazioni CRUD relative
+ * all'entità {@link User}.
  */
 public interface UserDAO extends DAO<User, String>, Bindable {
 

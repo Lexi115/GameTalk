@@ -4,11 +4,9 @@ import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.Post;
 
 /**
- * Classe che rappresenta un thread.
- * Contiene informazioni aggiuntive come titolo, stato
- * di archiviazione e categoria.
- * <p>
- * Estende {@link Post}.
+ * Entità che rappresenta un thread.
+ * Rispetto a un generico {@link Post}, contiene informazioni
+ * aggiuntive come titolo, stato di archiviazione e categoria.
  */
 public class Thread extends Post {
 

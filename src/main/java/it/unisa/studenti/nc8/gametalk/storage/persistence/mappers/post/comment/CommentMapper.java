@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +12,6 @@ import java.util.List;
  * Implementazione dell'interfaccia {@link ResultSetMapper} per mappare i
  * risultati di una query {@link ResultSet} in una lista di oggetti
  * {@link Comment}.
- *
- * @version 1.0
  */
 public class CommentMapper implements ResultSetMapper<Comment> {
 

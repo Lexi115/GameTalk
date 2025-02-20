@@ -3,10 +3,9 @@ package it.unisa.studenti.nc8.gametalk.storage.entities.post.comment;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.Post;
 
 /**
- * Classe che rappresenta un thread.
- * Contiene informazioni aggiuntive come ID thread.
- * <p>
- * Estende {@link Post}.
+ * Entità che rappresenta un commento di un thread.
+ * Rispetto a un generico {@link Post}, contiene informazioni
+ * aggiuntive come l'ID del thread corrispondente.
  */
 public class Comment extends Post {
 

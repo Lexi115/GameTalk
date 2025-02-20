@@ -1,9 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 /**
- * Servlet per gestire la registrazione degli utenti.
+ * Servlet per gestire la registrazione di un utente.
  * Riceve username e password.
  */
 @WebServlet("/signup")

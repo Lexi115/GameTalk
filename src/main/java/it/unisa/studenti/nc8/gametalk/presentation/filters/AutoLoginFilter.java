@@ -1,12 +1,12 @@
 package it.unisa.studenti.nc8.gametalk.presentation.filters;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.Cookie;
@@ -22,8 +22,8 @@ import java.io.IOException;
  * Filtro che intercetta le richieste HTTP per gestire il login automatico e
  * controlla gli accessi alle pagine riservate ai moderatori.
  */
-@WebFilter(filterName = "HttpFilter")
-public class HttpFilter implements Filter {
+@WebFilter(filterName = "AutoLoginFilter")
+public class AutoLoginFilter implements Filter {
 
     /** Logger per la gestione dei log. */
     private static final Logger LOGGER = LogManager.getLogger();

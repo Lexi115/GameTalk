@@ -1,9 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.post.thread;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 
 /**
  * Classe di validazione per oggetti {@link Thread}.

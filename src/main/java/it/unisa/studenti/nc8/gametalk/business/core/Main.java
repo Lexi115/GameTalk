@@ -18,6 +18,7 @@ import java.io.Serial;
  * inizializzare le risorse necessarie (es. Database).
  */
 public class Main extends HttpServlet {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -26,9 +27,6 @@ public class Main extends HttpServlet {
 
     /** Servlet context. */
     private ServletContext ctx;
-
-    /** Il database a cui collegarsi. */
-    private Database database;
 
     /**
      * Metodo di inizializzazione.
@@ -49,7 +47,7 @@ public class Main extends HttpServlet {
             String dbUser = ctx.getInitParameter("dbUser");
             String dbPassword = ctx.getInitParameter("dbPass");
             String dbType = ctx.getInitParameter("dbType");
-            database = new DatabaseImpl(
+            Database database = new DatabaseImpl(
                     dbHost, dbPort, dbUser, dbPassword, dbName, dbType);
             ctx.setAttribute("db", database);
 
@@ -71,11 +69,12 @@ public class Main extends HttpServlet {
     @Override
     public void destroy() {
         try {
-            if (database != null) {
-                ctx.removeAttribute("db");
-            }
+            ctx.removeAttribute("db");
+            ctx.removeAttribute("daoFactory");
+            ctx.removeAttribute("serviceFactory");
         } catch (Exception e) {
-            LOGGER.error("Errore durante la chiusura del database", e);
+            LOGGER.error(
+                    "Errore durante lo spegnimento dell'applicazione", e);
         }
     }
 }

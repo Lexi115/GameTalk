@@ -5,7 +5,8 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 
 /**
- * Interfaccia per la gestione dell'autenticazione utente.
+ * Interfaccia di servizio per la gestione dell'autenticazione utente.
+ * Fornisce metodi per eseguire il login.
  */
 public interface AuthenticationService {
 

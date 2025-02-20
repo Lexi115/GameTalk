@@ -1,13 +1,12 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 
 /**
  * Classe di validazione per oggetti {@link Comment}.
- * Contiene metodi per verificare la validità del contenuto del commento.
  */
 public class CommentValidator implements Validator<Comment> {
 

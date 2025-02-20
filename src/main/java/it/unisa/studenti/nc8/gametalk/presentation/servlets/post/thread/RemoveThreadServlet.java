@@ -1,10 +1,10 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.thread;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadService;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
-import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +13,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/**
+ * Servlet per rimuovere un thread esistente.
+ */
 @WebServlet("/removeThread")
 public class RemoveThreadServlet extends ThreadServlet {
 
@@ -56,7 +59,7 @@ public class RemoveThreadServlet extends ThreadServlet {
                 //Non può modificare il thread
                 Functions.handleError(
                         req, resp, HttpServletResponse.SC_UNAUTHORIZED,
-                        "Ma ddo t abbij.....");
+                        "Ma ddo t abbij....."); //todo: lo lasciamo così? lol
                 return;
             }
 
@@ -83,7 +86,7 @@ public class RemoveThreadServlet extends ThreadServlet {
             final String usernameReq,
             final HttpSession session
     ) {
-        //Thread recuperato, verifico permessi di modifica
+        //Thread recuperato, verifico permessi di rimozione
         boolean isOp = thread.getUsername().equals(usernameReq);
         boolean isMod = (boolean) session.getAttribute("isModerator");
         return isOp || isMod;

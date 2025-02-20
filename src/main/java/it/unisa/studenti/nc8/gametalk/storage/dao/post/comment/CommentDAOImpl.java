@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
@@ -13,6 +13,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Implementazione dell'interfaccia DAO per l'entità {@link Comment}.
+ * Questa classe fornisce metodi per l'interazione con il database
+ * per le operazioni CRUD relative all'entità {@link Comment}.
+ */
 public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
     /**

@@ -3,15 +3,15 @@ package it.unisa.studenti.nc8.gametalk.business.services.post.thread;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
-import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
-import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Transaction;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.TransactionImpl;
-import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Classe di servizio per la gestione di oggetti {@link Thread}.
- * Fornisce metodi per recuperare e cercare thread.
+ * Fornisce metodi per creare, rimuovere, aggiornare e cercare threads.
  */
 public class ThreadServiceImpl implements ThreadService {
 

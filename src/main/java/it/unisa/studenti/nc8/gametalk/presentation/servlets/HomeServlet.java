@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Servlet per mostrare la pagina Home.
+ * Servlet per mostrare la pagina home.
  */
 @WebServlet("")
 public class HomeServlet extends HttpServlet {
 
     /**
-     * Gestisce la richiesta GET per mostrare la pagina Home.
+     * Gestisce la richiesta GET per mostrare la pagina home.
      *
      * @param req  l'oggetto HttpServletRequest contenente i
      *             parametri della richiesta

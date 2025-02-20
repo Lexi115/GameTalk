@@ -5,8 +5,10 @@ import com.google.gson.annotations.Expose;
 import java.time.LocalDate;
 
 /**
- * Classe astratta che rappresenta un post generico.
- * Fornisce proprietà comuni a tutti i tipi di post.
+ * Entità astratta che rappresenta un post generico.
+ * Fornisce proprietà comuni a tutti i tipi di post, ad
+ * esempio l'ID univoco, l'username del creatore, il corpo
+ * del messaggio, i voti e la data di creazione.
  */
 public abstract class Post {
 

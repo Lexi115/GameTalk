@@ -6,6 +6,7 @@ import java.sql.SQLException;
  * Una transazione SQL, ossia un insieme di operazioni atomiche.
  */
 public interface Transaction extends AutoCloseable {
+
     /**
      * Conferma la transazione corrente.
      * <p>

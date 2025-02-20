@@ -5,9 +5,9 @@ import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import java.util.List;
 
 /**
- * Interfaccia generica che definisce le operazioni di base per accedere
- * e gestire entità. Questa interfaccia è parametrizzata
- * con il tipo generico {@code T}.
+ * Interfaccia DAO (Data Access Object) generica che definisce
+ * le operazioni di base per accedere e gestire entità.
+ * Questa interfaccia è parametrizzata con il tipo generico {@code T}.
  *
  * @param <T> il tipo dell'entità gestita dal DAO.
  * @param <K> il tipo della chiave primaria dell'entità.

@@ -1,8 +1,8 @@
 package it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user;
 
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +13,6 @@ import java.util.List;
  * Implementazione dell'interfaccia {@link ResultSetMapper} per mappare i
  * risultati di una query {@link ResultSet} in una lista di oggetti
  * {@link User}.
- *
- * @version 1.0
  */
 public class UserMapper implements ResultSetMapper<User> {
 

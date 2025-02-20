@@ -1,13 +1,13 @@
 package it.unisa.studenti.nc8.gametalk.business.services.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
-import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Transaction;
@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * Classe di servizio per la gestione di oggetti {@link Comment}.
+ * Fornisce metodi per aggiungere, rimuovere e cercare commenti.
  */
 public class CommentServiceImpl implements CommentService {
 

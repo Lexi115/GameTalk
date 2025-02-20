@@ -7,13 +7,11 @@ import java.util.List;
 /**
  * Interfaccia per la gestione della connessione e delle operazioni
  * con un database SQL.
- *
- * @version 1.0
  */
 public interface Database {
 
     /**
-     * Restituisce una connessione dalla pool.
+     * Restituisce una connessione al database.
      * <p>
      * @return Una connessione al database.
      * @throws SQLException Se si verifica un errore durante il

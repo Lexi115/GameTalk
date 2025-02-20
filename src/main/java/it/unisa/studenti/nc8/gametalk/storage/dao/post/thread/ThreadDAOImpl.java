@@ -3,10 +3,10 @@ package it.unisa.studenti.nc8.gametalk.storage.dao.post.thread;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
-import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
 import java.math.BigInteger;
@@ -17,13 +17,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Implementazione della classe DAO per l'entità Thread.
+ * Implementazione dell'interfaccia DAO per l'entità {@link Thread}.
  * Questa classe fornisce metodi per l'interazione con il database
- * per le operazioni CRUD relative all'entità Thread.
- * <p>
- * Estende {@link DatabaseDAO} e implementa {@link ThreadDAO}.
- *
- * @version 1.0
+ * per le operazioni CRUD relative all'entità {@link Thread}.
  */
 public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
 

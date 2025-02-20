@@ -1,9 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.user;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 
 import java.time.LocalDate;
 

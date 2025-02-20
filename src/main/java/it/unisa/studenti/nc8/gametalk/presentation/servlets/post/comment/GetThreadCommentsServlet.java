@@ -1,9 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
-import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +18,7 @@ import java.util.Map;
 /**
  * Servlet per ottenere i commenti di un thread dato il suo ID.
  * Supporta la paginazione.
+ * Restituisce risultato in JSON.
  */
 @WebServlet("/getThreadComments")
 public class GetThreadCommentsServlet extends CommentServlet {

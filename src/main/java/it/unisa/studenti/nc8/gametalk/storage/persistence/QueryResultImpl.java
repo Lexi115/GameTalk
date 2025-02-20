@@ -6,6 +6,8 @@ import java.sql.Statement;
 
 /**
  * Rappresenta il risultato di una query al database.
+ * Chiude automaticamente lo {@link Statement} e il {@link ResultSet}
+ * a esso associato.
  */
 public class QueryResultImpl implements QueryResult {
 

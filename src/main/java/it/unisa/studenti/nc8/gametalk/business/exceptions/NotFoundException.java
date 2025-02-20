@@ -1,10 +1,10 @@
 package it.unisa.studenti.nc8.gametalk.business.exceptions;
 
 /**
- * Eccezione lanciata quando una risorsa
- * non viene trovata.
+ * Eccezione lanciata quando una risorsa non viene trovata.
  */
 public class NotFoundException extends RuntimeException {
+
     /**
      * Costruttore.
      *

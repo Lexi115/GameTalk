@@ -5,7 +5,7 @@ import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 import java.time.LocalDate;
 
 /**
- * Classe che rappresenta un utente nel sistema.
+ * Entità che rappresenta un utente della piattaforma.
  * Contiene informazioni sull'identità e sullo stato dell'utente.
  */
 public class User {

@@ -5,6 +5,7 @@ package it.unisa.studenti.nc8.gametalk.presentation.exceptions;
  * un'azione o accedere a una risorsa.
  */
 public class PermissionException extends Exception {
+
     /**
      * Costruttore.
      *

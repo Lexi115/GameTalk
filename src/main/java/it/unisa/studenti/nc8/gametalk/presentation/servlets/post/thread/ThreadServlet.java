@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Servlet che si occupa della gestione dei threads.
+ */
 public abstract class ThreadServlet extends HttpServlet {
 
     /** Logger. **/

@@ -1,10 +1,10 @@
 package it.unisa.studenti.nc8.gametalk.business.services.auth;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 
@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 /**
  * Classe di servizio per la gestione dell'autenticazione utente.
+ * Fornisce metodi per eseguire il login.
  */
 public class AuthenticationServiceImpl implements AuthenticationService {
 
