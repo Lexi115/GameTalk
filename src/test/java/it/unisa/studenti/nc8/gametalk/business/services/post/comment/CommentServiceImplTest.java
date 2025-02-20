@@ -15,7 +15,7 @@ public class CommentServiceImplTest {
     @BeforeAll
     static void setUp() throws ConnectException {
         Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db", "mysql");
-        commentService = new CommentServiceImpl(db);
+        //commentService = new CommentServiceImpl(db);
     }
 
     @Test

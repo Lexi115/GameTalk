@@ -3,36 +3,18 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.thread;
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadService;
-import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServiceImpl;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 @WebServlet("/addThread")
-public class AddThreadServlet extends HttpServlet {
-
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-    /** La classe di servizio per recuperare il thread. */
-    private ThreadService threadService;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.threadService = new ThreadServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
+public class AddThreadServlet extends ThreadServlet {
 
     /**
      * Gestisce la richiesta GET per visualizzare la pagina di aggiunta Thread.
@@ -66,6 +48,7 @@ public class AddThreadServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ThreadService threadService = getThreadService();
         HttpSession session = req.getSession();
 
         //Recupero usernameOp dalla sessione

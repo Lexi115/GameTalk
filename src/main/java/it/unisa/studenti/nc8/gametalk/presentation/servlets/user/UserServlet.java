@@ -1,0 +1,44 @@
+package it.unisa.studenti.nc8.gametalk.presentation.servlets.user;
+
+import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserServiceImpl;
+import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
+import jakarta.servlet.http.HttpServlet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public abstract class UserServlet extends HttpServlet {
+
+    /** Logger. **/
+    protected static final Logger LOGGER = LogManager.getLogger();
+
+    /** La classe di servizio per recuperare gli utenti. */
+    private UserService userService;
+
+    /**
+     * Init.
+     */
+    @Override
+    public void init() {
+        Database db = Functions.getContextDatabase(this.getServletContext());
+        UserDAO userDAO = new UserDAOImpl(db, null);
+        Validator<User> userValidator = new UserValidator();
+
+        this.userService = new UserServiceImpl(
+                db, userDAO, userValidator);
+    }
+
+    /**
+     * Restituisce la classe di servizio utente.
+     * @return La classe di servizio utente.
+     */
+    protected UserService getUserService() {
+        return userService;
+    }
+}

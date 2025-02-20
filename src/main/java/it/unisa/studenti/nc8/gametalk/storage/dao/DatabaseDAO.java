@@ -21,7 +21,7 @@ public abstract class DatabaseDAO<T> {
     private final Database db;
 
     /** La connessione al database. */
-    private final Connection connection;
+    private Connection connection;
 
     /** Il mapper utilizzato per convertire i {@link java.sql.ResultSet}
      * in oggetti di tipo {@code T}. */
@@ -61,6 +61,15 @@ public abstract class DatabaseDAO<T> {
      */
     protected Connection getConnection() {
         return connection;
+    }
+
+    /**
+     * Imposta la connessione al database.
+     *
+     * @param connection La connessione al database.
+     */
+    protected void setConnection(final Connection connection) {
+        this.connection = connection;
     }
 
     /**

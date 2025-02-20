@@ -20,7 +20,7 @@ public class ThreadServiceImplTest {
     @BeforeEach
     void setUp() throws ConnectException {
         Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db", "mysql");
-        threadService = new ThreadServiceImpl(db);
+        //threadService = new ThreadServiceImpl(db);
     }
 
     @Test

@@ -5,33 +5,16 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadService;
-import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 @WebServlet("/removeThread")
-public class RemoveThreadServlet extends HttpServlet {
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-    /** La classe di servizio per recuperare il thread. */
-    private ThreadService threadService;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.threadService = new ThreadServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
+public class RemoveThreadServlet extends ThreadServlet {
 
     /**
      * Gestisce la richiesta POST per eliminare un thread.
@@ -47,6 +30,7 @@ public class RemoveThreadServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ThreadService threadService = getThreadService();
         HttpSession session = req.getSession();
 
         //Recupero usernameReq dalla sessione

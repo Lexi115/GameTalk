@@ -1,5 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.user;
 
+import it.unisa.studenti.nc8.gametalk.storage.utils.Bindable;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
@@ -15,7 +16,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public interface UserDAO extends DAO<User, String> {
+public interface UserDAO extends DAO<User, String>, Bindable {
 
     /**
      * Recupera una lista di utenti che hanno uno username corrispondente

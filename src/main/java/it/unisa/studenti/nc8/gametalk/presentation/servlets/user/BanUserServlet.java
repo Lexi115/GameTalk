@@ -4,16 +4,12 @@ import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.services.user.UserServiceImpl;
-import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.presentation.exceptions.PermissionException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -21,22 +17,7 @@ import java.io.IOException;
  * Servlet per bandire un utente dalla piattaforma.
  */
 @WebServlet("/mod/banUser")
-public class BanUserServlet extends HttpServlet {
-
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** La classe di servizio per ricercare l'utente. */
-    private UserService userService;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.userService = new UserServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
+public class BanUserServlet extends UserServlet {
 
     /**
      * Gestisce la richiesta POST per modificare un profilo.
@@ -52,6 +33,8 @@ public class BanUserServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        UserService userService = getUserService();
+
         // Parametro username dell'utente da bandire.
         String username = req.getParameter("username");
         boolean banned = Boolean.parseBoolean(req.getParameter("banned"));

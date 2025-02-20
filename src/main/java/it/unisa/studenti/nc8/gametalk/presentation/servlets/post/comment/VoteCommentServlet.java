@@ -1,39 +1,22 @@
-package it.unisa.studenti.nc8.gametalk.presentation.api.v1.post;
+package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
-import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadService;
-import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServiceImpl;
+import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet("/api/v1/post/voteThread")
-public class VoteThreadAPIServlet extends HttpServlet {
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-    /** La classe di servizio per recuperare il thread. */
-    private ThreadService threadService;
+@WebServlet("/voteComment")
+public class VoteCommentServlet extends CommentServlet {
 
     /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.threadService = new ThreadServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
-
-    /**
-     * Gestisce la richiesta POST per valutare un thread.
+     * Gestisce la richiesta POST per valutare un commento.
      *
      * @param req  l'oggetto HttpServletRequest contenente i
      *             parametri della richiesta
@@ -46,20 +29,21 @@ public class VoteThreadAPIServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        CommentService commentService = getCommentService();
         HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("user");
         String usernameReq = user.getUsername();
         String voteString = req.getParameter("vote");
-        String threadIdString = req.getParameter("threadId");
-        try {
+        String commentIdString = req.getParameter("commentId");
 
+        try {
             int vote = Integer.parseInt(voteString);
-            long threadId = Long.parseLong(threadIdString);
-            threadService.rateThread(threadId, usernameReq, vote);
+            long commentId = Long.parseLong(commentIdString);
+            commentService.rateComment(commentId, usernameReq, vote);
 
         } catch (ServiceException e) {
-            LOGGER.error("Errore con il servizio di voto thread", e);
+            LOGGER.error("Errore con il servizio di voto commento", e);
             Functions.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage());

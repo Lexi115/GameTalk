@@ -4,9 +4,12 @@ import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationServiceImpl;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -51,11 +54,12 @@ public class HttpFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
+        Database db = Functions.getContextDatabase(req.getServletContext());
         AuthenticationService authenticationService =
                 new AuthenticationServiceImpl(
-                        Functions.getContextDatabase(
-                                req.getServletContext()));
-
+                        db,
+                        new UserDAOImpl(db, null)
+                );
 
         HttpSession session = req.getSession(false);
 

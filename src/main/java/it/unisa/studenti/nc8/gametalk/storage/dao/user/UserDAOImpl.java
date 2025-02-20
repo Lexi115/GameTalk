@@ -260,4 +260,9 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
             throw new DAOException("Errore recupero utente con token", e);
         }
     }
+
+    @Override
+    public void bind(final Object object) {
+        setConnection((Connection) object);
+    }
 }

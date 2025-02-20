@@ -5,19 +5,14 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationExceptio
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
-import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationServiceImpl;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.services.user.UserServiceImpl;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Cookie;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -27,30 +22,10 @@ import java.io.IOException;
  * e imposta un cookie di autenticazione.
  */
 @WebServlet("/login")
-public class LoginServlet extends HttpServlet {
-
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** La classe di servizio per effettuare l'autenticazione. */
-    private AuthenticationService authenticationService;
-
-    /** La classe di servizio per recuperare l'utente. */
-    private UserService userService;
+public class LoginServlet extends AuthenticationServlet {
 
     /** Durata cookie di autenticazione. */
     private static final int AUTH_TOKEN_COOKIE_EXPIRY = 86400 * 7; // 7 giorni
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.authenticationService = new AuthenticationServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-        this.userService = new UserServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
 
     /**
      * Gestisce la richiesta GET per visualizzare la pagina di login.
@@ -84,6 +59,10 @@ public class LoginServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        AuthenticationService authenticationService =
+                getAuthenticationService();
+        UserService userService = getUserService();
+
         // Parametri di login (username e password)
         String username = req.getParameter("username");
         String password = req.getParameter("password");

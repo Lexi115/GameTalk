@@ -5,13 +5,9 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
-import it.unisa.studenti.nc8.gametalk.business.validators.post.comment.CommentValidator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.post.comment.CommentDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Transaction;
@@ -34,6 +30,24 @@ public class CommentServiceImpl implements CommentService {
     private final Database db;
 
     /**
+     * Il DAO per interagire con i commenti sul
+     * sistema di persistenza.
+     */
+    private final CommentDAO commentDAO;
+
+    /**
+     * Il DAO per interagire con i threads sul
+     * sistema di persistenza.
+     */
+    private final ThreadDAO threadDAO;
+
+    /**
+     * Il DAO per interagire con gli utenti sul
+     * sistema di persistenza.
+     */
+    private final UserDAO userDAO;
+
+    /**
      * Il validator che valida i dati contenuti in
      * un oggetto {@link Comment}.
      */
@@ -44,9 +58,18 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param db il database utilizzato per la persistenza dei dati.
      */
-    public CommentServiceImpl(final Database db) {
+    public CommentServiceImpl(
+            final Database db,
+            final CommentDAO commentDAO,
+            final ThreadDAO threadDAO,
+            final UserDAO userDAO,
+            final Validator<Comment> commentValidator
+    ) {
         this.db = db;
-        this.commentValidator = new CommentValidator();
+        this.commentDAO = commentDAO;
+        this.threadDAO = threadDAO;
+        this.userDAO = userDAO;
+        this.commentValidator = commentValidator;
     }
 
     /**
@@ -82,8 +105,8 @@ public class CommentServiceImpl implements CommentService {
 
         //Salvataggio comment
         try (Connection connection = db.connect()) {
-            CommentDAO commentDAO = new CommentDAOImpl(db, connection);
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            commentDAO.bind(connection);
+            threadDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 //Verifica thread non archiviato
@@ -121,8 +144,8 @@ public class CommentServiceImpl implements CommentService {
         }
 
         try (Connection connection = db.connect()) {
-            CommentDAO commentDAO = new CommentDAOImpl(db, connection);
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            commentDAO.bind(connection);
+            threadDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 //Verifica thread non archiviato
@@ -165,7 +188,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         try (Connection connection = db.connect()) {
-            CommentDAO commentDAO = new CommentDAOImpl(db, connection);
+            commentDAO.bind(connection);
             return commentDAO.get(id);
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
@@ -204,7 +227,7 @@ public class CommentServiceImpl implements CommentService {
 
         //Recupero commenti dal thread
         try (Connection connection = db.connect()) {
-            CommentDAO commentDAO = new CommentDAOImpl(db, connection);
+            commentDAO.bind(connection);
             return commentDAO.getCommentsByThreadId(
                     threadId, realUserName, realPage, pageSize);
         } catch (SQLException | DAOException e) {
@@ -235,7 +258,7 @@ public class CommentServiceImpl implements CommentService {
 
         // Recupero commenti dal thread
         try (Connection connection = db.connect()) {
-            CommentDAO commentDAO = new CommentDAOImpl(db, connection);
+            commentDAO.bind(connection);
             return commentDAO.countCommentsByThreadId(threadId);
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
@@ -280,9 +303,9 @@ public class CommentServiceImpl implements CommentService {
         }
 
         try (Connection connection = db.connect()) {
-            CommentDAO commentDAO = new CommentDAOImpl(db, connection);
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            commentDAO.bind(connection);
+            threadDAO.bind(connection);
+            userDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 //Verifico l'esistenza del commento

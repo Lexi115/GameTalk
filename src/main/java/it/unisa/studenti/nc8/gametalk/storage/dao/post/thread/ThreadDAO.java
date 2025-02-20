@@ -2,6 +2,7 @@ package it.unisa.studenti.nc8.gametalk.storage.dao.post.thread;
 
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
+import it.unisa.studenti.nc8.gametalk.storage.utils.Bindable;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
@@ -18,7 +19,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public interface ThreadDAO extends DAO<Thread, Long> {
+public interface ThreadDAO extends DAO<Thread, Long>, Bindable {
 
     /**
      * Ottiene una lista di thread che corrispondono al titolo

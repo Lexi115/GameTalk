@@ -301,4 +301,9 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
         db.executeUpdate(connection, updateVotesQuery, commentId, commentId);
     }
+
+    @Override
+    public void bind(final Object object) {
+        setConnection((Connection) object);
+    }
 }

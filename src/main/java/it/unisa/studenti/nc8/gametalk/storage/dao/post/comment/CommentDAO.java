@@ -1,5 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.post.comment;
 
+import it.unisa.studenti.nc8.gametalk.storage.utils.Bindable;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
@@ -15,7 +16,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public interface CommentDAO extends DAO<Comment, Long> {
+public interface CommentDAO extends DAO<Comment, Long>, Bindable {
 
     /**
      * Recupera una lista di commenti in base all'ID del thread,

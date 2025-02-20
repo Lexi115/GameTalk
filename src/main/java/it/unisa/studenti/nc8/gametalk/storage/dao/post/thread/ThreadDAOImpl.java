@@ -449,4 +449,9 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
 
         return finalQuery;
     }
+
+    @Override
+    public void bind(final Object object) {
+        setConnection((Connection) object);
+    }
 }

@@ -1,4 +1,4 @@
-package it.unisa.studenti.nc8.gametalk.presentation.exceptions;
+package it.unisa.studenti.nc8.gametalk.business.exceptions;
 
 /**
  * Eccezione lanciata quando una risorsa

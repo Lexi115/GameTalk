@@ -1,38 +1,23 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
-import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.Writer;
 
+/**
+ * Servlet per rimuovere un commento dato il suo ID.
+ */
 @WebServlet("/removeComment")
-public class RemoveCommentServlet extends HttpServlet {
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-    /** La classe di servizio per recuperare il commento. */
-    private CommentService commentService;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.commentService = new CommentServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
+public class RemoveCommentServlet extends CommentServlet {
 
     /**
      * Gestisce la richiesta POST per eliminare un commento.
@@ -62,6 +47,7 @@ public class RemoveCommentServlet extends HttpServlet {
         //Recupero informazioni commento
         Comment comment;
         long idComment;
+        CommentService commentService = getCommentService();
         try {
             idComment = Long.parseLong(idCommentString);
             comment = commentService.findCommentById(idComment);

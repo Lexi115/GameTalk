@@ -5,12 +5,9 @@ import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
-import it.unisa.studenti.nc8.gametalk.business.validators.post.thread.ThreadValidator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Transaction;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.TransactionImpl;
@@ -34,6 +31,18 @@ public class ThreadServiceImpl implements ThreadService {
     private final Database db;
 
     /**
+     * Il DAO per interagire con i threads sul
+     * sistema di persistenza.
+     */
+    private final ThreadDAO threadDAO;
+
+    /**
+     * Il DAO per interagire con gli utenti sul
+     * sistema di persistenza.
+     */
+    private final UserDAO userDAO;
+
+    /**
      * Il validator che valida i dati contenuti in
      * un oggetto {@link Thread}.
      */
@@ -44,9 +53,16 @@ public class ThreadServiceImpl implements ThreadService {
      *
      * @param db il database utilizzato per la persistenza dei dati.
      */
-    public ThreadServiceImpl(final Database db) {
+    public ThreadServiceImpl(
+            final Database db,
+            final ThreadDAO threadDAO,
+            final UserDAO userDAO,
+            final Validator<Thread> threadValidator
+    ) {
         this.db = db;
-        this.threadValidator = new ThreadValidator();
+        this.threadDAO = threadDAO;
+        this.userDAO = userDAO;
+        this.threadValidator = threadValidator;
     }
 
     /**
@@ -85,7 +101,7 @@ public class ThreadServiceImpl implements ThreadService {
 
         //Salvataggio Thread
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            threadDAO.bind(connection);
             return threadDAO.save(newThread);
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
@@ -108,7 +124,7 @@ public class ThreadServiceImpl implements ThreadService {
         }
 
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            threadDAO.bind(connection);
             threadDAO.delete(id);
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
@@ -140,7 +156,7 @@ public class ThreadServiceImpl implements ThreadService {
     ) throws ServiceException, IllegalArgumentException {
         //Operazioni di aggiornamento
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            threadDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 //Verifico se esiste un thread con quell'id e lo recupero
@@ -190,7 +206,7 @@ public class ThreadServiceImpl implements ThreadService {
         }
 
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            threadDAO.bind(connection);
             return threadDAO.get(id);
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
@@ -246,7 +262,7 @@ public class ThreadServiceImpl implements ThreadService {
         }
 
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            threadDAO.bind(connection);
 
             // Ricerca generica
             if (isCategoryNull && isTitleEmpty) {
@@ -328,7 +344,7 @@ public class ThreadServiceImpl implements ThreadService {
 
         //Username valido, recupero i thread.
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            threadDAO.bind(connection);
             return threadDAO.getThreadsByUsername(
                     username, realPage, pageSize, order);
         } catch (SQLException | DAOException e) {
@@ -366,8 +382,8 @@ public class ThreadServiceImpl implements ThreadService {
         }
 
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            threadDAO.bind(connection);
+            userDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 //Verifico l'esistenza del thread
@@ -427,7 +443,7 @@ public class ThreadServiceImpl implements ThreadService {
         }
 
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            threadDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 //Recupero thread da modificare
@@ -462,7 +478,7 @@ public class ThreadServiceImpl implements ThreadService {
     @Override
     public void archiveThread(final long threadId) throws ServiceException {
         try (Connection connection = db.connect()) {
-            ThreadDAO threadDAO = new ThreadDAOImpl(db, connection);
+            threadDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 //Recupero thread da modificare

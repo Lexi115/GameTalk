@@ -5,7 +5,6 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationExceptio
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 
@@ -23,12 +22,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final Database db;
 
     /**
+     * Il DAO per interagire con gli utenti sul
+     * sistema di persistenza.
+     */
+    private final UserDAO userDAO;
+
+    /**
      * Costruttore.
      *
      * @param db il database utilizzato per la persistenza dei dati.
      */
-    public AuthenticationServiceImpl(final Database db) {
+    public AuthenticationServiceImpl(
+            final Database db,
+            final UserDAO userDAO
+    ) {
         this.db = db;
+        this.userDAO = userDAO;
     }
 
     /**
@@ -55,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
 
             User user = userDAO.get(username);
             if (user == null) {
@@ -90,7 +99,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
 
             //Effettuo il secondo hash del token
             String hashedToken = Functions.hash(token);

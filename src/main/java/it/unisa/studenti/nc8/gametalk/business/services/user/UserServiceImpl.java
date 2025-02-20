@@ -4,10 +4,8 @@ import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
-import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
-import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Transaction;
@@ -29,6 +27,12 @@ public class UserServiceImpl implements UserService {
     private final Database db;
 
     /**
+     * Il DAO per interagire con gli utenti sul
+     * sistema di persistenza.
+     */
+    private final UserDAO userDAO;
+
+    /**
      * L'oggetto che valida i campi di {@link User}.
      */
     private final Validator<User> userValidator;
@@ -38,9 +42,14 @@ public class UserServiceImpl implements UserService {
      *
      * @param db il database utilizzato per la persistenza dei dati.
      */
-    public UserServiceImpl(final Database db) {
+    public UserServiceImpl(
+            final Database db,
+            final UserDAO userDAO,
+            final Validator<User> userValidator
+    ) {
         this.db = db;
-        this.userValidator = new UserValidator();
+        this.userDAO = userDAO;
+        this.userValidator = userValidator;
     }
 
     /**
@@ -58,7 +67,7 @@ public class UserServiceImpl implements UserService {
             final String password
     ) throws ServiceException {
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 // Crea nuovo utente
@@ -102,7 +111,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeUser(final String username) throws ServiceException {
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 if (!userDAO.delete(username)) {
@@ -130,7 +139,7 @@ public class UserServiceImpl implements UserService {
             final String password
     ) throws ServiceException {
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 User user = userDAO.get(username);
@@ -165,7 +174,7 @@ public class UserServiceImpl implements UserService {
             final String token
     ) throws ServiceException {
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 User user = userDAO.get(username);
@@ -196,7 +205,7 @@ public class UserServiceImpl implements UserService {
             final String username
     ) throws ServiceException {
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
             return userDAO.get(username);
         } catch (SQLException | DAOException e) {
             throw new ServiceException("Errore recupero utente", e);
@@ -220,7 +229,7 @@ public class UserServiceImpl implements UserService {
             final int pageSize
     ) throws ServiceException {
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
             return userDAO.getUsersByUsername(username, page, pageSize);
         } catch (SQLException | DAOException e) {
             throw new ServiceException("Errore ricerca utenti", e);
@@ -241,7 +250,7 @@ public class UserServiceImpl implements UserService {
             final int pageSize
     ) throws ServiceException {
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
             return userDAO.getBannedUsers(page, pageSize);
         } catch (SQLException | DAOException e) {
             throw new ServiceException("Errore recupero utenti bannati", e);
@@ -264,7 +273,7 @@ public class UserServiceImpl implements UserService {
             final boolean banned
     ) throws ServiceException {
         try (Connection connection = db.connect()) {
-            UserDAO userDAO = new UserDAOImpl(db, connection);
+            userDAO.bind(connection);
 
             try (Transaction tx = new TransactionImpl(connection)) {
                 User user = userDAO.get(username);

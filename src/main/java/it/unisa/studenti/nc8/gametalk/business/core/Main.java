@@ -31,7 +31,7 @@ public class Main extends HttpServlet {
      */
     @Override
     public void init() {
-        LOGGER.info("Init lanciato!");
+        LOGGER.info("Init Main lanciato!");
         ctx = getServletContext();
 
         try {

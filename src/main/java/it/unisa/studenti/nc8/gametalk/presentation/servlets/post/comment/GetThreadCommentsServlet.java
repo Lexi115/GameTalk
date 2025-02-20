@@ -1,17 +1,13 @@
-package it.unisa.studenti.nc8.gametalk.presentation.api.v1.post;
+package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
-import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentServiceImpl;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -23,28 +19,14 @@ import java.util.Map;
  * Servlet per ottenere i commenti di un thread dato il suo ID.
  * Supporta la paginazione.
  */
-@WebServlet("/api/v1/post/getThreadComments")
-public class GetThreadCommentsAPIServlet extends HttpServlet {
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** La classe di servizio per recuperare i commenti. */
-    private CommentService commentService;
+@WebServlet("/getThreadComments")
+public class GetThreadCommentsServlet extends CommentServlet {
 
     /** Pagina default. */
     private static final int DEFAULT_PAGE = 1;
 
     /** Numero default di commenti per pagina. */
     private static final int DEFAULT_PAGE_SIZE = 10;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.commentService = new CommentServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
 
     /**
      * Gestisce la richiesta GET per ottenere i commenti di un thread.
@@ -100,6 +82,7 @@ public class GetThreadCommentsAPIServlet extends HttpServlet {
             return;
         }
 
+        CommentService commentService = getCommentService();
         try {
             // Ottieni i commenti del thread
             List<Comment> comments = commentService.findCommentsByThreadId(

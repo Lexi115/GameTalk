@@ -20,20 +20,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 @WebServlet("/editThread")
-public class EditThreadServlet extends HttpServlet {
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-    /** La classe di servizio per recuperare il thread. */
-    private ThreadService threadService;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.threadService = new ThreadServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
+public class EditThreadServlet extends ThreadServlet {
 
     /**
      * Gestisce la richiesta GET per visualizzare la pagina di modifica thread.
@@ -49,6 +36,7 @@ public class EditThreadServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ThreadService threadService = getThreadService();
         HttpSession session = req.getSession();
 
         String idThreadString = req.getParameter("idThread");
@@ -107,7 +95,7 @@ public class EditThreadServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
-
+        ThreadService threadService = getThreadService();
         HttpSession session = req.getSession();
 
         //Recupero usernameReq dalla sessione
