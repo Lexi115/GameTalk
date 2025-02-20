@@ -4,6 +4,7 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.post.comment.CommentMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +38,7 @@ class CommentDAOImplTest {
                 .thenReturn(queryResult);
         when(queryResult.getResultSet()).thenReturn(resultSet);
 
-        commentDAO = new CommentDAOImpl(database, connection);
+        commentDAO = new CommentDAOImpl(database, connection, new CommentMapper());
     }
 
     @Test

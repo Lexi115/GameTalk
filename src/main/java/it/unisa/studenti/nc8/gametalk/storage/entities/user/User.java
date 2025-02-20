@@ -136,4 +136,21 @@ public class User {
     public void setAuthToken(final String authToken) {
         this.authToken = authToken;
     }
+
+    /**
+     * Restituisce una rappresentazione testuale dell'utente.
+     *
+     * @return una stringa che rappresenta l'utente.
+     */
+    @Override
+    public String toString() {
+        return "User{"
+                + "username='" + username + '\''
+                + ", password='" + password + '\''
+                + ", creationDate=" + creationDate
+                + ", banned=" + banned
+                + ", role=" + role
+                + ", authToken='" + authToken + '\''
+                + '}';
+    }
 }

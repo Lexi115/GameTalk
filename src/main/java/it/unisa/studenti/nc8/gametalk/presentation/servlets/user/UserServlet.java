@@ -1,13 +1,11 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.user;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.services.user.UserServiceImpl;
-import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
-import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
-import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
-import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
-import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.http.HttpServlet;
 import org.apache.logging.log4j.LogManager;
@@ -27,11 +25,10 @@ public abstract class UserServlet extends HttpServlet {
     @Override
     public void init() {
         Database db = Functions.getContextDatabase(this.getServletContext());
-        UserDAO userDAO = new UserDAOImpl(db, null);
-        Validator<User> userValidator = new UserValidator();
+        DAOFactory daoFactory = new DAOFactoryImpl(db);
+        ServiceFactory serviceFactory = new ServiceFactoryImpl(db, daoFactory);
 
-        this.userService = new UserServiceImpl(
-                db, userDAO, userValidator);
+        this.userService = serviceFactory.createUserService();
     }
 
     /**

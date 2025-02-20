@@ -5,7 +5,7 @@ import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.post.comment.CommentMapper;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -20,9 +20,15 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      *
      * @param db         Il database.
      * @param connection La connessione al database.
+     * @param mapper     Il mapper per trasformare il risultato di
+     *                   una query in un oggetto {@link Comment}.
      */
-    public CommentDAOImpl(final Database db, final Connection connection) {
-        super(db, connection, new CommentMapper());
+    public CommentDAOImpl(
+            final Database db,
+            final Connection connection,
+            final ResultSetMapper<Comment> mapper
+    ) {
+        super(db, connection, mapper);
     }
 
     /**

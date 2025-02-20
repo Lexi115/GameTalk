@@ -7,7 +7,7 @@ import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.post.thread.ThreadMapper;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -32,12 +32,15 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      *
      * @param db         Il database.
      * @param connection La connessione al database.
+     * @param mapper     Il mapper per trasformare il risultato di
+     *                   una query in un oggetto {@link Thread}.
      */
     public ThreadDAOImpl(
             final Database db,
-            final Connection connection
+            final Connection connection,
+            final ResultSetMapper<Thread> mapper
     ) {
-        super(db, connection, new ThreadMapper());
+        super(db, connection, mapper);
     }
 
     /**

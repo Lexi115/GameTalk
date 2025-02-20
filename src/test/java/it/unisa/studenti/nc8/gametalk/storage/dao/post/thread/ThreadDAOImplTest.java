@@ -6,6 +6,7 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.post.thread.ThreadMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +40,7 @@ class ThreadDAOImplTest {
                 .thenReturn(queryResult);
         when(queryResult.getResultSet()).thenReturn(resultSet);
 
-        threadDAO = new ThreadDAOImpl(database, connection);
+        threadDAO = new ThreadDAOImpl(database, connection, new ThreadMapper());
     }
 
     @Test

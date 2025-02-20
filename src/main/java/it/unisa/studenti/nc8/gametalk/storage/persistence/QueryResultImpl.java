@@ -33,8 +33,6 @@ public class QueryResultImpl implements QueryResult {
      * Restituisce il {@link ResultSet} associato a questo risultato di query.
      *
      * @return il {@code ResultSet} contenente i risultati della query.
-     * @throws SQLException se si verifica un errore SQL
-     * durante l'accesso ai risultati.
      */
     @Override
     public ResultSet getResultSet() {

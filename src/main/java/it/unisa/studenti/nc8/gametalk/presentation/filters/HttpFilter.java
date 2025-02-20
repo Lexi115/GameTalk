@@ -4,11 +4,15 @@ import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAOImpl;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationServiceImpl;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -55,11 +59,10 @@ public class HttpFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         Database db = Functions.getContextDatabase(req.getServletContext());
+        DAOFactory daoFactory = new DAOFactoryImpl(db);
+        ServiceFactory serviceFactory = new ServiceFactoryImpl(db, daoFactory);
         AuthenticationService authenticationService =
-                new AuthenticationServiceImpl(
-                        db,
-                        new UserDAOImpl(db, null)
-                );
+                serviceFactory.createAuthenticationService();
 
         HttpSession session = req.getSession(false);
 

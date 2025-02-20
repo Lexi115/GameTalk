@@ -5,7 +5,7 @@ import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,9 +27,15 @@ public class UserDAOImpl extends DatabaseDAO<User> implements UserDAO {
      *
      * @param db         Il database.
      * @param connection La connessione al database.
+     * @param mapper     Il mapper per trasformare il risultato di
+     *                   una query in un oggetto {@link User}.
      */
-    public UserDAOImpl(final Database db, final Connection connection) {
-        super(db, connection, new UserMapper());
+    public UserDAOImpl(
+            final Database db,
+            final Connection connection,
+            final ResultSetMapper<User> mapper
+    ) {
+        super(db, connection, mapper);
     }
 
     /**

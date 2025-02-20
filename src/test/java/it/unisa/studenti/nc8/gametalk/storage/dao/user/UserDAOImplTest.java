@@ -4,6 +4,7 @@ import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.*;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.user.UserMapper;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -35,7 +36,7 @@ class UserDAOImplTest {
                 .thenReturn(queryResult);
         when(queryResult.getResultSet()).thenReturn(resultSet);
 
-        userDAO = new UserDAOImpl(database, connection);
+        userDAO = new UserDAOImpl(database, connection, new UserMapper());
     }
 
     @Test

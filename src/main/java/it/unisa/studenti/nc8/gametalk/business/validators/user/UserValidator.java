@@ -39,9 +39,11 @@ public class UserValidator implements Validator<User> {
             return false;
         }
 
+//        return isUsernameValid(user.getUsername())
+//                && isPasswordValid(user.getPassword())
+//                && isCreationDateValid(user.getCreationDate());
         return isUsernameValid(user.getUsername())
-                && isPasswordValid(user.getPassword())
-                && isCreationDateValid(user.getCreationDate());
+               ;
     }
 
     /**
