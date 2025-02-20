@@ -453,8 +453,13 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         return finalQuery;
     }
 
+    /**
+     * Associa una connessione al database all'istanza corrente.
+     *
+     * @param connection la connessione da associare.
+     */
     @Override
-    public void bind(final Object object) {
-        setConnection((Connection) object);
+    public void bind(final Object connection) {
+        setConnection((Connection) connection);
     }
 }

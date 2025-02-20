@@ -56,7 +56,15 @@ public class CommentServiceImpl implements CommentService {
     /**
      * Costruttore.
      *
-     * @param db il database utilizzato per la persistenza dei dati.
+     * @param db                il database utilizzato per la persistenza
+     *                          dei dati.
+     * @param commentDAO        il DAO per gestire i commenti sul sistema di
+     *                          persistenza.
+     * @param threadDAO         il DAO per gestire i thread sul sistema di
+     *                          persistenza.
+     * @param userDAO           il DAO per gestire gli utenti sul sistema di
+     *                          persistenza.
+     * @param commentValidator  il validator di commenti.
      */
     public CommentServiceImpl(
             final Database db,
@@ -99,9 +107,7 @@ public class CommentServiceImpl implements CommentService {
         newComment.setCreationDate(LocalDate.now());
 
         //Validazione commento
-        if (!commentValidator.validate(newComment)) {
-            throw new IllegalArgumentException("Commento non valido");
-        }
+        commentValidator.validate(newComment);
 
         //Salvataggio comment
         try (Connection connection = db.connect()) {

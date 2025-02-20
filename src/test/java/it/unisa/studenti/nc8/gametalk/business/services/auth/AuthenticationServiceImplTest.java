@@ -41,7 +41,7 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
-    void loginValid() throws ServiceException, AuthenticationException, DAOException {
+    void testLoginValidCredentials() throws ServiceException, AuthenticationException, DAOException {
         String username = "marco";
         String password = "password_marco";
 
@@ -56,7 +56,7 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
-    void loginInvalid() throws DAOException {
+    void testLoginInvalidCredentials() throws DAOException {
         String username = "marco";
         String password = "password_sbagliata";
 
@@ -66,7 +66,7 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
-    void loginByValidToken() throws DAOException, ServiceException, AuthenticationException {
+    void testLoginByValidToken() throws DAOException, ServiceException, AuthenticationException {
         String username = "marco";
         String token = "marco_token";
 
@@ -81,7 +81,7 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
-    void loginByInvalidToken() throws DAOException {
+    void testLoginByInvalidToken() throws DAOException {
         String token = "token_sbagliato";
 
         when(userDAO.getUserByToken(anyString())).thenReturn(null);

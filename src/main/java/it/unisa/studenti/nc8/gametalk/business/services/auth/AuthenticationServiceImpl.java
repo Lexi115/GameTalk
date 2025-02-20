@@ -30,7 +30,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     /**
      * Costruttore.
      *
-     * @param db il database utilizzato per la persistenza dei dati.
+     * @param db      il database utilizzato per la persistenza dei dati.
+     * @param userDAO il DAO per gestire gli utenti sul sistema di
+     *                persistenza.
      */
     public AuthenticationServiceImpl(
             final Database db,

@@ -1,6 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.user;
 
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 
@@ -31,24 +32,25 @@ public class UserValidator implements Validator<User> {
      * Valida un oggetto {@link User}.
      *
      * @param user L'oggetto {@link User} da validare.
-     * @return {@code true} se l'oggetto è valido, {@code false} altrimenti.
+     * @throws ValidationException se la validazione fallisce.
      */
     @Override
-    public boolean validate(final User user) {
-        if (user == null) {
-            return false;
+    public void validate(final User user) throws ValidationException {
+        if (!isUsernameValid(user.getUsername())) {
+            throw new ValidationException("Username non valido!");
         }
 
-//        return isUsernameValid(user.getUsername())
-//                && isPasswordValid(user.getPassword())
-//                && isCreationDateValid(user.getCreationDate());
-        return isUsernameValid(user.getUsername())
-               ;
+        if (!isPasswordValid(user.getPassword())) {
+            throw new ValidationException("Password non valida!");
+        }
+
+        if (!isCreationDateValid(user.getCreationDate())) {
+            throw new ValidationException("Data di creazione non valida!");
+        }
     }
 
     /**
      * Verifica se il nome utente è valido.
-     * Controlla che non sia nullo, vuoto e che rispetti la regex predefinita.
      *
      * @param username Il nome utente da validare.
      * @return {@code true} se il nome utente è valido,
@@ -62,7 +64,6 @@ public class UserValidator implements Validator<User> {
 
     /**
      * Verifica se la password è valida.
-     * Controlla che non sia nulla, vuota e che rispetti la regex predefinita.
      *
      * @param password La password da validare.
      * @return {@code true} se la password è valida, {@code false} altrimenti.
@@ -75,7 +76,6 @@ public class UserValidator implements Validator<User> {
 
     /**
      * Verifica se la data di creazione è valida.
-     * Controlla che non sia successiva alla data corrente.
      *
      * @param date La data da validare.
      * @return {@code true} se la data di creazione è valida,

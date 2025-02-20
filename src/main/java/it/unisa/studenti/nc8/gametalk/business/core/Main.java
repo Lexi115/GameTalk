@@ -1,5 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.business.core;
 
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactoryImpl;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.DatabaseImpl;
 import jakarta.servlet.ServletContext;
@@ -48,8 +52,16 @@ public class Main extends HttpServlet {
             database = new DatabaseImpl(
                     dbHost, dbPort, dbUser, dbPassword, dbName, dbType);
             ctx.setAttribute("db", database);
+
+            // DAO e Service Factories
+            DAOFactory daoFactory = new DAOFactoryImpl(database);
+            ServiceFactory serviceFactory =
+                    new ServiceFactoryImpl(database, daoFactory);
+            ctx.setAttribute("daoFactory", daoFactory);
+            ctx.setAttribute("serviceFactory", serviceFactory);
         } catch (Exception e) {
-            LOGGER.error("Errore durante l'inizializzazione del database", e);
+            LOGGER.error(
+                    "Errore durante l'inizializzazione dell'applicazione", e);
         }
     }
 

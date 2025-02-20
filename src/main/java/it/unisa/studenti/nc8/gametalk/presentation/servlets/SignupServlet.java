@@ -3,12 +3,9 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets;
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
-import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
-import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
-import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactoryImpl;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -37,9 +34,9 @@ public class SignupServlet extends HttpServlet {
      */
     @Override
     public void init() {
-        Database db = Functions.getContextDatabase(this.getServletContext());
-        DAOFactory daoFactory = new DAOFactoryImpl(db);
-        ServiceFactory serviceFactory = new ServiceFactoryImpl(db, daoFactory);
+        ServletContext ctx = getServletContext();
+        ServiceFactory serviceFactory =
+                (ServiceFactory) ctx.getAttribute("serviceFactory");
 
         this.userService = serviceFactory.createUserService();
     }

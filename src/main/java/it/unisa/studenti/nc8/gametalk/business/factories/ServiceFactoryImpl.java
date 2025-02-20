@@ -21,11 +21,24 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 
+/**
+ * Factory concreta per la creazione delle classi di servizio.
+ * Pensata per lavorare con un database e i DAO.
+ */
 public class ServiceFactoryImpl implements ServiceFactory {
 
+    /** Il database. */
     private final Database database;
+
+    /** La DAO Factory. */
     private final DAOFactory daoFactory;
 
+    /**
+     * Costruttore.
+     *
+     * @param database      Il database.
+     * @param daoFactory    La factory per creare DAO.
+     */
     public ServiceFactoryImpl(
             final Database database,
             final DAOFactory daoFactory
@@ -34,12 +47,22 @@ public class ServiceFactoryImpl implements ServiceFactory {
         this.daoFactory = daoFactory;
     }
 
+    /**
+     * Crea e restituisce un'istanza del servizio di autenticazione.
+     *
+     * @return un'istanza di {@link AuthenticationService}
+     */
     @Override
     public AuthenticationService createAuthenticationService() {
         UserDAO userDAO = daoFactory.createUserDAO();
         return new AuthenticationServiceImpl(database, userDAO);
     }
 
+    /**
+     * Crea e restituisce un'istanza del servizio utente.
+     *
+     * @return un'istanza di {@link UserService}
+     */
     @Override
     public UserService createUserService() {
         UserDAO userDAO = daoFactory.createUserDAO();
@@ -47,6 +70,11 @@ public class ServiceFactoryImpl implements ServiceFactory {
         return new UserServiceImpl(database, userDAO, userValidator);
     }
 
+    /**
+     * Crea e restituisce un'istanza del servizio per la gestione dei thread.
+     *
+     * @return un'istanza di {@link ThreadService}
+     */
     @Override
     public ThreadService createThreadService() {
         ThreadDAO threadDAO = daoFactory.createThreadDAO();
@@ -56,6 +84,11 @@ public class ServiceFactoryImpl implements ServiceFactory {
                 database, threadDAO, userDAO, threadValidator);
     }
 
+    /**
+     * Crea e restituisce un'istanza del servizio per la gestione dei commenti.
+     *
+     * @return un'istanza di {@link CommentService}
+     */
     @Override
     public CommentService createCommentService() {
         CommentDAO commentDAO = daoFactory.createCommentDAO();

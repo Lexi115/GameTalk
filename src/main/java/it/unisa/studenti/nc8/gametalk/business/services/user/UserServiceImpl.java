@@ -3,6 +3,7 @@ package it.unisa.studenti.nc8.gametalk.business.services.user;
 import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
@@ -41,7 +42,11 @@ public class UserServiceImpl implements UserService {
     /**
      * Costruttore.
      *
-     * @param db il database utilizzato per la persistenza dei dati.
+     * @param db                il database utilizzato per la persistenza
+     *                          dei dati.
+     * @param userDAO           il DAO per gestire gli utenti sul sistema di
+     *                          persistenza.
+     * @param userValidator     il validator di utenti.
      */
     public UserServiceImpl(
             final Database db,
@@ -80,10 +85,7 @@ public class UserServiceImpl implements UserService {
                 user.setRole(Role.Member);
 
                 // Valida username e password
-                if (!userValidator.validate(user)) {
-                    throw new IllegalArgumentException(
-                            "Username o password incorretti");
-                }
+                userValidator.validate(user);
 
                 // Verifica esistenza di un utente con lo stesso username
                 User existingUser = userDAO.get(username);
@@ -150,10 +152,7 @@ public class UserServiceImpl implements UserService {
                 }
 
                 user.setPassword(password);
-                if (!userValidator.validate(user)) {
-                    throw new IllegalArgumentException("Password non valida");
-                }
-
+                userValidator.validate(user);
                 userDAO.update(user);
                 tx.commit();
             }

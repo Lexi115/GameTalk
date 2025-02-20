@@ -51,7 +51,13 @@ public class ThreadServiceImpl implements ThreadService {
     /**
      * Costruttore.
      *
-     * @param db il database utilizzato per la persistenza dei dati.
+     * @param db                il database utilizzato per la persistenza
+     *                          dei dati.
+     * @param threadDAO         il DAO per gestire i thread sul sistema di
+     *                          persistenza.
+     * @param userDAO           il DAO per gestire gli utenti sul sistema di
+     *                          persistenza.
+     * @param threadValidator   il validator di thread.
      */
     public ThreadServiceImpl(
             final Database db,
@@ -95,9 +101,7 @@ public class ThreadServiceImpl implements ThreadService {
         newThread.setCreationDate(LocalDate.now());
 
         //Validazione Thread
-        if (!threadValidator.validate(newThread)) {
-            throw new ServiceException("Thread non valido.");
-        }
+        threadValidator.validate(newThread);
 
         //Salvataggio Thread
         try (Connection connection = db.connect()) {
@@ -176,9 +180,7 @@ public class ThreadServiceImpl implements ThreadService {
                 updatedThread.setCategory(category);
 
                 //Valido i campi aggiornati
-                if (!threadValidator.validate(updatedThread)) {
-                    throw new ServiceException("Thread non valido.");
-                }
+                threadValidator.validate(updatedThread);
 
                 //Aggiorno il thread sul database
                 threadDAO.update(updatedThread);

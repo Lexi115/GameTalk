@@ -308,8 +308,13 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
         db.executeUpdate(connection, updateVotesQuery, commentId, commentId);
     }
 
+    /**
+     * Associa una connessione al database all'istanza corrente.
+     *
+     * @param connection la connessione da associare.
+     */
     @Override
-    public void bind(final Object object) {
-        setConnection((Connection) object);
+    public void bind(final Object connection) {
+        setConnection((Connection) connection);
     }
 }

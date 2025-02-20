@@ -4,9 +4,7 @@ import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.unisa.studenti.nc8.gametalk.business.adapters.json.LocalDateAdapter;
-import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,19 +21,6 @@ import java.util.regex.Pattern;
  * utilizzate nell'applicazione.
  */
 public abstract class Functions {
-
-    /**
-     * Recupera il database dal contesto della servlet.
-     *
-     * @param servletContext il context.
-     * @return il database dal servlet context
-     * oppure {@code null} se non trovato.
-     */
-    public static Database getContextDatabase(
-            final ServletContext servletContext) {
-        Object obj = servletContext.getAttribute("db");
-        return obj == null ? null : (Database) obj;
-    }
 
     /**
      * Verifica se una stringa corrisponde a una determinata
