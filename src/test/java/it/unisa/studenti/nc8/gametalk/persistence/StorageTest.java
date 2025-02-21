@@ -10,12 +10,13 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactoryImpl;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DatabaseFactory;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DatabaseFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,8 +30,10 @@ public class StorageTest {
     private UserDAO userDAO;
 
     @BeforeEach
-    void setUp() throws ConnectException {
-        db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db", "mysql");
+    void setUp() {
+        DatabaseFactory databaseFactory =
+                new DatabaseFactoryImpl("localhost", 3306, "root", "root_pw", "gametalk_db", "mysql");
+        db = databaseFactory.createDatabase();
 
         DAOFactory daoFactory = new DAOFactoryImpl(db);
         userDAO = daoFactory.createUserDAO();
