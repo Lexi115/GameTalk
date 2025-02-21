@@ -21,8 +21,6 @@ import java.util.TimeZone;
  * Classe per la gestione della connessione e delle operazioni
  * con un database SQL. Utilizza un pool di connessioni per
  * migliorare le prestazioni.
- *
- * @version 2.0
  */
 public class DatabaseImpl implements Database {
 

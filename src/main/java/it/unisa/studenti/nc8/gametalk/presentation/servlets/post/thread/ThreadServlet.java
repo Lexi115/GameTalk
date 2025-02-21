@@ -32,6 +32,7 @@ public abstract class ThreadServlet extends HttpServlet {
 
     /**
      * Restituisce la classe di servizio thread.
+     *
      * @return La classe di servizio thread.
      */
     protected ThreadService getThreadService() {

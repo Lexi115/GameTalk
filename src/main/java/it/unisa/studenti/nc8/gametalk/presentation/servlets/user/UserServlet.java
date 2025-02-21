@@ -32,6 +32,7 @@ public abstract class UserServlet extends HttpServlet {
 
     /**
      * Restituisce la classe di servizio utente.
+     *
      * @return La classe di servizio utente.
      */
     protected UserService getUserService() {

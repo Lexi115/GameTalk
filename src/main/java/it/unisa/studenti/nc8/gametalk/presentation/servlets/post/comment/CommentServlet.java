@@ -32,6 +32,7 @@ public abstract class CommentServlet extends HttpServlet {
 
     /**
      * Restituisce la classe di servizio commento.
+     *
      * @return La classe di servizio commento.
      */
     protected CommentService getCommentService() {

@@ -38,6 +38,7 @@ public abstract class AuthenticationServlet extends HttpServlet {
 
     /**
      * Restituisce la classe di servizio per l'autenticazione.
+     *
      * @return La classe di servizio per l'autenticazione.
      */
     protected AuthenticationService getAuthenticationService() {
@@ -46,6 +47,7 @@ public abstract class AuthenticationServlet extends HttpServlet {
 
     /**
      * Restituisce la classe di servizio utente.
+     *
      * @return La classe di servizio utente.
      */
     protected UserService getUserService() {
