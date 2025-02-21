@@ -1,11 +1,11 @@
 package it.unisa.studenti.nc8.gametalk.storage.exceptions;
 
 /**
- * Eccezione lanciata da una classe che implementa
- * {@link it.unisa.studenti.nc8.gametalk.storage.dao.DAO} in caso di errori
+ * Eccezione lanciata da una classe DAO in caso di errori
  * (ad esempio problemi con il sistema di persistenza).
  */
 public class DAOException extends Exception {
+
     /**
      * Costruttore.
      *

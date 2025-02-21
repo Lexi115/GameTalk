@@ -1,14 +1,11 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.auth;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Cookie;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -16,10 +13,7 @@ import java.io.IOException;
  * Servlet per gestire il logout degli utenti.
  */
 @WebServlet("/logout")
-public class LogoutServlet extends HttpServlet {
-
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
+public class LogoutServlet extends AuthenticationServlet {
 
     /**
      * Gestisce la richiesta GET per effettuare il logout.

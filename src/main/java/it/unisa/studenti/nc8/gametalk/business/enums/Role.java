@@ -5,6 +5,7 @@ package it.unisa.studenti.nc8.gametalk.business.enums;
  * sulla piattaforma.
  */
 public enum Role {
+
     /** Ruolo assegnato ai membri regolari della community. */
     Member,
 

@@ -1,5 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.validators;
 
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
+
 /**
  * Interfaccia generica per la validazione di oggetti.
  *
@@ -10,9 +12,8 @@ public interface Validator<T> {
     /**
      * Valida un oggetto del tipo specificato.
      *
-     * @param t L'oggetto da validare.
-     * @return {@code true} se l'oggetto è valido, {@code false} altrimenti.
+     * @param object                L'oggetto da validare.
+     * @throws ValidationException  se la validazione fallisce.
      */
-    boolean validate(T t);
+    void validate(T object) throws ValidationException;
 }
-

@@ -1,10 +1,11 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserServiceImpl;
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 /**
- * Servlet per gestire la registrazione degli utenti.
+ * Servlet per gestire la registrazione di un utente.
  * Riceve username e password.
  */
 @WebServlet("/signup")
@@ -33,8 +34,11 @@ public class SignupServlet extends HttpServlet {
      */
     @Override
     public void init() {
-        this.userService = new UserServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
+        ServletContext ctx = getServletContext();
+        ServiceFactory serviceFactory =
+                (ServiceFactory) ctx.getAttribute("serviceFactory");
+
+        this.userService = serviceFactory.createUserService();
     }
 
     /**

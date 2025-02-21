@@ -3,6 +3,8 @@ package it.unisa.studenti.nc8.gametalk.storage.dao;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
+import java.sql.Connection;
+
 /**
  * Classe astratta che rappresenta un DAO generico per la gestione
  * dell'accesso ai dati tramite un database.
@@ -18,6 +20,9 @@ public abstract class DatabaseDAO<T> {
     /** Il database utilizzato per le operazioni di accesso ai dati. */
     private final Database db;
 
+    /** La connessione al database. */
+    private Connection connection;
+
     /** Il mapper utilizzato per convertire i {@link java.sql.ResultSet}
      * in oggetti di tipo {@code T}. */
     private final ResultSetMapper<T> mapper;
@@ -25,12 +30,18 @@ public abstract class DatabaseDAO<T> {
     /**
      * Costruttore.
      *
-     * @param db     Istanza di {@link Database} per la connessione al database.
-     * @param mapper Mapper per convertire un {@link java.sql.ResultSet}
-     *               in un oggetto entità.
+     * @param db         Il database.
+     * @param connection La connessione al database.
+     * @param mapper     Mapper per convertire un {@link java.sql.ResultSet}
+     *                   in un oggetto entità.
      */
-    public DatabaseDAO(final Database db, final ResultSetMapper<T> mapper) {
+    public DatabaseDAO(
+            final Database db,
+            final Connection connection,
+            final ResultSetMapper<T> mapper
+    ) {
         this.db = db;
+        this.connection = connection;
         this.mapper = mapper;
     }
 
@@ -39,8 +50,26 @@ public abstract class DatabaseDAO<T> {
      *
      * @return Il database.
      */
-    protected Database getDb() {
+    protected Database getDatabase() {
         return db;
+    }
+
+    /**
+     * Restituisce la connessione al database.
+     *
+     * @return La connessione al database.
+     */
+    protected Connection getConnection() {
+        return connection;
+    }
+
+    /**
+     * Imposta la connessione al database.
+     *
+     * @param connection La connessione al database.
+     */
+    protected void setConnection(final Connection connection) {
+        this.connection = connection;
     }
 
     /**

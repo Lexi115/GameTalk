@@ -3,22 +3,20 @@ package it.unisa.studenti.nc8.gametalk.storage.dao.post.thread;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
-import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.storage.utils.Bindable;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Definizione dell'interfaccia DAO per l'entità {@link Thread}.
+ * Interfaccia DAO per l'entità {@link Thread}.
  * Questa interfaccia definisce metodi aggiuntivi per l'interazione
- * con il database per le operazioni CRUD relative all'entità {@link Thread}.
- * <p>
- * Estende {@link DAO<Thread>}.
- *
- * @version 1.0
+ * con il sistema di persistenza per le operazioni CRUD relative
+ * all'entità {@link Thread}.
  */
-public interface ThreadDAO extends DAO<Thread, Long> {
+public interface ThreadDAO extends DAO<Thread, Long>, Bindable {
 
     /**
      * Ottiene una lista di thread che corrispondono al titolo

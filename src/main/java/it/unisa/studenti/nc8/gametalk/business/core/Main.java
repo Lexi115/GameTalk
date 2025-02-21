@@ -1,5 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.business.core;
 
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
+import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactoryImpl;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
+import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.DatabaseImpl;
 import jakarta.servlet.ServletContext;
@@ -8,13 +12,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Serial;
-import java.sql.SQLException;
 
 /**
  * Classe principale dell'applicazione che si occupa di
- * inizializzare le risorse necessarie (es. database).
+ * inizializzare le risorse necessarie (es. Database).
  */
 public class Main extends HttpServlet {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -24,15 +28,12 @@ public class Main extends HttpServlet {
     /** Servlet context. */
     private ServletContext ctx;
 
-    /** Il database a cui collegarsi. */
-    private Database database;
-
     /**
      * Metodo di inizializzazione.
      */
     @Override
     public void init() {
-        LOGGER.info("Init lanciato!");
+        LOGGER.info("Init Main lanciato!");
         ctx = getServletContext();
 
         try {
@@ -45,16 +46,20 @@ public class Main extends HttpServlet {
             String dbName = ctx.getInitParameter("dbName");
             String dbUser = ctx.getInitParameter("dbUser");
             String dbPassword = ctx.getInitParameter("dbPass");
-            database = new DatabaseImpl(
-                    dbHost, dbPort, dbUser, dbPassword, dbName);
-
-            // Test connessione
-            database.connect();
-            LOGGER.info("Test Connessione al database: OK!");
-            database.close();
+            String dbType = ctx.getInitParameter("dbType");
+            Database database = new DatabaseImpl(
+                    dbHost, dbPort, dbUser, dbPassword, dbName, dbType);
             ctx.setAttribute("db", database);
-        } catch (SQLException e) {
-            LOGGER.error("Errore durante l'inizializzazione del database", e);
+
+            // DAO e Service Factories
+            DAOFactory daoFactory = new DAOFactoryImpl(database);
+            ServiceFactory serviceFactory =
+                    new ServiceFactoryImpl(database, daoFactory);
+            ctx.setAttribute("daoFactory", daoFactory);
+            ctx.setAttribute("serviceFactory", serviceFactory);
+        } catch (Exception e) {
+            LOGGER.error(
+                    "Errore durante l'inizializzazione dell'applicazione", e);
         }
     }
 
@@ -64,12 +69,12 @@ public class Main extends HttpServlet {
     @Override
     public void destroy() {
         try {
-            if (database != null) {
-                database.close();
-                ctx.removeAttribute("db");
-            }
+            ctx.removeAttribute("db");
+            ctx.removeAttribute("daoFactory");
+            ctx.removeAttribute("serviceFactory");
         } catch (Exception e) {
-            LOGGER.error("Errore durante la chiusura del database", e);
+            LOGGER.error(
+                    "Errore durante lo spegnimento dell'applicazione", e);
         }
     }
 }

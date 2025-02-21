@@ -1,31 +1,39 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DatabaseDAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMapper;
 
 import java.math.BigInteger;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Implementazione dell'interfaccia DAO per l'entità {@link Comment}.
+ * Questa classe fornisce metodi per l'interazione con il database
+ * per le operazioni CRUD relative all'entità {@link Comment}.
+ */
 public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
 
     /**
-     * Costruttore che inizializza l'oggetto {@link CommentDAOImpl} con
-     * il database e il mapper per mappare i risultati delle query.
+     * Costruttore.
      *
-     * @param db Oggetto {@link Database}, contiene informazioni sul database
-     *           con cui interagire.
-     * @param mapper il mapper per mappare i risultati del {@link ResultSet}
+     * @param db         Il database.
+     * @param connection La connessione al database.
+     * @param mapper     Il mapper per trasformare il risultato di
+     *                   una query in un oggetto {@link Comment}.
      */
     public CommentDAOImpl(
             final Database db,
+            final Connection connection,
             final ResultSetMapper<Comment> mapper
     ) {
-        super(db, mapper);
+        super(db, connection, mapper);
     }
 
     /**
@@ -39,12 +47,12 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public Comment get(final Long id) throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM comments WHERE id = ?";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "SELECT * FROM comments WHERE id = ?";
 
-            ResultSet rs = db.executeQuery(query, id);
-            List<Comment> comments = this.getMapper().map(rs);
+        try (QueryResult qr = db.executeQuery(connection, query, id)) {
+            List<Comment> comments = this.getMapper().map(qr.getResultSet());
             return !comments.isEmpty() ? comments.getFirst() : null;
         } catch (SQLException e) {
             throw new DAOException("Errore recupero commento ID " + id, e);
@@ -60,12 +68,12 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public List<Comment> getAll() throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM comments";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "SELECT * FROM comments";
 
-            ResultSet rs = db.executeQuery(query);
-            return this.getMapper().map(rs);
+        try (QueryResult qr = db.executeQuery(connection, query)) {
+            return this.getMapper().map(qr.getResultSet());
         } catch (SQLException e) {
             throw new DAOException("Errore recupero commenti", e);
         }
@@ -82,20 +90,20 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public Long save(final Comment entity) throws DAOException {
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "INSERT INTO comments (thread_id, username, body, "
+                + "votes, creation_date) VALUES (?, ?, ?, ?, ?)";
+        Object[] params = {
+                entity.getThreadId(),
+                entity.getUsername(),
+                entity.getBody(),
+                entity.getVotes(),
+                entity.getCreationDate()
+        };
+
         try {
-            Database db = this.getDb();
-            String query = "INSERT INTO comments (thread_id, username, body, "
-                    + "votes, creation_date) VALUES (?, ?, ?, ?, ?)";
-
-            Object[] params = {
-                    entity.getThreadId(),
-                    entity.getUsername(),
-                    entity.getBody(),
-                    entity.getVotes(),
-                    entity.getCreationDate()
-            };
-
-            List<Object> keys = db.executeInsert(query, params);
+            List<Object> keys = db.executeInsert(connection, query, params);
             return !keys.isEmpty()
                     ? ((BigInteger) keys.getFirst()).longValue() : 0;
         } catch (SQLException e) {
@@ -114,21 +122,21 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public boolean update(final Comment entity) throws DAOException {
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "UPDATE comments SET thread_id = ?, username = ?, "
+                + "body = ?, votes = ?, creation_date = ? WHERE id = ?";
+        Object[] params = {
+                entity.getThreadId(),
+                entity.getUsername(),
+                entity.getBody(),
+                entity.getVotes(),
+                entity.getCreationDate(),
+                entity.getId()
+        };
+
         try {
-            Database db = this.getDb();
-            String query = "UPDATE comments SET thread_id = ?, username = ?, "
-                    + "body = ?, votes = ?, creation_date = ? WHERE id = ?";
-
-            Object[] params = {
-                    entity.getThreadId(),
-                    entity.getUsername(),
-                    entity.getBody(),
-                    entity.getVotes(),
-                    entity.getCreationDate(),
-                    entity.getId()
-            };
-
-            return db.executeUpdate(query, params) > 0;
+            return db.executeUpdate(connection, query, params) > 0;
         } catch (SQLException e) {
             throw new DAOException("Errore aggiornamento commento", e);
         }
@@ -145,11 +153,12 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      */
     @Override
     public boolean delete(final Long id) throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "DELETE FROM comments WHERE id = ?";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "DELETE FROM comments WHERE id = ?";
 
-            return db.executeUpdate(query, id) > 0;
+        try {
+            return db.executeUpdate(connection, query, id) > 0;
         } catch (SQLException e) {
             throw new DAOException("Errore rimozione commento", e);
         }
@@ -177,20 +186,15 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     ) throws DAOException {
         int offset = (page - 1) * limit;
 
-        try {
-            Database db = this.getDb();
-            String query = "SELECT * FROM comments WHERE thread_id = ? "
-                    + "ORDER BY (username = ?) DESC, creation_date DESC "
-                    + "LIMIT ? OFFSET ?";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "SELECT * FROM comments WHERE thread_id = ? "
+                + "ORDER BY (username = ?) DESC, creation_date DESC "
+                + "LIMIT ? OFFSET ?";
 
-            ResultSet rs = db.executeQuery(
-                    query,
-                    threadId,
-                    username,
-                    limit,
-                    offset
-            );
-            return this.getMapper().map(rs);
+        try (QueryResult qr = db.executeQuery(
+                connection, query, threadId, username, limit, offset)) {
+            return this.getMapper().map(qr.getResultSet());
         } catch (SQLException e) {
             throw new DAOException(
                     "Errore recupero commenti thread ID " + threadId, e);
@@ -208,11 +212,12 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     @Override
     public long countCommentsByThreadId(
             final long threadId) throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "SELECT COUNT(id) FROM comments WHERE thread_id = ?";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "SELECT COUNT(id) FROM comments WHERE thread_id = ?";
 
-            ResultSet rs = db.executeQuery(query, threadId);
+        try (QueryResult qr = db.executeQuery(connection, query, threadId)) {
+            ResultSet rs = qr.getResultSet();
             return rs.next() ? rs.getLong(1) : 0;
         } catch (SQLException e) {
             throw new DAOException(
@@ -244,16 +249,16 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             final String username,
             final int vote
     ) throws DAOException {
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query =
+                "INSERT INTO votes_comments (username, comment_id, vote)"
+                        + " VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE vote = ?";
+
         try {
-            Database db = this.getDb();
-            String query =
-                    "INSERT INTO votes_comments (username, comment_id, vote)"
-                    + " VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE vote = ?";
-
-            db.executeInsert(query, username, commentId, vote, vote);
-
+            db.executeInsert(connection, query, username,
+                    commentId, vote, vote);
             updateCommentVotes(commentId);
-
         } catch (SQLException e) {
             throw new DAOException("Voto non andato a buon fine", e);
         }
@@ -274,15 +279,15 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
             final long commentId,
             final String username
     ) throws DAOException {
-        try {
-            Database db = this.getDb();
-            String query = "DELETE FROM votes_comments "
-                    + "WHERE username = ? AND comment_id = ?";
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+        String query = "DELETE FROM votes_comments "
+                + "WHERE username = ? AND comment_id = ?";
 
-            if (db.executeUpdate(query, username, commentId) > 0) {
+        try {
+            if (db.executeUpdate(connection, query, username, commentId) > 0) {
                 updateCommentVotes(commentId);
             }
-
         } catch (SQLException e) {
             throw new DAOException("Rimozione voto non andata a buon fine", e);
         }
@@ -298,12 +303,23 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
      * conteggio dei voti nel database.
      */
     private void updateCommentVotes(final long commentId) throws SQLException {
-        Database db = this.getDb();
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
         String updateVotesQuery = "UPDATE comments SET votes = "
                 + "COALESCE((SELECT SUM(vote) "
                 + "FROM votes_comments WHERE comment_id = ?), 0)"
                 + " WHERE id = ?";
 
-        db.executeUpdate(updateVotesQuery, commentId, commentId);
+        db.executeUpdate(connection, updateVotesQuery, commentId, commentId);
+    }
+
+    /**
+     * Associa una connessione al database all'istanza corrente.
+     *
+     * @param connection la connessione da associare.
+     */
+    @Override
+    public void bind(final Object connection) {
+        setConnection((Connection) connection);
     }
 }

@@ -12,12 +12,12 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Main</servlet-name>
-        <url-pattern>/main</url-pattern>
+        <url-pattern />
     </servlet-mapping>
 
     <!-- Filtri -->
     <filter-mapping>
-        <filter-name>HttpFilter</filter-name>
+        <filter-name>AutoLoginFilter</filter-name>
         <url-pattern>/*</url-pattern> <!-- Si applica filter a tutto il sito -->
     </filter-mapping>
     <filter-mapping>
@@ -66,5 +66,9 @@
     <context-param>
         <param-name>dbPort</param-name>
         <param-value>3306</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbType</param-name>
+        <param-value>mysql</param-value>
     </context-param>
 </web-app>

@@ -5,6 +5,7 @@ package it.unisa.studenti.nc8.gametalk.business.exceptions;
  * (ad esempio problemi con lo storage layer).
  */
 public class ServiceException extends Exception {
+
     /**
      * Costruttore.
      *

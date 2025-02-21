@@ -1,8 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.post.thread;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
-import it.unisa.studenti.nc8.gametalk.business.model.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 
 /**
  * Classe di validazione per oggetti {@link Thread}.
@@ -28,21 +29,21 @@ public class ThreadValidator implements Validator<Thread> {
      * Valida un oggetto {@link Thread}.
      *
      * @param thread L'oggetto {@link Thread} da validare.
-     * @return {@code true} se l'oggetto è valido, {@code false} altrimenti.
+     * @throws ValidationException se la validazione fallisce.
      */
     @Override
-    public boolean validate(final Thread thread) {
-        if (thread == null) {
-            return false;
+    public void validate(final Thread thread) throws ValidationException {
+        if (!isTitleValid(thread.getTitle())) {
+            throw new ValidationException("Titolo thread non valido!");
         }
 
-        return isTitleValid(thread.getTitle())
-                && isBodyValid(thread.getBody());
+        if (!isBodyValid(thread.getBody())) {
+            throw new ValidationException("Corpo thread non valido!");
+        }
     }
 
     /**
      * Verifica se il titolo del thread è valido.
-     * Controlla che non sia nullo, vuoto e che rispetti la regex predefinita.
      *
      * @param title Il titolo del thread da validare.
      * @return {@code true} se il titolo è valido, {@code false} altrimenti.
@@ -55,7 +56,6 @@ public class ThreadValidator implements Validator<Thread> {
 
     /**
      * Verifica se il corpo del thread è valido.
-     * Controlla che non sia nullo, vuoto e che rispetti la regex predefinita.
      *
      * @param body Il corpo del thread da validare.
      * @return {@code true} se il corpo è valido, {@code false} altrimenti.

@@ -4,6 +4,7 @@ package it.unisa.studenti.nc8.gametalk.business.enums;
  * Enum che rappresenta le categorie assegnabili a un thread.
  */
 public enum Category {
+
     /** Categoria per i nuovi utenti dove presentarsi alla community. */
     Welcome,
 

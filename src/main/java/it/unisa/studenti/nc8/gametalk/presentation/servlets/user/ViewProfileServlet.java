@@ -1,19 +1,15 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.user;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.model.user.User;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserServiceImpl;
-import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
+import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -21,22 +17,7 @@ import java.io.IOException;
  * Servlet per mostrare una pagina di profilo utente.
  */
 @WebServlet("/profile")
-public class ViewProfileServlet extends HttpServlet {
-
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** La classe di servizio per ricercare l'utente. */
-    private UserService userService;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.userService = new UserServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
+public class ViewProfileServlet extends UserServlet {
 
     /**
      * Gestisce la richiesta GET per mostrare la pagina profilo.
@@ -52,6 +33,7 @@ public class ViewProfileServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws IOException, ServletException {
+        UserService userService = getUserService();
         try {
             // Parametro di ricerca (username)
             String username = req.getParameter("username");
