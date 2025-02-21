@@ -8,8 +8,8 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.DatabaseImpl;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serial;
 
@@ -23,7 +23,8 @@ public class Main extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /** Logger. */
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(Main.class);
 
     /** Servlet context. */
     private ServletContext ctx;

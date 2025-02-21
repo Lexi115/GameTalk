@@ -5,8 +5,8 @@ import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationServi
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servlet che si occupa dell'autenticazione di un utente.
@@ -14,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 public abstract class AuthenticationServlet extends HttpServlet {
 
     /** Logger. **/
-    protected static final Logger LOGGER = LogManager.getLogger();
+    protected static final Logger LOGGER =
+            LoggerFactory.getLogger(AuthenticationServlet.class);
 
     /** La classe di servizio per gestire l'autenticazione. */
     private AuthenticationService authenticationService;
@@ -38,6 +39,7 @@ public abstract class AuthenticationServlet extends HttpServlet {
 
     /**
      * Restituisce la classe di servizio per l'autenticazione.
+     *
      * @return La classe di servizio per l'autenticazione.
      */
     protected AuthenticationService getAuthenticationService() {
@@ -46,6 +48,7 @@ public abstract class AuthenticationServlet extends HttpServlet {
 
     /**
      * Restituisce la classe di servizio utente.
+     *
      * @return La classe di servizio utente.
      */
     protected UserService getUserService() {

@@ -251,7 +251,7 @@ public class ThreadServiceImpl implements ThreadService {
         boolean isCategoryNull = category == null;
         boolean isTitleEmpty = title == null || title.isBlank();
 
-        LocalDate actualStartDate = LocalDate.of(1000, 01, 01);
+        LocalDate actualStartDate = LocalDate.of(1000, 1, 1);
         LocalDate actualEndDate = LocalDate.of(9999, 12, 31);
 
         //Controllo data inizio

@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Servlet per ottenere i commenti di un thread dato il suo ID.
  * Supporta la paginazione.
- * Restituisce risultato in JSON.
+ * Restituisce il risultato in formato JSON.
  */
 @WebServlet("/getThreadComments")
 public class GetThreadCommentsServlet extends CommentServlet {

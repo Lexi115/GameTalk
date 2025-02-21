@@ -6,7 +6,6 @@ import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationServi
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -26,24 +25,6 @@ public class LoginServlet extends AuthenticationServlet {
 
     /** Durata cookie di autenticazione. */
     private static final int AUTH_TOKEN_COOKIE_EXPIRY = 86400 * 7; // 7 giorni
-
-    /**
-     * Gestisce la richiesta GET per visualizzare la pagina di login.
-     *
-     * @param req  l'oggetto HttpServletRequest contenente i
-     *             parametri della richiesta
-     * @param resp l'oggetto HttpServletResponse per inviare
-     *             la risposta al client
-     * @throws IOException se si verifica un errore.
-     */
-    @Override
-    protected void doGet(
-            final HttpServletRequest req,
-            final HttpServletResponse resp
-    ) throws ServletException, IOException {
-        RequestDispatcher rd = req.getRequestDispatcher("login.jsp");
-        rd.forward(req, resp);
-    }
 
     /**
      * Gestisce la richiesta POST per autenticare l'utente.

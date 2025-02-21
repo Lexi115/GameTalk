@@ -15,6 +15,7 @@ import java.io.Writer;
 
 /**
  * Servlet per rimuovere un commento dato il suo ID.
+ * Restituisce l'esito in formato JSON.
  */
 @WebServlet("/removeComment")
 public class RemoveCommentServlet extends CommentServlet {

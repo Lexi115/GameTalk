@@ -2,8 +2,8 @@ package it.unisa.studenti.nc8.gametalk.storage.persistence;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.net.ConnectException;
@@ -21,13 +21,12 @@ import java.util.TimeZone;
  * Classe per la gestione della connessione e delle operazioni
  * con un database SQL. Utilizza un pool di connessioni per
  * migliorare le prestazioni.
- *
- * @version 2.0
  */
 public class DatabaseImpl implements Database {
 
     /** Logger. */
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(DatabaseImpl.class);
 
     /** Host del database. */
     private final String host;
