@@ -23,7 +23,8 @@ public class Main extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /** Logger. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(Main.class);
 
     /** Servlet context. */
     private ServletContext ctx;

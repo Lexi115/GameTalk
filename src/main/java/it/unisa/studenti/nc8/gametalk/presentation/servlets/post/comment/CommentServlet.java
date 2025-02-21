@@ -4,8 +4,8 @@ import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servlet che si occupa della gestione dei commenti dei threads.
@@ -13,7 +13,8 @@ import org.apache.logging.log4j.Logger;
 public abstract class CommentServlet extends HttpServlet {
 
     /** Logger. **/
-    protected static final Logger LOGGER = LogManager.getLogger();
+    protected static final Logger LOGGER =
+            LoggerFactory.getLogger(CommentServlet.class);
 
     /** La classe di servizio per recuperare i commenti. */
     private CommentService commentService;
