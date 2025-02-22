@@ -5,6 +5,7 @@ import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationServi
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelperImpl;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
 import org.slf4j.Logger;
@@ -22,6 +23,9 @@ public abstract class AuthenticationServlet extends HttpServlet {
     /** La classe di servizio per gestire l'autenticazione. */
     private AuthenticationService authenticationService;
 
+    /** Error handler. */
+    private ErrorHandler errorHandler;
+
     /** La classe di servizio per recuperare gli utenti. */
     private UserService userService;
 
@@ -36,6 +40,7 @@ public abstract class AuthenticationServlet extends HttpServlet {
         ServletContext ctx = getServletContext();
         ServiceFactory serviceFactory =
                 (ServiceFactory) ctx.getAttribute("serviceFactory");
+        errorHandler = (ErrorHandler) ctx.getAttribute("errorHandler");
 
         this.authenticationService =
                 serviceFactory.createAuthenticationService();
@@ -69,5 +74,14 @@ public abstract class AuthenticationServlet extends HttpServlet {
      */
     protected CookieHelper getCookieHelper() {
         return cookieHelper;
+    }
+
+    /**
+     * Restituisce l'handler di errori.
+     *
+     * @return L'handler di errori.
+     */
+    protected ErrorHandler getErrorHandler() {
+        return errorHandler;
     }
 }

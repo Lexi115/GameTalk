@@ -1,7 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.presentation.filters;
 
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -43,7 +42,7 @@ public class ModFilter implements Filter {
         User user = (User) req.getSession(false).getAttribute("user");
 
         if (user.getRole() != Role.Moderator) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_FORBIDDEN,
                     "Accesso negato!");
             return;

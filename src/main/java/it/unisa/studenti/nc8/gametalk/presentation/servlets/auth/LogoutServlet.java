@@ -1,6 +1,5 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.auth;
 
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;

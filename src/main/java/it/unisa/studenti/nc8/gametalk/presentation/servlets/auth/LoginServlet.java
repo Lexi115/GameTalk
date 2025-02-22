@@ -4,8 +4,8 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationExceptio
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -41,6 +41,7 @@ public class LoginServlet extends AuthenticationServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ErrorHandler errorHandler = getErrorHandler();
         AuthenticationService authenticationService =
                 getAuthenticationService();
         UserService userService = getUserService();
@@ -74,7 +75,7 @@ public class LoginServlet extends AuthenticationServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con servizio di autenticazione", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage()
             );

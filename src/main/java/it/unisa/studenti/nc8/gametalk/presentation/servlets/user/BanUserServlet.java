@@ -3,8 +3,8 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets.user;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.presentation.exceptions.PermissionException;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -33,6 +33,7 @@ public class BanUserServlet extends UserServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ErrorHandler errorHandler = getErrorHandler();
         UserService userService = getUserService();
 
         // Parametro username dell'utente da bandire.
@@ -55,25 +56,25 @@ public class BanUserServlet extends UserServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio utenti", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage()
             );
 
         } catch (IllegalArgumentException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_BAD_REQUEST,
                     e.getMessage()
             );
 
         } catch (NotFoundException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_NOT_FOUND,
                     e.getMessage()
             );
 
         } catch (PermissionException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_FORBIDDEN,
                     e.getMessage()
             );

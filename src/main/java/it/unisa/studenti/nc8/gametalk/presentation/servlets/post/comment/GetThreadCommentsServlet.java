@@ -5,7 +5,6 @@ import it.unisa.studenti.nc8.gametalk.presentation.utils.json.JsonSerializer;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.json.JsonSerializerImpl;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

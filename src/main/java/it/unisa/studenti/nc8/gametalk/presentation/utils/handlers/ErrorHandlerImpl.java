@@ -1,18 +1,14 @@
-package it.unisa.studenti.nc8.gametalk.business.utils;
+package it.unisa.studenti.nc8.gametalk.presentation.utils.handlers;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-/**
- * Classe di utilità che fornisce metodi statici per operazioni comuni
- * utilizzate nell'applicazione.
- */
-public abstract class Functions {
+public class ErrorHandlerImpl implements ErrorHandler {
+
     /**
      * Gestisce gli errori mostrando una pagina di errore personalizzata.
      * Imposta il codice di stato e passa il messaggio di errore alla vista.
@@ -24,7 +20,7 @@ public abstract class Functions {
      * @throws ServletException Se si verifica un errore generico.
      * @throws IOException      Se si verifica un errore I/O.
      */
-    public static void handleError(
+    public void handleError(
             final HttpServletRequest req,
             final HttpServletResponse resp,
             final int status,
