@@ -2,6 +2,7 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
 import org.slf4j.Logger;
@@ -16,6 +17,9 @@ public abstract class CommentServlet extends HttpServlet {
     protected static final Logger LOGGER =
             LoggerFactory.getLogger(CommentServlet.class);
 
+    /** Error handler. */
+    private ErrorHandler errorHandler;
+
     /** La classe di servizio per recuperare i commenti. */
     private CommentService commentService;
 
@@ -27,6 +31,7 @@ public abstract class CommentServlet extends HttpServlet {
         ServletContext ctx = getServletContext();
         ServiceFactory serviceFactory =
                 (ServiceFactory) ctx.getAttribute("serviceFactory");
+        errorHandler = (ErrorHandler) ctx.getAttribute("errorHandler");
 
         this.commentService = serviceFactory.createCommentService();
     }
@@ -38,5 +43,14 @@ public abstract class CommentServlet extends HttpServlet {
      */
     protected CommentService getCommentService() {
         return commentService;
+    }
+
+    /**
+     * Restituisce l'handler di errori.
+     *
+     * @return L'handler di errori.
+     */
+    protected ErrorHandler getErrorHandler() {
+        return errorHandler;
     }
 }

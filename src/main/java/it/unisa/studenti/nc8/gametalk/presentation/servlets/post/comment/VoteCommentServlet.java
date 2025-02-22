@@ -2,7 +2,7 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -33,6 +33,7 @@ public class VoteCommentServlet extends CommentServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ErrorHandler errorHandler = getErrorHandler();
         CommentService commentService = getCommentService();
         HttpSession session = req.getSession();
 
@@ -47,12 +48,12 @@ public class VoteCommentServlet extends CommentServlet {
             commentService.rateComment(commentId, usernameReq, vote);
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di voto commento", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage());
         } catch (IllegalArgumentException e) {
             LOGGER.error("Parametri non validi", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_BAD_REQUEST,
                     "Parametri non validi");
         }

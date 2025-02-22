@@ -1,6 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.auth;
 
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +35,8 @@ public class LogoutServlet extends AuthenticationServlet {
         }
 
         // Invalida cookie di autenticazione
-        Cookie expiredCookie = Functions.createSecureCookie(
+        CookieHelper cookieHelper = getCookieHelper();
+        Cookie expiredCookie = cookieHelper.createCookie(
                 "auth_token", "", 0);
         resp.addCookie(expiredCookie);
 

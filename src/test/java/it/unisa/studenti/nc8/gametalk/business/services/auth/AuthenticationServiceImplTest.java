@@ -2,12 +2,12 @@ package it.unisa.studenti.nc8.gametalk.business.services.auth;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.Hasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +24,8 @@ class AuthenticationServiceImplTest {
 
     private AuthenticationServiceImpl authenticationService;
     private UserDAO userDAO;
+    private Hasher passwordHasher;
+    private Hasher tokenHasher;
 
     @BeforeEach
     void setUp() throws SQLException {
@@ -32,13 +34,19 @@ class AuthenticationServiceImplTest {
         QueryResult queryResult = mock(QueryResult.class);
         ResultSet resultSet = mock(ResultSet.class);
         userDAO = mock(UserDAO.class);
+        passwordHasher = mock(Hasher.class);
+        tokenHasher = mock(Hasher.class);
 
         when(db.connect()).thenReturn(connection);
         when(db.executeQuery(eq(connection), anyString(), any(Object[].class)))
                 .thenReturn(queryResult);
         when(queryResult.getResultSet()).thenReturn(resultSet);
 
-        authenticationService = new AuthenticationServiceImpl(db, userDAO);
+        when(passwordHasher.hash(anyString())).thenReturn("hashed_password");
+        when(tokenHasher.hash(anyString())).thenReturn("hashed_token");
+
+        authenticationService = new AuthenticationServiceImpl(
+                db, userDAO, passwordHasher, tokenHasher);
     }
 
     @Test
@@ -48,7 +56,7 @@ class AuthenticationServiceImplTest {
 
         User user = new User();
         user.setUsername(username);
-        user.setPassword(Functions.hash(password));
+        user.setPassword(passwordHasher.hash(password));
         when(userDAO.get(anyString())).thenReturn(user);
 
         User loggedUser = authenticationService.login(username, password);
@@ -73,7 +81,7 @@ class AuthenticationServiceImplTest {
 
         User user = new User();
         user.setUsername(username);
-        user.setAuthToken(Functions.hash(token));
+        user.setAuthToken(tokenHasher.hash(token));
         when(userDAO.getUserByToken(anyString())).thenReturn(user);
 
         User loggedUser = authenticationService.loginByToken(token);

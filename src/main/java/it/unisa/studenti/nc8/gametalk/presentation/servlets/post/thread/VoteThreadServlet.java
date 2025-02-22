@@ -2,7 +2,7 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.thread;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadService;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,6 +32,7 @@ public class VoteThreadServlet extends ThreadServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ErrorHandler errorHandler = getErrorHandler();
         ThreadService threadService = getThreadService();
         HttpSession session = req.getSession();
 
@@ -47,12 +48,12 @@ public class VoteThreadServlet extends ThreadServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di voto thread", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage());
         } catch (IllegalArgumentException e) {
             LOGGER.error("Parametri non validi", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_BAD_REQUEST,
                     "Parametri non validi");
         }

@@ -1,4 +1,4 @@
-package it.unisa.studenti.nc8.gametalk.business.adapters.json;
+package it.unisa.studenti.nc8.gametalk.presentation.utils.json.adapters;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

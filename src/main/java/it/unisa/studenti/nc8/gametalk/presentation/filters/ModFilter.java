@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.presentation.filters;
 
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -20,6 +20,21 @@ import java.io.IOException;
  */
 @WebFilter(filterName = "ModFilter")
 public class ModFilter implements Filter {
+
+    /** Error handler. */
+    private ErrorHandler errorHandler;
+
+    /**
+     * Init.
+     *
+     * @param filterConfig Il filter config.
+     */
+    @Override
+    public void init(final FilterConfig filterConfig) throws ServletException {
+        Filter.super.init(filterConfig);
+        ServletContext ctx = filterConfig.getServletContext();
+        errorHandler = (ErrorHandler) ctx.getAttribute("errorHandler");
+    }
 
     /**
      * Intercetta le richieste HTTP per verificare che l'utente sia
@@ -43,7 +58,7 @@ public class ModFilter implements Filter {
         User user = (User) req.getSession(false).getAttribute("user");
 
         if (user.getRole() != Role.Moderator) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_FORBIDDEN,
                     "Accesso negato!");
             return;

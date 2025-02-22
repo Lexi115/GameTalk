@@ -3,7 +3,7 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets.user;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -33,6 +33,7 @@ public class ViewProfileServlet extends UserServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws IOException, ServletException {
+        ErrorHandler errorHandler = getErrorHandler();
         UserService userService = getUserService();
         try {
             // Parametro di ricerca (username)
@@ -52,19 +53,19 @@ public class ViewProfileServlet extends UserServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio utenti", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage()
             );
 
         } catch (NotFoundException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_NOT_FOUND,
                     e.getMessage()
             );
 
         } catch (IllegalArgumentException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_BAD_REQUEST,
                     e.getMessage()
             );

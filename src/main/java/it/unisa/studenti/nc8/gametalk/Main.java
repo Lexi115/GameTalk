@@ -1,9 +1,11 @@
-package it.unisa.studenti.nc8.gametalk.business.core;
+package it.unisa.studenti.nc8.gametalk;
 
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.config.Config;
 import it.unisa.studenti.nc8.gametalk.config.EnvConfig;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandlerImpl;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DatabaseFactory;
@@ -56,27 +58,30 @@ public class Main extends HttpServlet {
     }
 
     private void initLayers() {
+        // Error handler
+        ErrorHandler errorHandler = new ErrorHandlerImpl();
+        context.setAttribute("errorHandler", errorHandler);
+
+        // Database
         DatabaseFactory databaseFactory = getDatabaseFactory();
         Database database = databaseFactory.createDatabase();
-        context.setAttribute("database", database);
 
         // DAO e Service Factories
         DAOFactory daoFactory = new DAOFactoryImpl(database);
         ServiceFactory serviceFactory =
                 new ServiceFactoryImpl(database, daoFactory);
-        context.setAttribute("daoFactory", daoFactory);
         context.setAttribute("serviceFactory", serviceFactory);
     }
 
     private DatabaseFactory getDatabaseFactory() {
-        // Inizializzazione database. Prende le credenziali
-        // di accesso dal file "web.xml".
+        // Credenziali prese dal file .env
         String dbHost = config.get("DB_HOST");
         int dbPort = Integer.parseInt(config.get("DB_PORT"));
         String dbName = config.get("DB_NAME");
         String dbUser = config.get("DB_USER");
         String dbPassword = config.get("DB_PASSWORD");
         String dbType = config.get("DB_TYPE");
+
         return new DatabaseFactoryImpl(
                 dbHost, dbPort, dbUser, dbPassword, dbName, dbType);
     }
@@ -87,8 +92,6 @@ public class Main extends HttpServlet {
     @Override
     public void destroy() {
         try {
-            context.removeAttribute("database");
-            context.removeAttribute("daoFactory");
             context.removeAttribute("serviceFactory");
         } catch (Exception e) {
             LOGGER.error(

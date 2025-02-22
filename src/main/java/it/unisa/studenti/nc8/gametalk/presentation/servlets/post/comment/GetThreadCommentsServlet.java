@@ -1,7 +1,8 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.post.comment;
 
 import it.unisa.studenti.nc8.gametalk.business.services.post.comment.CommentService;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.json.JsonSerializer;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.json.JsonSerializerImpl;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,6 +29,18 @@ public class GetThreadCommentsServlet extends CommentServlet {
 
     /** Numero default di commenti per pagina. */
     private static final int DEFAULT_PAGE_SIZE = 10;
+
+    /** Il serializzatore JSON. */
+    private JsonSerializer jsonSerializer;
+
+    /**
+     * Init.
+     */
+    @Override
+    public void init() {
+        super.init();
+        jsonSerializer = new JsonSerializerImpl();
+    }
 
     /**
      * Gestisce la richiesta GET per ottenere i commenti di un thread.
@@ -103,7 +116,7 @@ public class GetThreadCommentsServlet extends CommentServlet {
 
             // Scrivi la risposta
             resp.setStatus(HttpServletResponse.SC_OK);
-            writer.write(Functions.toJson(response));
+            writer.write(jsonSerializer.stringify(response));
 
         } catch (Exception e) {
             LOGGER.error("Errore durante la chiamata API", e);

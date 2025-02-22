@@ -8,6 +8,7 @@ import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServic
 import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServiceImpl;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserServiceImpl;
+import it.unisa.studenti.nc8.gametalk.business.utils.pattern.RegexMatcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.comment.CommentValidator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.thread.ThreadValidator;
@@ -20,6 +21,9 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.BCryptHasher;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.Hasher;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.SHA256Hasher;
 
 /**
  * Factory concreta per la creazione delle classi di servizio.
@@ -55,7 +59,10 @@ public class ServiceFactoryImpl implements ServiceFactory {
     @Override
     public AuthenticationService createAuthenticationService() {
         UserDAO userDAO = daoFactory.createUserDAO();
-        return new AuthenticationServiceImpl(database, userDAO);
+        Hasher passwordHasher = new BCryptHasher();
+        Hasher tokenHasher = new SHA256Hasher();
+        return new AuthenticationServiceImpl(
+                database, userDAO, passwordHasher, tokenHasher);
     }
 
     /**
@@ -66,8 +73,11 @@ public class ServiceFactoryImpl implements ServiceFactory {
     @Override
     public UserService createUserService() {
         UserDAO userDAO = daoFactory.createUserDAO();
-        Validator<User> userValidator = new UserValidator();
-        return new UserServiceImpl(database, userDAO, userValidator);
+        Hasher passwordHasher = new BCryptHasher();
+        Validator<User> userValidator =
+                new UserValidator(new RegexMatcher());
+        return new UserServiceImpl(
+                database, userDAO, userValidator, passwordHasher);
     }
 
     /**
@@ -79,7 +89,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
     public ThreadService createThreadService() {
         ThreadDAO threadDAO = daoFactory.createThreadDAO();
         UserDAO userDAO = daoFactory.createUserDAO();
-        Validator<Thread> threadValidator = new ThreadValidator();
+        Validator<Thread> threadValidator =
+                new ThreadValidator(new RegexMatcher());
         return new ThreadServiceImpl(
                 database, threadDAO, userDAO, threadValidator);
     }
@@ -94,7 +105,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
         CommentDAO commentDAO = daoFactory.createCommentDAO();
         ThreadDAO threadDAO = daoFactory.createThreadDAO();
         UserDAO userDAO = daoFactory.createUserDAO();
-        Validator<Comment> commentValidator = new CommentValidator();
+        Validator<Comment> commentValidator =
+                new CommentValidator(new RegexMatcher());
         return new CommentServiceImpl(
                 database, commentDAO, threadDAO, userDAO, commentValidator);
     }
