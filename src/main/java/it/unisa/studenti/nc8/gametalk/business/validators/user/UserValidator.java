@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.user;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.business.utils.pattern.Matcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 
@@ -27,6 +27,12 @@ public class UserValidator implements Validator<User> {
     public static final String REGEX_USER_PASSWORD =
             "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%_*#?&])"
                     + "[A-Za-z\\d@$!%_*#?&]{8,100}$";
+
+    private final Matcher matcher;
+
+    public UserValidator(final Matcher matcher) {
+        this.matcher = matcher;
+    }
 
     /**
      * Valida un oggetto {@link User}.
@@ -59,7 +65,7 @@ public class UserValidator implements Validator<User> {
     private boolean isUsernameValid(final String username) {
         return username != null
                 && !username.isEmpty()
-                && Functions.matchesRegex(REGEX_USER_NAME, username);
+                && matcher.matches(REGEX_USER_NAME, username);
     }
 
     /**
@@ -71,7 +77,7 @@ public class UserValidator implements Validator<User> {
     private boolean isPasswordValid(final String password) {
         return password != null
                 && !password.isEmpty()
-                && Functions.matchesRegex(REGEX_USER_PASSWORD, password);
+                && matcher.matches(REGEX_USER_PASSWORD, password);
     }
 
     /**

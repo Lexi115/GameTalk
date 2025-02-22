@@ -1,4 +1,4 @@
-package it.unisa.studenti.nc8.gametalk.business.core;
+package it.unisa.studenti.nc8.gametalk;
 
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactoryImpl;
@@ -58,13 +58,11 @@ public class Main extends HttpServlet {
     private void initLayers() {
         DatabaseFactory databaseFactory = getDatabaseFactory();
         Database database = databaseFactory.createDatabase();
-        context.setAttribute("database", database);
 
         // DAO e Service Factories
         DAOFactory daoFactory = new DAOFactoryImpl(database);
         ServiceFactory serviceFactory =
                 new ServiceFactoryImpl(database, daoFactory);
-        context.setAttribute("daoFactory", daoFactory);
         context.setAttribute("serviceFactory", serviceFactory);
     }
 
@@ -87,8 +85,6 @@ public class Main extends HttpServlet {
     @Override
     public void destroy() {
         try {
-            context.removeAttribute("database");
-            context.removeAttribute("daoFactory");
             context.removeAttribute("serviceFactory");
         } catch (Exception e) {
             LOGGER.error(

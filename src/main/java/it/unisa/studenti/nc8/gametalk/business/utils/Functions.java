@@ -1,9 +1,5 @@
 package it.unisa.studenti.nc8.gametalk.business.utils;
 
-import com.google.common.hash.Hashing;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import it.unisa.studenti.nc8.gametalk.business.adapters.json.LocalDateAdapter;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -11,92 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Classe di utilità che fornisce metodi statici per operazioni comuni
  * utilizzate nell'applicazione.
  */
 public abstract class Functions {
-
-    /**
-     * Verifica se una stringa corrisponde a una determinata
-     * espressione regolare.
-     *
-     * @param regex l'espressione regolare da utilizzare per il confronto.
-     * @param input la stringa da verificare.
-     * @return {@code true} se la stringa corrisponde all'espressione
-     * regolare, {@code false} altrimenti.
-     */
-    public static boolean matchesRegex(final String regex, final String input) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        return matcher.matches();
-    }
-
-    /**
-     * Serializza un oggetto in una stringa JSON.
-     *
-     * @param obj L'oggetto da serializzare.
-     * @return la stringa JSON corrispondente.
-     */
-    public static String toJson(final Object obj) {
-        Gson gson = new GsonBuilder()
-                // Adattatore per LocalDate
-                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                .setPrettyPrinting()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
-        return gson.toJson(obj);
-    }
-
-    /**
-     * Crea un cookie sicuro con le opzioni di protezione abilitate.
-     *
-     * @param name   il nome del cookie
-     * @param value  il valore del cookie
-     * @param expiry il tempo di scadenza del cookie in secondi
-     * @return un oggetto {@link Cookie} sicuro
-     */
-    public static Cookie createSecureCookie(
-            final String name,
-            final String value,
-            final int expiry
-    ) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setSecure(true); // Solo HTTPS
-        cookie.setMaxAge(expiry); // Scadenza in secondi
-        cookie.setHttpOnly(true); // Inaccessibile da JS
-        cookie.setPath("/"); // Valido per tutto il sito
-        return cookie;
-    }
-
-    /**
-     * Recupera un cookie che ha un certo nome.
-     *
-     * @param name Il nome del cookie da cercare.
-     * @param request La request http in cui cercare.
-     * @return Il cookie con quel nome, <code>null</code> altrimenti.
-     */
-    public static Cookie getCookie(
-            final String name,
-            final HttpServletRequest request
-    ) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(name)) {
-                    return cookie;
-                }
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Gestisce gli errori mostrando una pagina di errore personalizzata.
      * Imposta il codice di stato e passa il messaggio di errore alla vista.

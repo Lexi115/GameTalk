@@ -5,6 +5,7 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -55,9 +56,10 @@ public class LoginServlet extends AuthenticationServlet {
             User loggedUser = authenticationService.login(username, password);
 
             // Genera cookie token di autenticazione
+            CookieHelper cookieHelper = getCookieHelper();
             String authToken = authenticationService.generateToken(
                     username + password);
-            Cookie authTokenCookie = Functions.createSecureCookie(
+            Cookie authTokenCookie = cookieHelper.createCookie(
                     "auth_token", authToken, AUTH_TOKEN_COOKIE_EXPIRY);
 
             // Aggiorna token nel database (doppio hash)

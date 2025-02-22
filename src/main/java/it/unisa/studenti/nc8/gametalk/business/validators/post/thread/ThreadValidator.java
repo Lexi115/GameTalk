@@ -1,7 +1,7 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.post.thread;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.business.utils.pattern.Matcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 
@@ -24,6 +24,12 @@ public class ThreadValidator implements Validator<Thread> {
      * massima di 2000 caratteri.
      */
     public static final String REGEX_THREAD_BODY = "^.{1,2000}$";
+
+    private final Matcher matcher;
+
+    public ThreadValidator(final Matcher matcher) {
+        this.matcher = matcher;
+    }
 
     /**
      * Valida un oggetto {@link Thread}.
@@ -51,7 +57,7 @@ public class ThreadValidator implements Validator<Thread> {
     private boolean isTitleValid(final String title) {
         return title != null
                 && !title.isEmpty()
-                && Functions.matchesRegex(REGEX_THREAD_TITLE, title);
+                && matcher.matches(REGEX_THREAD_TITLE, title);
     }
 
     /**
@@ -63,6 +69,6 @@ public class ThreadValidator implements Validator<Thread> {
     private boolean isBodyValid(final String body) {
         return body != null
                 && !body.isEmpty()
-                && Functions.matchesRegex(REGEX_THREAD_BODY, body);
+                && matcher.matches(REGEX_THREAD_BODY, body);
     }
 }

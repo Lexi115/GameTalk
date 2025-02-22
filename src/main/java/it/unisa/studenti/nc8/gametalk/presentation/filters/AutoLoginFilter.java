@@ -5,7 +5,8 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationExceptio
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelperImpl;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -25,10 +26,31 @@ import java.io.IOException;
 @WebFilter(filterName = "AutoLoginFilter")
 public class AutoLoginFilter implements Filter {
 
-    /** Logger per la gestione dei log. */
+    /** Logger. */
     private static final Logger LOGGER =
             LoggerFactory.getLogger(AutoLoginFilter.class);
 
+    /** La classe di servizio per gestire l'autenticazione. */
+    private AuthenticationService authenticationService;
+
+    /** Il cookie helper. */
+    private CookieHelper cookieHelper;
+
+    /**
+     * Init.
+     *
+     * @param filterConfig Il filter config.
+     */
+    @Override
+    public void init(final FilterConfig filterConfig) {
+        ServletContext ctx = filterConfig.getServletContext();
+        ServiceFactory serviceFactory =
+                (ServiceFactory) ctx.getAttribute("serviceFactory");
+        authenticationService =
+                serviceFactory.createAuthenticationService();
+
+        cookieHelper = new CookieHelperImpl();
+    }
 
     /**
      * Intercetta le richieste HTTP per gestire l'autenticazione tramite
@@ -48,12 +70,6 @@ public class AutoLoginFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        ServletContext ctx = req.getServletContext();
-        ServiceFactory serviceFactory =
-                (ServiceFactory) ctx.getAttribute("serviceFactory");
-        AuthenticationService authenticationService =
-                serviceFactory.createAuthenticationService();
-
         HttpSession session = req.getSession(false);
 
         // La sessione non esiste?
@@ -64,7 +80,7 @@ public class AutoLoginFilter implements Filter {
 
             //Verifica presenza authToken nel cookie per autologin
             //(altrimenti è un guest e ha solo la sessione)
-            Cookie authTokenCookie = Functions.getCookie("auth_token", req);
+            Cookie authTokenCookie = cookieHelper.getCookie("auth_token", req);
             if (authTokenCookie != null) {
                 try {
                     User loggedUser = authenticationService
