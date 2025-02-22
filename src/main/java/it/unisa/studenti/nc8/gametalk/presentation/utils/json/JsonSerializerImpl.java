@@ -22,7 +22,6 @@ public class JsonSerializerImpl implements JsonSerializer {
         gson = new GsonBuilder()
                 // Adattatore per LocalDate
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                .setPrettyPrinting()
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
     }
@@ -34,7 +33,7 @@ public class JsonSerializerImpl implements JsonSerializer {
      * @return la stringa JSON corrispondente.
      */
     @Override
-    public String to(final Object obj) {
+    public String stringify(final Object obj) {
         return gson.toJson(obj);
     }
 
@@ -47,7 +46,7 @@ public class JsonSerializerImpl implements JsonSerializer {
      * @return l'oggetto corrispondente.
      */
     @Override
-    public <T> T from(final String json, final Class<T> clazz) {
+    public <T> T parse(final String json, final Class<T> clazz) {
         return gson.fromJson(json, clazz);
     }
 }

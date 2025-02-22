@@ -116,7 +116,7 @@ public class GetThreadCommentsServlet extends CommentServlet {
 
             // Scrivi la risposta
             resp.setStatus(HttpServletResponse.SC_OK);
-            writer.write(jsonSerializer.to(response));
+            writer.write(jsonSerializer.stringify(response));
 
         } catch (Exception e) {
             LOGGER.error("Errore durante la chiamata API", e);

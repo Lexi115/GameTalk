@@ -12,7 +12,7 @@ public interface JsonSerializer {
      * @param obj L'oggetto da convertire.
      * @return la stringa JSON corrispondente.
      */
-    String to(Object obj);
+    String stringify(Object obj);
 
     /**
      * Converti una stringa JSON in un oggetto.
@@ -22,5 +22,5 @@ public interface JsonSerializer {
      * @param clazz La classe dell'oggetto corrispondente.
      * @return l'oggetto corrispondente.
      */
-    <T> T from(String json, Class<T> clazz);
+    <T> T parse(String json, Class<T> clazz);
 }
