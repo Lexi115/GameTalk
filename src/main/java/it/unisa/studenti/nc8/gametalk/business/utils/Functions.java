@@ -38,18 +38,6 @@ public abstract class Functions {
     }
 
     /**
-     * Genera l'hash SHA-256 di una stringa.
-     *
-     * @param input La stringa da hashare
-     * @return La stringa hashato SHA-256
-     */
-    public static String hash(final String input) {
-        return Hashing.sha256()
-                .hashString(input, StandardCharsets.UTF_8)
-                .toString();
-    }
-
-    /**
      * Serializza un oggetto in una stringa JSON.
      *
      * @param obj L'oggetto da serializzare.

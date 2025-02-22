@@ -35,4 +35,6 @@ public interface AuthenticationService {
      */
     User loginByToken(String token)
             throws AuthenticationException, ServiceException;
+
+    String generateToken(String input);
 }

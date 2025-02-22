@@ -3,7 +3,6 @@ package it.unisa.studenti.nc8.gametalk.business.services.user;
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
@@ -11,6 +10,7 @@ import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Transaction;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.TransactionImpl;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.Hasher;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -39,6 +39,8 @@ public class UserServiceImpl implements UserService {
      */
     private final Validator<User> userValidator;
 
+    private final Hasher passwordHasher;
+
     /**
      * Costruttore.
      *
@@ -51,11 +53,13 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(
             final Database db,
             final UserDAO userDAO,
-            final Validator<User> userValidator
+            final Validator<User> userValidator,
+            final Hasher passwordHasher
     ) {
         this.db = db;
         this.userDAO = userDAO;
         this.userValidator = userValidator;
+        this.passwordHasher = passwordHasher;
     }
 
     /**
@@ -94,7 +98,7 @@ public class UserServiceImpl implements UserService {
                 }
 
                 // Hash della password
-                user.setPassword(Functions.hash(password));
+                user.setPassword(passwordHasher.hash(password));
 
                 // Salva nuovo utente
                 userDAO.save(user);

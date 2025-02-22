@@ -55,15 +55,15 @@ public class LoginServlet extends AuthenticationServlet {
             User loggedUser = authenticationService.login(username, password);
 
             // Genera cookie token di autenticazione
+            String authToken = authenticationService.generateToken(
+                    username + password);
             Cookie authTokenCookie = Functions.createSecureCookie(
-                    "auth_token",
-                    Functions.hash(username + password),
-                    AUTH_TOKEN_COOKIE_EXPIRY
-            );
+                    "auth_token", authToken, AUTH_TOKEN_COOKIE_EXPIRY);
 
             // Aggiorna token nel database (doppio hash)
-            userService.updateToken(username, Functions.hash(
-                    authTokenCookie.getValue()));
+            String hashedAuthToken =
+                    authenticationService.generateToken(authToken);
+            userService.updateToken(username, hashedAuthToken);
 
             // Imposta utente nella sessione
             session.setAttribute("user", loggedUser);
@@ -80,7 +80,6 @@ public class LoginServlet extends AuthenticationServlet {
         } catch (AuthenticationException | IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             req.setAttribute("error", e.getMessage());
-            doGet(req, resp);
         }
     }
 }

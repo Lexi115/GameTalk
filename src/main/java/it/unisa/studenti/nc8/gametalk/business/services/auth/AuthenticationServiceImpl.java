@@ -2,11 +2,11 @@ package it.unisa.studenti.nc8.gametalk.business.services.auth;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.utils.Functions;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.Hasher;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,6 +28,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     private final UserDAO userDAO;
 
+    private final Hasher passwordHasher;
+
+    private final Hasher tokenHasher;
+
     /**
      * Costruttore.
      *
@@ -37,10 +41,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     public AuthenticationServiceImpl(
             final Database db,
-            final UserDAO userDAO
+            final UserDAO userDAO,
+            final Hasher passwordHasher,
+            final Hasher tokenHasher
     ) {
         this.db = db;
         this.userDAO = userDAO;
+        this.passwordHasher = passwordHasher;
+        this.tokenHasher = tokenHasher;
     }
 
     /**
@@ -75,8 +83,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
 
             // Confronta password con la sua versione hashed sul database
-            String hashedPassword = Functions.hash(password);
-            if (!hashedPassword.equals(user.getPassword())) {
+            if (passwordHasher.verify(password, user.getPassword())) {
                 throw new AuthenticationException("Password non valida");
             }
 
@@ -105,7 +112,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             userDAO.bind(connection);
 
             //Effettuo il secondo hash del token
-            String hashedToken = Functions.hash(token);
+            String hashedToken = generateToken(token);
             User user = userDAO.getUserByToken(hashedToken);
             if (user == null) {
                 throw new AuthenticationException("Utente non trovato");
@@ -116,5 +123,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new ServiceException(
                     "Errore durante autenticazione con token", e);
         }
+    }
+
+    @Override
+    public String generateToken(final String input) {
+        return tokenHasher.hash(input);
     }
 }

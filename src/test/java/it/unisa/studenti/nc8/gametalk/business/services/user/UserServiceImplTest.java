@@ -2,6 +2,7 @@ package it.unisa.studenti.nc8.gametalk.business.services.user;
 
 import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.Hasher;
 import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
@@ -33,14 +34,18 @@ class UserServiceImplTest {
         Connection connection = mock(Connection.class);
         QueryResult queryResult = mock(QueryResult.class);
         ResultSet resultSet = mock(ResultSet.class);
+        Hasher passwordHasher = mock(Hasher.class);
+        userDAO = mock(UserDAO.class);
 
         when(database.connect()).thenReturn(connection);
         when(database.executeQuery(eq(connection), anyString(), any(Object[].class)))
                 .thenReturn(queryResult);
         when(queryResult.getResultSet()).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(true);
 
-        userDAO = mock(UserDAO.class);
-        userService = new UserServiceImpl(database, userDAO, new UserValidator());
+        when(passwordHasher.hash(anyString())).thenReturn("hashed_password");
+
+        userService = new UserServiceImpl(database, userDAO, new UserValidator(), passwordHasher);
     }
 
     @Test
