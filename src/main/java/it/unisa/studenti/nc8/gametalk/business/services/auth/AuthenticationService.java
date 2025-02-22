@@ -6,7 +6,8 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 
 /**
  * Interfaccia di servizio per la gestione dell'autenticazione utente.
- * Fornisce metodi per eseguire il login.
+ * Fornisce metodi per eseguire il login e generare token di
+ * autenticazione.
  */
 public interface AuthenticationService {
 
@@ -36,5 +37,11 @@ public interface AuthenticationService {
     User loginByToken(String token)
             throws AuthenticationException, ServiceException;
 
+    /**
+     * Genera un token di autenticazione.
+     *
+     * @param input La stringa in input.
+     * @return Il token generato.
+     */
     String generateToken(String input);
 }

@@ -13,7 +13,8 @@ import java.sql.SQLException;
 
 /**
  * Classe di servizio per la gestione dell'autenticazione utente.
- * Fornisce metodi per eseguire il login.
+ * Fornisce metodi per eseguire il login e generare token di
+ * autenticazione.
  */
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -28,8 +29,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     private final UserDAO userDAO;
 
+    /** L'hasher della password. */
     private final Hasher passwordHasher;
 
+    /** L'hasher del token di autenticazione. */
     private final Hasher tokenHasher;
 
     /**
@@ -38,6 +41,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param db      il database utilizzato per la persistenza dei dati.
      * @param userDAO il DAO per gestire gli utenti sul sistema di
      *                persistenza.
+     * @param passwordHasher l'hasher della password.
+     * @param tokenHasher    l'hasher del token.
      */
     public AuthenticationServiceImpl(
             final Database db,
@@ -125,6 +130,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+    /**
+     * Genera un token di autenticazione.
+     *
+     * @param input La stringa in input.
+     * @return Il token generato.
+     */
     @Override
     public String generateToken(final String input) {
         return tokenHasher.hash(input);

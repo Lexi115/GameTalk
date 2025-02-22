@@ -6,6 +6,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * Interfaccia per la gestione degli errori a
+ * livello di presentazione.
+ */
 public interface ErrorHandler {
 
     /**

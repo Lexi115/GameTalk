@@ -7,6 +7,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * Classe per la gestione degli errori a
+ * livello di presentazione.
+ */
 public class ErrorHandlerImpl implements ErrorHandler {
 
     /**

@@ -25,8 +25,14 @@ public class ThreadValidator implements Validator<Thread> {
      */
     public static final String REGEX_THREAD_BODY = "^.{1,2000}$";
 
+    /** Il matcher. */
     private final Matcher matcher;
 
+    /**
+     * Costruttore.
+     *
+     * @param matcher Il matcher.
+     */
     public ThreadValidator(final Matcher matcher) {
         this.matcher = matcher;
     }

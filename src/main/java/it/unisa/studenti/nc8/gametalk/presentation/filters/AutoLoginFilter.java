@@ -42,7 +42,8 @@ public class AutoLoginFilter implements Filter {
      * @param filterConfig Il filter config.
      */
     @Override
-    public void init(final FilterConfig filterConfig) {
+    public void init(final FilterConfig filterConfig) throws ServletException {
+        Filter.super.init(filterConfig);
         ServletContext ctx = filterConfig.getServletContext();
         ServiceFactory serviceFactory =
                 (ServiceFactory) ctx.getAttribute("serviceFactory");

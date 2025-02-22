@@ -6,10 +6,18 @@ import it.unisa.studenti.nc8.gametalk.presentation.utils.json.adapters.LocalDate
 
 import java.time.LocalDate;
 
+/**
+ * Serializzatore JSON. Permette di trasformare
+ * un oggetto in una stringa JSON e viceversa.
+ */
 public class JsonSerializerImpl implements JsonSerializer {
 
+    /** Oggetto per la serializzazione. */
     private final Gson gson;
 
+    /**
+     * Costruttore.
+     */
     public JsonSerializerImpl() {
         gson = new GsonBuilder()
                 // Adattatore per LocalDate
@@ -20,9 +28,9 @@ public class JsonSerializerImpl implements JsonSerializer {
     }
 
     /**
-     * Serializza un oggetto in una stringa JSON.
+     * Converti un oggetto in una stringa JSON.
      *
-     * @param obj L'oggetto da serializzare.
+     * @param obj L'oggetto da convertire.
      * @return la stringa JSON corrispondente.
      */
     @Override
@@ -30,6 +38,14 @@ public class JsonSerializerImpl implements JsonSerializer {
         return gson.toJson(obj);
     }
 
+    /**
+     * Converti una stringa JSON in un oggetto.
+     *
+     * @param <T> il tipo dell'oggetto risultante.
+     * @param json La stringa JSON da convertire.
+     * @param clazz La classe dell'oggetto corrispondente.
+     * @return l'oggetto corrispondente.
+     */
     @Override
     public <T> T from(final String json, final Class<T> clazz) {
         return gson.fromJson(json, clazz);

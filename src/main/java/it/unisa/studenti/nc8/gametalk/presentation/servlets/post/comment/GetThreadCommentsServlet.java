@@ -30,6 +30,7 @@ public class GetThreadCommentsServlet extends CommentServlet {
     /** Numero default di commenti per pagina. */
     private static final int DEFAULT_PAGE_SIZE = 10;
 
+    /** Il serializzatore JSON. */
     private JsonSerializer jsonSerializer;
 
     /**

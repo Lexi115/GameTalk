@@ -28,8 +28,14 @@ public class UserValidator implements Validator<User> {
             "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%_*#?&])"
                     + "[A-Za-z\\d@$!%_*#?&]{8,100}$";
 
+    /** Il matcher. */
     private final Matcher matcher;
 
+    /**
+     * Costruttore.
+     *
+     * @param matcher Il matcher.
+     */
     public UserValidator(final Matcher matcher) {
         this.matcher = matcher;
     }

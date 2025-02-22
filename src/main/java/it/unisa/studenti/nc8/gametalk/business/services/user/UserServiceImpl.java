@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
      */
     private final Validator<User> userValidator;
 
+    /** L'hasher della password. */
     private final Hasher passwordHasher;
 
     /**
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
      * @param userDAO           il DAO per gestire gli utenti sul sistema di
      *                          persistenza.
      * @param userValidator     il validator di utenti.
+     * @param passwordHasher    l'hasher della password.
      */
     public UserServiceImpl(
             final Database db,

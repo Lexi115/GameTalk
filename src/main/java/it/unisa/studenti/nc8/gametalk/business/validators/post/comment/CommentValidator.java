@@ -17,8 +17,14 @@ public class CommentValidator implements Validator<Comment> {
      */
     public static final String REGEX_COMMENT_BODY = "^.{1,1000}$";
 
+    /** Il matcher. */
     private final Matcher matcher;
 
+    /**
+     * Costruttore.
+     *
+     * @param matcher Il matcher.
+     */
     public CommentValidator(final Matcher matcher) {
         this.matcher = matcher;
     }

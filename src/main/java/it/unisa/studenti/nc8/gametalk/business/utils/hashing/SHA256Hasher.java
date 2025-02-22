@@ -4,13 +4,16 @@ import com.google.common.hash.Hashing;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Classe per la gestione dell'hashing usando l'algoritmo SHA-256.
+ */
 public class SHA256Hasher implements Hasher {
 
     /**
      * Restituisce l'hash SHA-256 di una stringa.
      *
      * @param input La stringa da hashare
-     * @return La stringa hashata in SHA-256
+     * @return L'hash SHA-256 corrispondente
      */
     @Override
     public String hash(final String input) {
@@ -19,6 +22,14 @@ public class SHA256Hasher implements Hasher {
                 .toString();
     }
 
+    /**
+     * Verifica se l'input corrisponde all'hash SHA-256 fornito.
+     *
+     * @param input La stringa da verificare
+     * @param hash L'hash SHA-256 da confrontare
+     * @return {@code true} se l'input corrisponde all'hash SHA-256,
+     * {@code false} altrimenti
+     */
     @Override
     public boolean verify(final String input, final String hash) {
         return hash(input).equals(hash);

@@ -3,6 +3,7 @@ package it.unisa.studenti.nc8.gametalk.business.services.user;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.utils.hashing.Hasher;
+import it.unisa.studenti.nc8.gametalk.business.utils.pattern.RegexMatcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.user.UserValidator;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
@@ -45,7 +46,8 @@ class UserServiceImplTest {
 
         when(passwordHasher.hash(anyString())).thenReturn("hashed_password");
 
-        userService = new UserServiceImpl(database, userDAO, new UserValidator(), passwordHasher);
+        userService = new UserServiceImpl(
+                database, userDAO, new UserValidator(new RegexMatcher()), passwordHasher);
     }
 
     @Test
