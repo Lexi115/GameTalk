@@ -30,29 +30,6 @@ public class AutoLoginFilter implements Filter {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(AutoLoginFilter.class);
 
-    /** La classe di servizio per gestire l'autenticazione. */
-    private AuthenticationService authenticationService;
-
-    /** Il cookie helper. */
-    private CookieHelper cookieHelper;
-
-    /**
-     * Init.
-     *
-     * @param filterConfig Il filter config.
-     */
-    @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
-        ServletContext ctx = filterConfig.getServletContext();
-        ServiceFactory serviceFactory =
-                (ServiceFactory) ctx.getAttribute("serviceFactory");
-        authenticationService =
-                serviceFactory.createAuthenticationService();
-
-        cookieHelper = new CookieHelperImpl();
-    }
-
     /**
      * Intercetta le richieste HTTP per gestire l'autenticazione tramite
      * token di autenticazione e controllo sugli accessi.
@@ -68,6 +45,13 @@ public class AutoLoginFilter implements Filter {
             final ServletResponse response,
             final FilterChain chain
     ) throws ServletException, IOException {
+        ServletContext ctx = request.getServletContext();
+        ServiceFactory serviceFactory =
+                (ServiceFactory) ctx.getAttribute("serviceFactory");
+        AuthenticationService authenticationService =
+                serviceFactory.createAuthenticationService();
+        CookieHelper cookieHelper = new CookieHelperImpl();
+
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 

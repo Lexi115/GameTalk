@@ -21,21 +21,6 @@ import java.io.IOException;
 @WebFilter(filterName = "ModFilter")
 public class ModFilter implements Filter {
 
-    /** Error handler. */
-    private ErrorHandler errorHandler;
-
-    /**
-     * Init.
-     *
-     * @param filterConfig Il filter config.
-     */
-    @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
-        ServletContext ctx = filterConfig.getServletContext();
-        errorHandler = (ErrorHandler) ctx.getAttribute("errorHandler");
-    }
-
     /**
      * Intercetta le richieste HTTP per verificare che l'utente sia
      * un moderatore. Se non è autorizzato,
@@ -53,6 +38,10 @@ public class ModFilter implements Filter {
             final ServletResponse response,
             final FilterChain chain
     ) throws IOException, ServletException {
+        ServletContext ctx = request.getServletContext();
+        ErrorHandler errorHandler =
+                (ErrorHandler) ctx.getAttribute("errorHandler");
+
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         User user = (User) req.getSession(false).getAttribute("user");
