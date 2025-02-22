@@ -45,30 +45,4 @@
         <error-code>500</error-code>
         <location>/WEB-INF/views/errors/error.jsp</location>
     </error-page>
-
-    <!-- Credenziali per accesso al database -->
-    <context-param>
-        <param-name>dbHost</param-name>
-        <param-value>localhost</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbUser</param-name>
-        <param-value>root</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbPass</param-name>
-        <param-value>root_pw</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbName</param-name>
-        <param-value>gametalk_db</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbPort</param-name>
-        <param-value>3306</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbType</param-name>
-        <param-value>mysql</param-value>
-    </context-param>
 </web-app>

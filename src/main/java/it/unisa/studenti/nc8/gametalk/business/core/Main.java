@@ -2,6 +2,8 @@ package it.unisa.studenti.nc8.gametalk.business.core;
 
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactoryImpl;
+import it.unisa.studenti.nc8.gametalk.config.Config;
+import it.unisa.studenti.nc8.gametalk.config.EnvConfig;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactoryImpl;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DatabaseFactory;
@@ -28,7 +30,10 @@ public class Main extends HttpServlet {
             LoggerFactory.getLogger(Main.class);
 
     /** Servlet context. */
-    private ServletContext ctx;
+    private ServletContext context;
+
+    /** File di configurazione. */
+    private Config config;
 
     /**
      * Metodo di inizializzazione.
@@ -36,11 +41,12 @@ public class Main extends HttpServlet {
     @Override
     public void init() {
         LOGGER.info("Init Main lanciato!");
-        ctx = getServletContext();
+        context = getServletContext();
+        config = EnvConfig.getInstance();
 
         try {
             // Inizializza service e storage layers.
-            initLayers(ctx);
+            initLayers();
         } catch (Exception e) {
             LOGGER.error(
                     "Errore durante l'inizializzazione dell'applicazione", e);
@@ -49,27 +55,30 @@ public class Main extends HttpServlet {
         LOGGER.info("Init Main terminato!");
     }
 
-    private void initLayers(final ServletContext ctx) {
-        // Inizializzazione database. Prende le credenziali
-        // di accesso dal file "web.xml".
-        String dbHost = ctx.getInitParameter("dbHost");
-        int dbPort = Integer.parseInt(ctx.getInitParameter("dbPort"));
-        String dbName = ctx.getInitParameter("dbName");
-        String dbUser = ctx.getInitParameter("dbUser");
-        String dbPassword = ctx.getInitParameter("dbPass");
-        String dbType = ctx.getInitParameter("dbType");
-        DatabaseFactory databaseFactory =
-                new DatabaseFactoryImpl(
-                        dbHost, dbPort, dbUser, dbPassword, dbName, dbType);
+    private void initLayers() {
+        DatabaseFactory databaseFactory = getDatabaseFactory();
         Database database = databaseFactory.createDatabase();
-        ctx.setAttribute("database", database);
+        context.setAttribute("database", database);
 
         // DAO e Service Factories
         DAOFactory daoFactory = new DAOFactoryImpl(database);
         ServiceFactory serviceFactory =
                 new ServiceFactoryImpl(database, daoFactory);
-        ctx.setAttribute("daoFactory", daoFactory);
-        ctx.setAttribute("serviceFactory", serviceFactory);
+        context.setAttribute("daoFactory", daoFactory);
+        context.setAttribute("serviceFactory", serviceFactory);
+    }
+
+    private DatabaseFactory getDatabaseFactory() {
+        // Inizializzazione database. Prende le credenziali
+        // di accesso dal file "web.xml".
+        String dbHost = config.get("DB_HOST");
+        int dbPort = Integer.parseInt(config.get("DB_PORT"));
+        String dbName = config.get("DB_NAME");
+        String dbUser = config.get("DB_USER");
+        String dbPassword = config.get("DB_PASSWORD");
+        String dbType = config.get("DB_TYPE");
+        return new DatabaseFactoryImpl(
+                dbHost, dbPort, dbUser, dbPassword, dbName, dbType);
     }
 
     /**
@@ -78,9 +87,9 @@ public class Main extends HttpServlet {
     @Override
     public void destroy() {
         try {
-            ctx.removeAttribute("database");
-            ctx.removeAttribute("daoFactory");
-            ctx.removeAttribute("serviceFactory");
+            context.removeAttribute("database");
+            context.removeAttribute("daoFactory");
+            context.removeAttribute("serviceFactory");
         } catch (Exception e) {
             LOGGER.error(
                     "Errore durante lo spegnimento dell'applicazione", e);
