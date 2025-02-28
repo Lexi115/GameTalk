@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,40 +104,12 @@ public class GetThreadCommentsServlet extends CommentServlet {
             long totalComments =
                     commentService.countCommentsByThreadId(threadId);
 
-            //Recupera valutazioni personali ai commenti, se l'utente è loggato.
-            boolean isLoggedIn = user != null;
-            List<Map<String, Object>> loggedInComments = new ArrayList<>();
-            if (isLoggedIn) {
-                Map<Long, Integer> personalRatings =
-                        commentService.getPersonalVotes(threadId, username);
-
-                // Commenti con rating personale
-                for (Comment comment : comments) {
-                    Map<String, Object> commentData = new HashMap<>();
-                    commentData.put("id", comment.getId());
-                    commentData.put("author", comment.getUsername());
-                    commentData.put("body", comment.getBody());
-                    commentData.put("creationDate", comment.getCreationDate());
-                    commentData.put("votes", comment.getVotes());
-                    commentData.put("personalRating", personalRatings.get(comment.getId()));
-                    loggedInComments.add(commentData);
-                }
-            }
-
-
             // Prepara la risposta JSON
             Map<String, Object> response = new HashMap<>();
             response.put("threadId", threadId);
             response.put("page", page);
             response.put("pageSize", pageSize);
-
-            //Se l'utente è loggato appende a ogni commento il voto personale.
-            if (isLoggedIn) {
-                response.put("comments", loggedInComments);
-            } else {
-                response.put("comments", comments);
-            }
-
+            response.put("comments", comments);
             response.put("totalComments", totalComments);
             response.put("totalPages",
                     (int) Math.ceil((double) totalComments / pageSize));

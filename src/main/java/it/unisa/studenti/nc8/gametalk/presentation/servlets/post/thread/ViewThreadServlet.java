@@ -9,7 +9,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -36,7 +35,7 @@ public class ViewThreadServlet extends ThreadServlet {
         ErrorHandler errorHandler = getErrorHandler();
         ThreadService threadService = getThreadService();
         long idThread = Long.parseLong(req.getParameter("idThread"));
-        HttpSession session = req.getSession();
+
         try {
             Thread recoveredThread = threadService.findThreadById(idThread);
 
@@ -47,16 +46,8 @@ public class ViewThreadServlet extends ThreadServlet {
                 return;
             }
 
-            //Recupero la valutazione personale dell'utente se è loggato.
-            if (session != null) {
-                String username = (String) session.getAttribute("username");
-                int personalVote = threadService.getPersonalVote(
-                        idThread, username);
-                req.setAttribute("personalVote", personalVote);
-            }
-
-            req.setAttribute("thread", recoveredThread);
             resp.setStatus(HttpServletResponse.SC_OK);
+            req.setAttribute("thread", recoveredThread);
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di visualizzazione thread", e);
             errorHandler.handleError(req, resp,

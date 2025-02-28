@@ -11,9 +11,7 @@ import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Implementazione dell'interfaccia DAO per l'entità {@link Comment}.
@@ -249,18 +247,17 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
     public void voteComment(
             final long commentId,
             final String username,
-            final long threadId,
             final int vote
     ) throws DAOException {
         Database db = this.getDatabase();
         Connection connection = this.getConnection();
         String query =
-                "INSERT INTO votes_comments (username, comment_id, thread_id, vote)"
-                        + " VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE vote = ?";
+                "INSERT INTO votes_comments (username, comment_id, vote)"
+                        + " VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE vote = ?";
 
         try {
             db.executeInsert(connection, query, username,
-                    commentId, threadId, vote, vote);
+                    commentId, vote, vote);
             updateCommentVotes(commentId);
         } catch (SQLException e) {
             throw new DAOException("Voto non andato a buon fine", e);
@@ -314,49 +311,6 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
                 + " WHERE id = ?";
 
         db.executeUpdate(connection, updateVotesQuery, commentId, commentId);
-    }
-
-    /**
-     * Recupera i voti personali di un utente sui commenti sotto un thread.
-     *
-     * @param threadId L'ID del thread di cui recuperare i voti.
-     * @param username Il nome utente dell'utente per cui recuperare i voti.
-     * @return Una mappa in cui le chiavi sono gli ID dei commenti
-     *         e i valori sono i voti assegnati dall'utente.
-     * @throws DAOException Se si verifica un errore durante il recupero dei
-     * voti dal database.
-     */
-    @Override
-    public Map<Long, Integer> getPersonalVotes(
-            final long threadId,
-            final String username
-    ) throws DAOException {
-        Database db = this.getDatabase();
-        Connection connection = this.getConnection();
-
-        String votedCommentsQuery =
-                "SELECT comment_id,vote FROM vote_comments "
-                        + "WHERE thread_id = ? AND username = ?";
-
-        Map<Long, Integer> votes = new HashMap<>();
-
-        try (QueryResult qr = db.executeQuery(
-                connection, votedCommentsQuery, threadId,
-                username)) {
-
-            ResultSet res = qr.getResultSet();
-            while (res.next()) {
-                long commentId = res.getLong("comment_id");
-                int vote = res.getInt("vote");
-                votes.put(commentId, vote);
-            }
-
-        } catch (SQLException e) {
-            throw new DAOException(
-                    "Errore recupero valutazione personale ai commenti", e);
-        }
-
-        return votes;
     }
 
     /**
