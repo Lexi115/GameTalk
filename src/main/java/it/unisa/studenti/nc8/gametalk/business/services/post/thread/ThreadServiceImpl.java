@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Classe di servizio per la gestione di oggetti {@link Thread}.
@@ -500,4 +501,74 @@ public class ThreadServiceImpl implements ThreadService {
                     "Errore durante l'archiviazione del thread", e);
         }
     }
+
+    @Override
+    public int getThreadCount(
+            final String title,
+            final Category category,
+            final LocalDate startDate,
+            final LocalDate endDate
+    ) throws ServiceException {
+        try (Connection connection = db.connect()) {
+            threadDAO.bind(connection);
+
+            LocalDate actualStartDate = LocalDate.of(1000, 01, 01);
+            LocalDate actualEndDate = LocalDate.of(9999, 12, 31);
+
+            //Controllo data inizio
+            if (startDate != null && startDate.isAfter(actualStartDate)) {
+                actualStartDate = startDate;
+            }
+
+            if (endDate != null && endDate.isBefore(actualEndDate)) {
+                actualEndDate = endDate;
+            }
+
+            return threadDAO.getThreadCount(
+                    title,
+                    category,
+                    actualStartDate,
+                    actualEndDate
+            );
+
+        } catch (DAOException | SQLException e) {
+            throw new ServiceException(
+                    "Errore durante il recupero del conteggio dei thread", e);
+        }
+    }
+
+    /**
+     * Recupera il voto che un utente ha dato a un thread.
+     *
+     * @param threadId L'ID del thread di cui recuperare il voto.
+     * @param username Il nome utente dell'utente per cui recuperare il voto.
+     * @return Un intero che indica la valutazione.
+     * @throws ServiceException Se si verifica un errore durante il recupero del voto
+     * dal database.
+     */
+    @Override
+    public int getPersonalVote(
+            final long threadId,
+            final String username
+    ) throws ServiceException {
+        try (Connection connection = db.connect()) {
+            threadDAO.bind(connection);
+
+            //Verifico esistenza thread
+            Thread thread = threadDAO.get(threadId);
+            if (thread == null) {
+                throw new ServiceException(
+                        "Nessun thread trovato con id " + threadId);
+            }
+
+            return threadDAO.getPersonalVote(threadId, username);
+
+        } catch (DAOException | SQLException e) {
+            throw new ServiceException(
+                    "Errore durante il recupero dei voti personali"
+                            + "thread " + threadId, e);
+        }
+    }
+
+
 }

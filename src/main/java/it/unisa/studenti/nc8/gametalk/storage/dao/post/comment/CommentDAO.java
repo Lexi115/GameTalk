@@ -6,6 +6,7 @@ import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.utils.Bindable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interfaccia DAO per l'entità {@link Comment}.
@@ -67,6 +68,7 @@ public interface CommentDAO extends DAO<Comment, Long>, Bindable {
     void voteComment(
             long commentId,
             String username,
+            long threadId,
             int vote
     ) throws DAOException;
 
@@ -82,6 +84,21 @@ public interface CommentDAO extends DAO<Comment, Long>, Bindable {
      */
     void removeVoteComment(
             long commentId,
+            String username
+    ) throws DAOException;
+
+    /**
+     * Recupera i voti personali di un utente sui commenti sotto un thread.
+     *
+     * @param threadId L'ID del thread di cui recuperare i voti.
+     * @param username Il nome utente dell'utente per cui recuperare i voti.
+     * @return Una mappa in cui le chiavi sono gli ID dei commenti
+     *         e i valori sono i voti assegnati dall'utente.
+     * @throws DAOException Se si verifica un errore durante il recupero dei
+     * voti dal database.
+     */
+    Map<Long, Integer> getPersonalVotes(
+            long threadId,
             String username
     ) throws DAOException;
 }

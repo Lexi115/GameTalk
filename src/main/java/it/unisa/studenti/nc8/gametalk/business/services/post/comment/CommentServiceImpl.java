@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Classe di servizio per la gestione di oggetti {@link Comment}.
@@ -302,6 +303,7 @@ public class CommentServiceImpl implements CommentService {
     public void rateComment(
             final long commentId,
             final String username,
+            final long threadId,
             final int vote
     ) throws ServiceException {
         //Sanificazione
@@ -346,7 +348,7 @@ public class CommentServiceImpl implements CommentService {
                     commentDAO.removeVoteComment(commentId, username);
                 } else {
                     //Inserisco il voto
-                    commentDAO.voteComment(commentId, username, vote);
+                    commentDAO.voteComment(commentId, username, threadId, vote);
                 }
 
                 tx.commit();
@@ -355,6 +357,40 @@ public class CommentServiceImpl implements CommentService {
             throw new ServiceException(
                     "Errore durante l'aggiunta del voto " + vote
                             + " al commento " + commentId, e);
+        }
+    }
+
+    /**
+     * Recupera i voti personali di un utente sui commenti sotto un thread.
+     *
+     * @param threadId L'ID del thread di cui recuperare i voti.
+     * @param username Il nome utente dell'utente per cui recuperare i voti.
+     * @return Una mappa in cui le chiavi sono gli ID dei commenti
+     *         e i valori sono i voti assegnati dall'utente.
+     * @throws ServiceException Se si verifica un errore durante il recupero dei
+     * voti dal database.
+     */
+    @Override
+    public Map<Long, Integer> getPersonalVotes(
+            final long threadId,
+            final String username
+    ) throws ServiceException {
+        try (Connection connection = db.connect()) {
+            commentDAO.bind(connection);
+
+            //Verifico esistenza thread
+            Thread thread = threadDAO.get(threadId);
+            if (thread == null) {
+                throw new ServiceException(
+                        "Nessun thread trovato con id " + threadId);
+            }
+
+            return commentDAO.getPersonalVotes(threadId, username);
+
+        } catch (DAOException | SQLException e) {
+            throw new ServiceException(
+                    "Errore durante il recupero del voto personale al "
+                            + "thread " + threadId, e);
         }
     }
 }

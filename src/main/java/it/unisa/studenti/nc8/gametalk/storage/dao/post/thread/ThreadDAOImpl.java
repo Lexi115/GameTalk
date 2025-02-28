@@ -11,9 +11,12 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMappe
 
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -447,6 +450,70 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         finalQuery += " LIMIT ? OFFSET ?";
 
         return finalQuery;
+    }
+
+    /**
+     * Conta il numero di thread risultanti da una ricerca.
+     *
+     * @param title Il titolo (o parte di esso) da cercare.
+     * @param category La categoria del thread.
+     * @param startDate La data di inizio dell'intervallo di ricerca.
+     * @param endDate La data di fine dell'intervallo di ricerca.
+     * @return Il numero di thread che corrispondono ai criteri di ricerca.
+     * @throws DAOException Se si verifica un errore nel
+     * conteggio dei thread dal database.
+     */
+    @Override
+    public int getThreadCount(
+            final String title,
+            final Category category,
+            final LocalDate startDate,
+            final LocalDate endDate
+    ) throws DAOException {
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+
+        String query = "SELECT COUNT(*) FROM threads WHERE title LIKE ? AND category ? AND creation_date BETWEEN ? AND ?";
+
+        String titleString = (title == null) ? "" : title.trim();
+
+        try (QueryResult qr = db.executeQuery(
+                connection, query, "%" + titleString + "%",
+                category.toString(), startDate, endDate)) {
+            return qr.getResultSet().getInt(1);
+        } catch (SQLException e) {
+            throw new DAOException("Errore ricerca threads", e);
+        }
+    }
+
+    /**
+     * Recupera il voto che un utente ha dato a un thread.
+     *
+     * @param threadId L'ID del thread di cui recuperare il voto.
+     * @param username Il nome utente dell'utente per cui recuperare il voto.
+     * @return Un intero che indica la valutazione.
+     * @throws DAOException Se si verifica un errore durante il recupero del voto
+     * dal database.
+     */
+    public int getPersonalVote(
+            final long threadId,
+            final String username
+    ) throws DAOException {
+        Database db = this.getDatabase();
+        Connection connection = this.getConnection();
+
+        String isThreadVotedQuery =
+                "SELECT vote FROM votes_threads "
+                        + "WHERE thread_id = ? AND username = ?";
+
+        try (QueryResult qr = db.executeQuery(
+                connection, isThreadVotedQuery, threadId,
+                username)) {
+            return qr.getResultSet().getInt(1);
+
+        } catch (SQLException e) {
+            throw new DAOException("Errore recupero valutazione personale al thread", e);
+        }
     }
 
     /**

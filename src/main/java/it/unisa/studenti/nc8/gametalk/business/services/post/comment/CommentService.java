@@ -4,6 +4,7 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interfaccia di servizio per la gestione dei {@link Comment}.
@@ -85,6 +86,7 @@ public interface CommentService {
      *
      * @param commentId ID del commento da votare.
      * @param username Nome utente dell'utente che sta effettuando il voto.
+     * @param threadId Id dell utente dalla quale proviene il commento.
      * @param vote Valore del voto da assegnare al commento, deve essere:
      *             <ul>
      *             <li>-1: Downvote.</li>
@@ -105,6 +107,22 @@ public interface CommentService {
     void rateComment(
             long commentId,
             String username,
+            long threadId,
             int vote
+    ) throws ServiceException;
+
+    /**
+     * Recupera i voti personali di un utente sui commenti sotto un thread.
+     *
+     * @param threadId L'ID del thread di cui recuperare i voti.
+     * @param username Il nome utente dell'utente per cui recuperare i voti.
+     * @return Una mappa in cui le chiavi sono gli ID dei commenti
+     *         e i valori sono i voti assegnati dall'utente.
+     * @throws ServiceException Se si verifica un errore durante il recupero dei
+     * voti dal database.
+     */
+    Map<Long, Integer> getPersonalVotes(
+            long threadId,
+            String username
     ) throws ServiceException;
 }
