@@ -67,8 +67,8 @@ public class SignupServlet extends HttpServlet {
         try {
             userService.createUser(username, password);
 
-            // Reindirizza sulla pagina di login dopo la creazione dell'utente
-            resp.sendRedirect(req.getContextPath() + "/login");
+            // Reindirizza sulla pagina home dopo la creazione dell'utente
+            resp.sendRedirect(req.getContextPath() + "/");
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di registrazione", e);
@@ -80,7 +80,6 @@ public class SignupServlet extends HttpServlet {
         } catch (IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             req.setAttribute("error", e.getMessage());
-            doGet(req, resp);
         }
     }
 }

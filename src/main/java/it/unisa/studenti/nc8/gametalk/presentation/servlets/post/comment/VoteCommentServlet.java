@@ -41,11 +41,12 @@ public class VoteCommentServlet extends CommentServlet {
         String usernameReq = user.getUsername();
         String voteString = req.getParameter("vote");
         String commentIdString = req.getParameter("commentId");
-
+        String threadIdString = req.getParameter("threadId");
         try {
             int vote = Integer.parseInt(voteString);
             long commentId = Long.parseLong(commentIdString);
-            commentService.rateComment(commentId, usernameReq, vote);
+            long threadId = Long.parseLong(threadIdString);
+            commentService.rateComment(commentId, usernameReq, threadId, vote);
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di voto commento", e);
             errorHandler.handleError(

@@ -180,4 +180,34 @@ public interface ThreadService {
      * @throws ServiceException Se si verifica un errore durante l'operazione.
      */
     void archiveThread(long threadId) throws ServiceException;
+
+    /**
+     * Recupera il numero di risultati appartenenti a una ricerca
+     * @param title Il titolo da cercare.
+     * @param category La categoria da cercare.
+     * @param startDate La data di inizio della ricerca.
+     * @param endDate La data di fine della ricerca
+     * @return Il numero di risultati.
+     * @throws ServiceException In caso di errore durante il conteggio.
+     */
+    int getThreadCount(
+            String title,
+            Category category,
+            LocalDate startDate,
+            LocalDate endDate
+    ) throws ServiceException;
+
+    /**
+     * Recupera il voto che un utente ha dato a un thread.
+     *
+     * @param threadId L'ID del thread di cui recuperare il voto.
+     * @param username Il nome utente dell'utente per cui recuperare il voto.
+     * @return Un intero che indica la valutazione.
+     * @throws ServiceException Se si verifica un errore durante il recupero del voto
+     * dal database.
+     */
+    int getPersonalVote(
+            long threadId,
+            String username
+    ) throws ServiceException;
 }
