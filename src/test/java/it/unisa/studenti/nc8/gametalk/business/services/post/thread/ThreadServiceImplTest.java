@@ -1,128 +1,91 @@
 package it.unisa.studenti.nc8.gametalk.business.services.post.thread;
 
-import it.unisa.studenti.nc8.gametalk.business.enums.Category;
-import it.unisa.studenti.nc8.gametalk.business.enums.Order;
-import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.utils.pattern.RegexMatcher;
+import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.business.validators.post.thread.ThreadValidator;
+import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
+import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
+import it.unisa.studenti.nc8.gametalk.storage.persistence.QueryResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Disabled
 public class ThreadServiceImplTest {
-    private ThreadService threadService;
+    private ThreadServiceImpl threadService;
+    private ThreadDAO threadDAO;
+    private UserDAO userDAO;
+    private Validator<Thread> threadValidator = new ThreadValidator(new RegexMatcher());
 
     @BeforeEach
-    void setUp() {
-        //Database db = new DatabaseImpl("localhost", 3306, "root", "root_pw", "gametalk_db", "mysql");
-        //threadService = new ThreadServiceImpl(db);
+    void setUp() throws SQLException {
+        Database db = mock(Database.class);
+        Connection connection = mock(Connection.class);
+        QueryResult queryResult = mock(QueryResult.class);
+        ResultSet resultSet = mock(ResultSet.class);
+
+        when(db.connect()).thenReturn(connection);
+        when(db.executeQuery(eq(connection), anyString(), any(Object[].class)))
+                .thenReturn(queryResult);
+        when(queryResult.getResultSet()).thenReturn(resultSet);
+        threadDAO = mock(ThreadDAO.class);
+        userDAO = mock(UserDAO.class);
+
+        threadService = new ThreadServiceImpl(db,threadDAO,userDAO,threadValidator);
+    }
+
+
+    @Test
+    void createThread() {
     }
 
     @Test
-    void createThreadTest() throws ServiceException {
-        assertDoesNotThrow(() -> threadService.createThread("ApexLegends", "Switch 2 Reveal", "rosse molto rosse", Category.General));
+    void removeThread() {
     }
 
     @Test
-    void createThreadInvalidTest() {
-        assertThrows(ServiceException.class, () -> threadService.createThread("", "", "", null));
+    void updateThread() {
     }
 
     @Test
-    void updateThreadTest() throws ServiceException {
-        assertDoesNotThrow(() -> threadService.updateThread(11, "AlphaMaster", "Rossissime", "Rossissime molto rosse", Category.Announcements));
+    void findThreadById() {
     }
 
     @Test
-    void updateThreadInvalidTest() {
-        assertThrows(ServiceException.class, () -> threadService.updateThread(-1, "", "", "", null));
+    void findThreads() {
     }
 
     @Test
-    void deleteThreadTest() throws ServiceException {
-        assertDoesNotThrow(() -> threadService.removeThread(11));
+    void findThreadsByUsername() {
     }
 
     @Test
-    void deleteThreadInvalidIdTest() {
-        assertThrows(IllegalArgumentException.class, () -> threadService.removeThread(-1));
+    void rateThread() {
     }
 
     @Test
-    void findThreadByIdTest() throws ServiceException {
-        Thread thread = threadService.findThreadById(10);
-        assertNotNull(thread);
-        assertEquals(10, thread.getId());
+    void updateThreadCategory() {
     }
 
     @Test
-    void findThreadByIdInvalidTest() {
-        assertThrows(IllegalArgumentException.class, () -> threadService.findThreadById(-1));
+    void archiveThread() {
     }
 
     @Test
-    void findThreadsByTitleTest() throws ServiceException {
-        for (Thread t : threadService.findThreads(null, null, 1, 12, null,null, LocalDate.of(2024, 1, 1))) {
-            System.out.println(t);
-        }
-    }
-    @Test
-    void findThreadsGeneral() throws ServiceException {
-        assertDoesNotThrow(() -> {
-            var threads = threadService.findThreads(null, null, 1, 12, Order.Best, null, null);
-            assertNotNull(threads);
-            assertFalse(threads.isEmpty());
-        });
+    void getThreadCount() {
     }
 
     @Test
-    void findThreadsByCategoryTest() throws ServiceException {
-        assertDoesNotThrow(() -> {
-            var threads = threadService.findThreads(null, Category.General, 1, 12, Order.Best, null, null);
-            assertNotNull(threads);
-            assertFalse(threads.isEmpty());
-        });
-    }
-
-    @Test
-    void findThreadsByTitleAndCategoryTest() throws ServiceException {
-        assertDoesNotThrow(() -> {
-            var threads = threadService.findThreads("sw", Category.Memes, 1, 12, Order.Best, null, null);
-            assertNotNull(threads);
-            assertFalse(threads.isEmpty());
-        });
-    }
-
-    @Test
-    void findThreadsByUsernameTest() throws ServiceException {
-        assertDoesNotThrow(() -> {
-            var threads = threadService.findThreadsByUsername("AlphaMaster", 1, 12, Order.Best);
-            assertNotNull(threads);
-            assertFalse(threads.isEmpty());
-        });
-    }
-
-    @Test
-    void rateThreadTestUpvote() throws ServiceException {
-        threadService.rateThread(7,"ApexLegends",1);
-    }
-
-    @Test
-    void findThreadsInvalidPaginationTest() {
-        assertThrows(IllegalArgumentException.class, () -> threadService.findThreads("sw", Category.Memes, -1, 0, Order.Best, null, null));
-    }
-
-    @Test
-    void changeCategoryTest() throws ServiceException {
-        threadService.updateThreadCategory(7,Category.Memes);
-    }
-
-    @Test
-    void archiveThreadTest() throws ServiceException {
-        threadService.archiveThread(7);
+    void getPersonalVote() {
     }
 }

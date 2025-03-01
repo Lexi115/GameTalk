@@ -166,7 +166,7 @@ class CommentDAOImplTest {
 
     @Test
     void testVoteValidComment() throws DAOException, SQLException {
-        commentDAO.voteComment(1L, "lucia", 1);
+        commentDAO.voteComment(1L, "lucia", 1L,1);
         verify(database).executeInsert(eq(connection), anyString(), any(Object[].class));
     }
 
@@ -176,7 +176,7 @@ class CommentDAOImplTest {
                 .thenThrow(SQLException.class);
 
         assertThrows(DAOException.class, () -> commentDAO.voteComment(
-                -1L, "lucia", 1));
+                -1L, "lucia", 1L,1));
     }
 
     @Test
