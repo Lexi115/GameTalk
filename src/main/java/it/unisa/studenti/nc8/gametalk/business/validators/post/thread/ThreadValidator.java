@@ -13,10 +13,10 @@ public class ThreadValidator implements Validator<Thread> {
     /**
      * Regex per il titolo del thread.
      * Deve contenere solo lettere, numeri e alcuni caratteri speciali,
-     * con una lunghezza compresa tra 1 e 150 caratteri.
+     * con una lunghezza compresa tra 1 e 32 caratteri.
      */
     public static final String REGEX_THREAD_TITLE = "^[A-Za-z0-9\\s\\-':,!?.()]"
-            + "{1,32}$";
+            + "{1,100}$";
 
     /**
      * Regex per il corpo del thread.

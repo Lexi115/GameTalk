@@ -17,7 +17,7 @@ public class UserValidator implements Validator<User> {
      * e alcuni caratteri speciali.
      */
     public static final String REGEX_USER_NAME =
-            "^[A-Za-z0-9\\s\\-':,!?.()]{4,24}$";
+            "^[A-Za-z0-9\\s\\-':_,!?.()]{4,24}$";
 
     /**
      * Regex per la password dell'utente.
