@@ -40,3 +40,7 @@ build/
 
 ### Logging ###
 /logs/
+
+## File .env ##
+/src/main/resources/.env
+/src/test/resources/.env

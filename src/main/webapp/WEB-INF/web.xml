@@ -3,4 +3,46 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
+
+    <!-- Servlet di inizializzazione (Main) -->
+    <servlet>
+        <servlet-name>Main</servlet-name>
+        <servlet-class>it.unisa.studenti.nc8.gametalk.Main</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Main</servlet-name>
+        <url-pattern>/main</url-pattern>
+    </servlet-mapping>
+
+    <!-- Filtri -->
+    <filter-mapping>
+        <filter-name>AutoLoginFilter</filter-name>
+        <url-pattern>/*</url-pattern> <!-- Si applica filter a tutto il sito -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/editProfile</url-pattern>
+        <url-pattern>/editThread</url-pattern>
+        <url-pattern>/addThread</url-pattern>
+        <url-pattern>/addComment</url-pattern>
+        <url-pattern>/removeThread</url-pattern>
+        <url-pattern>/removeComment</url-pattern>
+        <url-pattern>/voteThread</url-pattern>
+        <url-pattern>/voteComment</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ModFilter</filter-name>
+        <url-pattern>/mod/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Pagine di errore -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/errors/notFound.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/errors/error.jsp</location>
+    </error-page>
 </web-app>
