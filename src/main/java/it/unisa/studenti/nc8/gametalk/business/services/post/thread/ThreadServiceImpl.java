@@ -577,6 +577,4 @@ public class ThreadServiceImpl implements ThreadService {
                             + "thread " + threadId, e);
         }
     }
-
-
 }

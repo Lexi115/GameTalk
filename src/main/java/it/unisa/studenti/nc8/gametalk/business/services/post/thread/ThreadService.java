@@ -182,7 +182,7 @@ public interface ThreadService {
     void archiveThread(long threadId) throws ServiceException;
 
     /**
-     * Recupera il numero di risultati appartenenti a una ricerca
+     * Recupera il numero di risultati appartenenti a una ricerca.
      * @param title Il titolo da cercare.
      * @param category La categoria da cercare.
      * @param startDate La data di inizio della ricerca.
