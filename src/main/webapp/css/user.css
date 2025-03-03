@@ -1,0 +1,18 @@
+.user-facade{
+    justify-content: space-between;
+}
+
+
+
+.threadCard{
+    background: linear-gradient(135deg, #22236D, #2d3784);
+}
+
+.threadCard-title{
+    color: white;
+}
+
+.threadCard-text{
+    color: white;
+}
+

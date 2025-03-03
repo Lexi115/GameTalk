@@ -1,0 +1,100 @@
+.bg-main{
+    background-color: #07083F;
+}
+
+html, body{
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: #07083F;
+    position: relative;
+}
+
+.fadeIn{
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-fill-mode: forwards;
+}
+
+.animate-1{
+    animation-duration: 0.25s;
+}
+
+.animate-2{
+    animation-duration: 0.5s;
+}
+
+.animate-3{
+    animation-duration: 0.75s;
+}
+
+.animate-4{
+    animation-duration: 1s;
+}
+
+.a-delay-1{
+    animation-delay: 0.25s;
+}
+
+.a-delay-2{
+    animation-delay: 0.5s;
+}
+
+.a-delay-3{
+    animation-delay: 0.75s;
+}
+
+.a-delay-4{
+    animation-delay: 1s;
+}
+
+.a-block-zone * {
+    animation: none !important;
+    opacity: 1;
+}
+
+.bg-card {
+    background: linear-gradient(135deg, #22236D, #2d3784) !important;
+}
+
+.bg-card-light{
+    background: linear-gradient(135deg, #4055a2, #5b67b8) !important;
+}
+
+.label-bg-none{
+    --bs-body-bg: transparent !important;
+}
+
+.z-4{
+    z-index: 4 !important;
+}
+
+.z-5{
+    z-index: 5 !important;
+}
+
+@keyframes fadeIn {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+/*body::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+    aspect-ratio: 1;
+    z-index: -1;
+    background-color: aquamarine;
+    border-radius: 50%;
+    box-shadow: 0px 0px 20px 20px aquamarine;
+    opacity: 0.7;
+}*/
