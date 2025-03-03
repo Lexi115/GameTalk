@@ -47,7 +47,7 @@ class ThreadValidatorTest {
                 "Titolo&NonValido",       // Carattere non consentito
                 "Titolo[NonValido]",      // Carattere non consentito
                 "Titolo{NonValido}",      // Carattere non consentito
-                "A".repeat(33),     // Supera lunghezza massima
+                "A".repeat(101),     // Supera lunghezza massima
         };
         for (String invalidTitle : invalidTitles) {
             Thread thread = new Thread();
@@ -56,15 +56,6 @@ class ThreadValidatorTest {
 
             assertThrows(ValidationException.class, () -> validator.validate(thread));
         }
-    }
-
-    @Test
-    void validateTitleTooLong() {
-        Thread thread = new Thread();
-        thread.setTitle("A".repeat(33)); // Supera la lunghezza massima
-        thread.setBody("Valid body");
-
-        assertThrows(ValidationException.class, () -> validator.validate(thread));
     }
 
     @Test
