@@ -11,14 +11,19 @@
     if (pageName.equalsIgnoreCase(pageToAnimate) || pageName.equalsIgnoreCase(pageBase)){
 %>
 
-<nav class="navbar navbar-expand-lg  navbar-dark shadow-lg bg-nav animate-2 navDrop">
+<nav class="navbar navbar-expand-lg  navbar-dark shadow bg-nav animate-2 navDrop">
 <%}else{%>
-<nav class="navbar navbar-expand-lg  navbar-dark shadow-lg bg-nav a-block-zone">
+<nav class="navbar navbar-expand-lg  navbar-dark shadow bg-nav a-block-zone">
 <%}%>
     <div class="container-fluid row p-0 m-0">
-        <a href="index.jsp" class="col-md-3 col-6 order-0">
-            <img class="m-2 fs-3 ps-3 animate-2 fadeIn a-delay-1" height="25" alt="logo" src="images/logo.svg">
-        </a>
+        <div class="col-md-3 col-6 order-0">
+            <a href="index.jsp">
+                <img class="m-2 fs-3 ps-3 animate-2 fadeIn a-delay-1"
+                     style="height: 25px"
+                     alt="logo"
+                     src="images/logo.svg">
+            </a>
+        </div>
 
         <div class="col-md-6 col-12 order-2 order-md-1 mt-3 mt-md-0 fadeIn animate-2 a-delay-2">
             <form id="searchbarForm">
