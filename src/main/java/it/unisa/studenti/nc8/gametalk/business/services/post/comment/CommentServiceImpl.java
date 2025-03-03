@@ -377,7 +377,7 @@ public class CommentServiceImpl implements CommentService {
     ) throws ServiceException {
         try (Connection connection = db.connect()) {
             commentDAO.bind(connection);
-
+            threadDAO.bind(connection);
             //Verifico esistenza thread
             Thread thread = threadDAO.get(threadId);
             if (thread == null) {

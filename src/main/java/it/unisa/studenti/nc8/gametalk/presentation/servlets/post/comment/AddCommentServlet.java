@@ -41,7 +41,7 @@ public class AddCommentServlet extends CommentServlet {
         User user = (User) session.getAttribute("user");
         String usernameOp = user.getUsername();
 
-        long threadId = Long.parseLong(req.getParameter("idThread"));
+        long threadId = Long.parseLong(req.getParameter("threadId"));
         String body = req.getParameter("body");
 
         CommentService commentService = getCommentService();

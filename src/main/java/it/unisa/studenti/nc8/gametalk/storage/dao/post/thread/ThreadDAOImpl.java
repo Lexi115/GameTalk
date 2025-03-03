@@ -510,8 +510,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         try (QueryResult qr = db.executeQuery(
                 connection, isThreadVotedQuery, threadId,
                 username)) {
-            return qr.getResultSet().getInt(1);
-
+            ResultSet res = qr.getResultSet();
+            return (res.next()) ? qr.getResultSet().getInt(1) : 0;
         } catch (SQLException e) {
             throw new DAOException("Errore recupero valutazione personale al thread", e);
         }

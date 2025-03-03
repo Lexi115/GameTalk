@@ -88,7 +88,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
 
             // Confronta password con la sua versione hashed sul database
-            if (passwordHasher.verify(password, user.getPassword())) {
+            if (!passwordHasher.verify(password, user.getPassword())) {
                 throw new AuthenticationException("Password non valida");
             }
 

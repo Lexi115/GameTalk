@@ -335,7 +335,7 @@ public class CommentDAOImpl extends DatabaseDAO<Comment> implements CommentDAO {
         Connection connection = this.getConnection();
 
         String votedCommentsQuery =
-                "SELECT comment_id,vote FROM vote_comments "
+                "SELECT comment_id,vote FROM votes_comments "
                         + "WHERE thread_id = ? AND username = ?";
 
         Map<Long, Integer> votes = new HashMap<>();

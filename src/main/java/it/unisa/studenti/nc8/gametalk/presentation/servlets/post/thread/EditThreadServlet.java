@@ -39,7 +39,7 @@ public class EditThreadServlet extends ThreadServlet {
         ThreadService threadService = getThreadService();
         HttpSession session = req.getSession();
 
-        String idThreadString = req.getParameter("idThread");
+        String idThreadString = req.getParameter("threadId");
         User user = (User) session.getAttribute("user");
         String usernameReq = user.getUsername();
 
@@ -103,7 +103,7 @@ public class EditThreadServlet extends ThreadServlet {
         User user = (User) session.getAttribute("user");
         String usernameReq = user.getUsername();
 
-        String idThreadString = req.getParameter("idThread");
+        String idThreadString = req.getParameter("threadId");
         String title = req.getParameter("title");
         String body = req.getParameter("body");
         String categoryString = req.getParameter("category");
