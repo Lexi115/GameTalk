@@ -1,23 +1,18 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.auth;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.AuthenticationException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.model.user.User;
-import it.unisa.studenti.nc8.gametalk.business.service.auth.AuthenticationService;
-import it.unisa.studenti.nc8.gametalk.business.service.auth.AuthenticationServiceImpl;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserServiceImpl;
-import jakarta.servlet.RequestDispatcher;
+import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Cookie;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -27,48 +22,10 @@ import java.io.IOException;
  * e imposta un cookie di autenticazione.
  */
 @WebServlet("/login")
-public class LoginServlet extends HttpServlet {
-
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** La classe di servizio per effettuare l'autenticazione. */
-    private AuthenticationService authenticationService;
-
-    /** La classe di servizio per recuperare l'utente. */
-    private UserService userService;
+public class LoginServlet extends AuthenticationServlet {
 
     /** Durata cookie di autenticazione. */
     private static final int AUTH_TOKEN_COOKIE_EXPIRY = 86400 * 7; // 7 giorni
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.authenticationService = new AuthenticationServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-        this.userService = new UserServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
-
-    /**
-     * Gestisce la richiesta GET per visualizzare la pagina di login.
-     *
-     * @param req  l'oggetto HttpServletRequest contenente i
-     *             parametri della richiesta
-     * @param resp l'oggetto HttpServletResponse per inviare
-     *             la risposta al client
-     * @throws IOException se si verifica un errore.
-     */
-    @Override
-    protected void doGet(
-            final HttpServletRequest req,
-            final HttpServletResponse resp
-    ) throws ServletException, IOException {
-        RequestDispatcher rd = req.getRequestDispatcher("login.jsp");
-        rd.forward(req, resp);
-    }
 
     /**
      * Gestisce la richiesta POST per autenticare l'utente.
@@ -84,6 +41,11 @@ public class LoginServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ErrorHandler errorHandler = getErrorHandler();
+        AuthenticationService authenticationService =
+                getAuthenticationService();
+        UserService userService = getUserService();
+
         // Parametri di login (username e password)
         String username = req.getParameter("username");
         String password = req.getParameter("password");
@@ -95,15 +57,16 @@ public class LoginServlet extends HttpServlet {
             User loggedUser = authenticationService.login(username, password);
 
             // Genera cookie token di autenticazione
-            Cookie authTokenCookie = Functions.createSecureCookie(
-                    "auth_token",
-                    Functions.hash(username + password),
-                    AUTH_TOKEN_COOKIE_EXPIRY
-            );
+            CookieHelper cookieHelper = getCookieHelper();
+            String authToken = authenticationService.generateToken(
+                    username + password);
+            Cookie authTokenCookie = cookieHelper.createCookie(
+                    "auth_token", authToken, AUTH_TOKEN_COOKIE_EXPIRY);
 
             // Aggiorna token nel database (doppio hash)
-            userService.updateToken(username, Functions.hash(
-                    authTokenCookie.getValue()));
+            String hashedAuthToken =
+                    authenticationService.generateToken(authToken);
+            userService.updateToken(username, hashedAuthToken);
 
             // Imposta utente nella sessione
             session.setAttribute("user", loggedUser);
@@ -112,7 +75,7 @@ public class LoginServlet extends HttpServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con servizio di autenticazione", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage()
             );
@@ -120,7 +83,6 @@ public class LoginServlet extends HttpServlet {
         } catch (AuthenticationException | IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             req.setAttribute("error", e.getMessage());
-            doGet(req, resp);
         }
     }
 }

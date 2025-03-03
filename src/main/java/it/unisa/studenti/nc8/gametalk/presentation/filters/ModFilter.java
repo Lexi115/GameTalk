@@ -1,16 +1,13 @@
 package it.unisa.studenti.nc8.gametalk.presentation.filters;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
-import it.unisa.studenti.nc8.gametalk.business.model.user.User;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -41,12 +38,16 @@ public class ModFilter implements Filter {
             final ServletResponse response,
             final FilterChain chain
     ) throws IOException, ServletException {
+        ServletContext ctx = request.getServletContext();
+        ErrorHandler errorHandler =
+                (ErrorHandler) ctx.getAttribute("errorHandler");
+
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         User user = (User) req.getSession(false).getAttribute("user");
 
         if (user.getRole() != Role.Moderator) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_FORBIDDEN,
                     "Accesso negato!");
             return;

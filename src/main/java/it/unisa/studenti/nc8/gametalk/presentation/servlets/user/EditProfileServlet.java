@@ -1,43 +1,25 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.user;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
-import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
-import it.unisa.studenti.nc8.gametalk.presentation.exceptions.PermissionException;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.model.user.User;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserServiceImpl;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
+import it.unisa.studenti.nc8.gametalk.presentation.exceptions.PermissionException;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 /**
- * Servlet per mostrare una pagina di profilo utente.
+ * Servlet per modificare un profilo utente.
+ * È possibile cambiare solamente la password.
  */
 @WebServlet("/editProfile")
-public class EditProfileServlet extends HttpServlet {
-
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** La classe di servizio per ricercare l'utente. */
-    private UserService userService;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.userService = new UserServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
+public class EditProfileServlet extends UserServlet {
 
     /**
      * Gestisce la richiesta GET per mostrare la pagina profilo.
@@ -53,6 +35,7 @@ public class EditProfileServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws IOException, ServletException {
+        ErrorHandler errorHandler = getErrorHandler();
         try {
             // Parametro di ricerca (username).
             String username = req.getParameter("username");
@@ -66,25 +49,25 @@ public class EditProfileServlet extends HttpServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio utenti", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage()
             );
 
         } catch (IllegalArgumentException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_BAD_REQUEST,
                     e.getMessage()
             );
 
         } catch (NotFoundException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_NOT_FOUND,
                     e.getMessage()
             );
 
         } catch (PermissionException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_FORBIDDEN,
                     e.getMessage()
             );
@@ -105,6 +88,8 @@ public class EditProfileServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ErrorHandler errorHandler = getErrorHandler();
+        UserService userService = getUserService();
         try {
             // Parametri di aggiornamento (username e password).
             String username = req.getParameter("username");
@@ -120,25 +105,25 @@ public class EditProfileServlet extends HttpServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio utenti", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage()
             );
 
         } catch (IllegalArgumentException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_BAD_REQUEST,
                     e.getMessage()
             );
 
         } catch (NotFoundException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_NOT_FOUND,
                     e.getMessage()
             );
 
         } catch (PermissionException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_FORBIDDEN,
                     e.getMessage()
             );
@@ -149,6 +134,7 @@ public class EditProfileServlet extends HttpServlet {
             final String username,
             final User requester
     ) throws ServiceException, PermissionException, NotFoundException {
+        UserService userService = getUserService();
         if (username == null) {
             throw new IllegalArgumentException("Username richiesto");
         }

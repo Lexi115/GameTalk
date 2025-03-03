@@ -1,19 +1,15 @@
 package it.unisa.studenti.nc8.gametalk.presentation.servlets.user;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.NotFoundException;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
-import it.unisa.studenti.nc8.gametalk.business.model.user.User;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserService;
-import it.unisa.studenti.nc8.gametalk.business.service.user.UserServiceImpl;
-import it.unisa.studenti.nc8.gametalk.presentation.exceptions.NotFoundException;
+import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import it.unisa.studenti.nc8.gametalk.presentation.exceptions.PermissionException;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -21,22 +17,7 @@ import java.io.IOException;
  * Servlet per bandire un utente dalla piattaforma.
  */
 @WebServlet("/mod/banUser")
-public class BanUserServlet extends HttpServlet {
-
-    /** Logger. **/
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** La classe di servizio per ricercare l'utente. */
-    private UserService userService;
-
-    /**
-     * Init.
-     */
-    @Override
-    public void init() {
-        this.userService = new UserServiceImpl(
-                Functions.getContextDatabase(this.getServletContext()));
-    }
+public class BanUserServlet extends UserServlet {
 
     /**
      * Gestisce la richiesta POST per modificare un profilo.
@@ -52,6 +33,9 @@ public class BanUserServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        ErrorHandler errorHandler = getErrorHandler();
+        UserService userService = getUserService();
+
         // Parametro username dell'utente da bandire.
         String username = req.getParameter("username");
         boolean banned = Boolean.parseBoolean(req.getParameter("banned"));
@@ -72,25 +56,25 @@ public class BanUserServlet extends HttpServlet {
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio utenti", e);
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage()
             );
 
         } catch (IllegalArgumentException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_BAD_REQUEST,
                     e.getMessage()
             );
 
         } catch (NotFoundException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_NOT_FOUND,
                     e.getMessage()
             );
 
         } catch (PermissionException e) {
-            Functions.handleError(
+            errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_FORBIDDEN,
                     e.getMessage()
             );

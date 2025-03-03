@@ -1,12 +1,12 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
-import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
+import it.unisa.studenti.nc8.gametalk.business.utils.pattern.Matcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 
 /**
  * Classe di validazione per oggetti {@link Comment}.
- * Contiene metodi per verificare la validità del contenuto del commento.
  */
 public class CommentValidator implements Validator<Comment> {
 
@@ -17,23 +17,33 @@ public class CommentValidator implements Validator<Comment> {
      */
     public static final String REGEX_COMMENT_BODY = "^.{1,1000}$";
 
+    /** Il matcher. */
+    private final Matcher matcher;
+
+    /**
+     * Costruttore.
+     *
+     * @param matcher Il matcher.
+     */
+    public CommentValidator(final Matcher matcher) {
+        this.matcher = matcher;
+    }
+
     /**
      * Valida un oggetto {@link Comment}.
      *
      * @param comment L'oggetto {@link Comment} da validare.
-     * @return {@code true} se il commento è valido, {@code false} altrimenti.
+     * @throws ValidationException se la validazione fallisce.
      */
     @Override
-    public boolean validate(final Comment comment) {
-        if (comment == null) {
-            return false;
+    public void validate(final Comment comment) {
+        if (!isBodyValid(comment.getBody())) {
+            throw new ValidationException("Corpo commento non valido!");
         }
-        return isBodyValid(comment.getBody());
     }
 
     /**
      * Verifica se il corpo del commento è valido.
-     * Controlla che non sia nullo, vuoto e che rispetti la regex predefinita.
      *
      * @param body Il corpo del commento da validare.
      * @return {@code true} se il corpo è valido, {@code false} altrimenti.
@@ -41,6 +51,6 @@ public class CommentValidator implements Validator<Comment> {
     private boolean isBodyValid(final String body) {
         return body != null
                 && !body.isEmpty()
-                && Functions.matchesRegex(REGEX_COMMENT_BODY, body);
+                && matcher.matches(REGEX_COMMENT_BODY, body);
     }
 }

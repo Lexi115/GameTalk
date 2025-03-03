@@ -7,7 +7,7 @@
     <!-- Servlet di inizializzazione (Main) -->
     <servlet>
         <servlet-name>Main</servlet-name>
-        <servlet-class>it.unisa.studenti.nc8.gametalk.business.core.Main</servlet-class>
+        <servlet-class>it.unisa.studenti.nc8.gametalk.Main</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -17,7 +17,7 @@
 
     <!-- Filtri -->
     <filter-mapping>
-        <filter-name>HttpFilter</filter-name>
+        <filter-name>AutoLoginFilter</filter-name>
         <url-pattern>/*</url-pattern> <!-- Si applica filter a tutto il sito -->
     </filter-mapping>
     <filter-mapping>
@@ -45,26 +45,4 @@
         <error-code>500</error-code>
         <location>/WEB-INF/views/errors/error.jsp</location>
     </error-page>
-
-    <!-- Credenziali per accesso al database -->
-    <context-param>
-        <param-name>dbHost</param-name>
-        <param-value>localhost</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbUser</param-name>
-        <param-value>root</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbPass</param-name>
-        <param-value>root_pw</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbName</param-name>
-        <param-value>gametalk_db</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbPort</param-name>
-        <param-value>3306</param-value>
-    </context-param>
 </web-app>

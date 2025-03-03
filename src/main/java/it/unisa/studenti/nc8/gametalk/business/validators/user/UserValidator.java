@@ -1,8 +1,9 @@
 package it.unisa.studenti.nc8.gametalk.business.validators.user;
 
-import it.unisa.studenti.nc8.gametalk.business.core.Functions;
-import it.unisa.studenti.nc8.gametalk.business.model.user.User;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
+import it.unisa.studenti.nc8.gametalk.business.utils.pattern.Matcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 
 import java.time.LocalDate;
 
@@ -16,7 +17,7 @@ public class UserValidator implements Validator<User> {
      * e alcuni caratteri speciali.
      */
     public static final String REGEX_USER_NAME =
-            "^[A-Za-z0-9\\s\\-':,!?.()]{4,24}$";
+            "^[A-Za-z0-9\\s\\-':_,!?.()]{4,24}$";
 
     /**
      * Regex per la password dell'utente.
@@ -27,26 +28,41 @@ public class UserValidator implements Validator<User> {
             "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%_*#?&])"
                     + "[A-Za-z\\d@$!%_*#?&]{8,100}$";
 
+    /** Il matcher. */
+    private final Matcher matcher;
+
+    /**
+     * Costruttore.
+     *
+     * @param matcher Il matcher.
+     */
+    public UserValidator(final Matcher matcher) {
+        this.matcher = matcher;
+    }
+
     /**
      * Valida un oggetto {@link User}.
      *
      * @param user L'oggetto {@link User} da validare.
-     * @return {@code true} se l'oggetto è valido, {@code false} altrimenti.
+     * @throws ValidationException se la validazione fallisce.
      */
     @Override
-    public boolean validate(final User user) {
-        if (user == null) {
-            return false;
+    public void validate(final User user) throws ValidationException {
+        if (!isUsernameValid(user.getUsername())) {
+            throw new ValidationException("Username non valido!");
         }
 
-        return isUsernameValid(user.getUsername())
-                && isPasswordValid(user.getPassword())
-                && isCreationDateValid(user.getCreationDate());
+        if (!isPasswordValid(user.getPassword())) {
+            throw new ValidationException("Password non valida!");
+        }
+
+        if (!isCreationDateValid(user.getCreationDate())) {
+            throw new ValidationException("Data di creazione non valida!");
+        }
     }
 
     /**
      * Verifica se il nome utente è valido.
-     * Controlla che non sia nullo, vuoto e che rispetti la regex predefinita.
      *
      * @param username Il nome utente da validare.
      * @return {@code true} se il nome utente è valido,
@@ -55,12 +71,11 @@ public class UserValidator implements Validator<User> {
     private boolean isUsernameValid(final String username) {
         return username != null
                 && !username.isEmpty()
-                && Functions.matchesRegex(REGEX_USER_NAME, username);
+                && matcher.matches(REGEX_USER_NAME, username);
     }
 
     /**
      * Verifica se la password è valida.
-     * Controlla che non sia nulla, vuota e che rispetti la regex predefinita.
      *
      * @param password La password da validare.
      * @return {@code true} se la password è valida, {@code false} altrimenti.
@@ -68,12 +83,11 @@ public class UserValidator implements Validator<User> {
     private boolean isPasswordValid(final String password) {
         return password != null
                 && !password.isEmpty()
-                && Functions.matchesRegex(REGEX_USER_PASSWORD, password);
+                && matcher.matches(REGEX_USER_PASSWORD, password);
     }
 
     /**
      * Verifica se la data di creazione è valida.
-     * Controlla che non sia successiva alla data corrente.
      *
      * @param date La data da validare.
      * @return {@code true} se la data di creazione è valida,

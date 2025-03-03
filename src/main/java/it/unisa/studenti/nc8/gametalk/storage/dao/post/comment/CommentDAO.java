@@ -1,21 +1,20 @@
 package it.unisa.studenti.nc8.gametalk.storage.dao.post.comment;
 
-import it.unisa.studenti.nc8.gametalk.business.model.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.dao.DAO;
+import it.unisa.studenti.nc8.gametalk.storage.entities.post.comment.Comment;
 import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
+import it.unisa.studenti.nc8.gametalk.storage.utils.Bindable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * Definizione dell'interfaccia DAO per l'entità {@link Comment}.
+ * Interfaccia DAO per l'entità {@link Comment}.
  * Questa interfaccia definisce metodi aggiuntivi per l'interazione
- * con il database per le operazioni CRUD relative all'entità {@link Comment}.
- * <p>
- * Estende {@link DAO<Comment>}.
- *
- * @version 1.0
+ * con il sistema di persistenza per le operazioni CRUD relative
+ * all'entità {@link Comment}.
  */
-public interface CommentDAO extends DAO<Comment, Long> {
+public interface CommentDAO extends DAO<Comment, Long>, Bindable {
 
     /**
      * Recupera una lista di commenti in base all'ID del thread,
@@ -55,6 +54,7 @@ public interface CommentDAO extends DAO<Comment, Long> {
      *
      * @param commentId ID del commento da votare.
      * @param username Nome dell'utente che sta effettuando il voto.
+     * @param threadId L'id del thread a cui appartiene il commento.
      * @param vote Valore del voto da assegnare al commento. Deve essere:
      *             <ul>
      *             <li>-1: Downvote.</li>
@@ -69,6 +69,7 @@ public interface CommentDAO extends DAO<Comment, Long> {
     void voteComment(
             long commentId,
             String username,
+            long threadId,
             int vote
     ) throws DAOException;
 
@@ -84,6 +85,21 @@ public interface CommentDAO extends DAO<Comment, Long> {
      */
     void removeVoteComment(
             long commentId,
+            String username
+    ) throws DAOException;
+
+    /**
+     * Recupera i voti personali di un utente sui commenti sotto un thread.
+     *
+     * @param threadId L'ID del thread di cui recuperare i voti.
+     * @param username Il nome utente dell'utente per cui recuperare i voti.
+     * @return Una mappa in cui le chiavi sono gli ID dei commenti
+     *         e i valori sono i voti assegnati dall'utente.
+     * @throws DAOException Se si verifica un errore durante il recupero dei
+     * voti dal database.
+     */
+    Map<Long, Integer> getPersonalVotes(
+            long threadId,
             String username
     ) throws DAOException;
 }
