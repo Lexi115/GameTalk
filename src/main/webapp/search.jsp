@@ -18,7 +18,7 @@
                     <form id="searchForm">
                         <div class="row my-2">
                             <div class="p-0 form-floating input-group">
-                                <input type="text" class="form-control bg-card" id="searchbar" aria-describedby="search" placeholder="">
+                                <input type="text" class="form-control bg-card" id="searchbar" name="query" aria-describedby="search" placeholder="">
                                 <button class="btn btn-secondary rounded-end px-4" type="button" id="search"><i class="bi bi-search"></i></button>
                                 <label for="searchbar" class="label-bg-none z-5">ricerca</label>
                             </div>
@@ -26,19 +26,21 @@
                         <div class="row">
                             <div class="col-md-3 p-0 form-floating">
                                 <select name="category" class="form-select bg-card" id="category">
-                                    <option selected>null</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option selected value="General">General</option>
+                                    <option value="Welcome">Welcome</option>
+                                    <option value="Help">Help</option>
+                                    <option value="Bugs">Bugs</option>
+                                    <option value="Guides">Guides</option>
+                                    <option value="Memes">Memes</option>
+                                    <option value="Announcements">Announcements</option>
                                 </select>
                                 <label for="category" class="label-bg-none">category</label>
                             </div>
                             <div class="col-md-3 p-0 form-floating">
                                 <select name="order" class="form-select bg-card" id="order">
-                                    <option selected>null</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option selected value="Best">Best</option>
+                                    <option value="Newest">Newest</option>
+                                    <option value="Oldest">Oldest</option>
                                 </select>
                                 <label for="order" class="label-bg-none">order</label>
                             </div>
