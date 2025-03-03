@@ -18,12 +18,14 @@
                 <div class="col-6 text-end pe-4">date</div>
             </div>
             <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
+                <blockquote class="">fwadawdaw</blockquote>
+                <!--<h5 class="card-title">Special title treatment</h5>
                 <img class="img-fluid" src="images/solo-leveling.jpg">
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam corporis delectus eveniet in iusto molestiae mollitia nesciunt quis, recusandae sit tempora totam ullam velit veniam vero? Consequatur nostrum perferendis possimus!</p>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam corporis delectus eveniet in iusto molestiae mollitia nesciunt quis, recusandae sit tempora totam ullam velit veniam vero? Consequatur nostrum perferendis possimus!</p>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam corporis delectus eveniet in iusto molestiae mollitia nesciunt quis, recusandae sit tempora totam ullam velit veniam vero? Consequatur nostrum perferendis possimus!</p>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam corporis delectus eveniet in iusto molestiae mollitia nesciunt quis, recusandae sit tempora totam ullam velit veniam vero? Consequatur nostrum perferendis possimus!</p>
+            -->
             </div>
             <div class="card-footer d-flex justify-content-end fs-5">
                 <button class="btn btn-outline-danger fs-6 me-4"><i class=" bi bi-caret-down-fill"></i></button>
@@ -33,6 +35,16 @@
         </div>
     </div>
     <div class="container mt-4" id="comments" data-bs-theme="light">
+        <form action="#" method="post">
+            <div class="row g-0">
+                <div class="col-md-11">
+                    <textarea type="text" name="comment" id="comment" class="form-control"></textarea>
+                </div>
+                <div class="col-md-1 d-flex">
+                    <button class="btn btn-lg btn-secondary w-100"><i class="bi bi-caret-right-fill"></i></button>
+                </div>
+            </div>
+        </form>
         <div class="fs-3 mb-3">Comments</div>
         <%for (int i = 0; i < 10; i++) {%>
         <div class="card bg-card mb-4 text-white">

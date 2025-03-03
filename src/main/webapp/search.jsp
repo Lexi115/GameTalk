@@ -18,9 +18,9 @@
                     <form id="searchForm">
                         <div class="row my-2">
                             <div class="p-0 form-floating input-group">
-                                <input type="text" class="form-control bg-card" id="searchbar" aria-describedby="search">
+                                <input type="text" class="form-control bg-card" id="searchbar" aria-describedby="search" placeholder="">
                                 <button class="btn btn-secondary rounded-end px-4" type="button" id="search"><i class="bi bi-search"></i></button>
-                                <label for="searchbar" class="label-bg-none">ricerca</label>
+                                <label for="searchbar" class="label-bg-none z-5">ricerca</label>
                             </div>
                         </div>
                         <div class="row">
