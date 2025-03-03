@@ -29,26 +29,14 @@
             <form id="searchbarForm">
                 <div class="input-group form-floating">
                     <input type="text" class="form-control bg-card" id="searchbar" aria-describedby="filter" placeholder="Ricerca">
-                    <a href="search.jsp" class="btn px-4 btn-secondary rounded-end text-center align-items-center justify-content-center d-inline-flex" type="button" id="filter">filtri</a>
+                    <a href="searchThread" class="btn px-4 btn-secondary rounded-end text-center align-items-center justify-content-center d-inline-flex" type="button" id="filter">filtri</a>
                     <label for="searchbar" class="label-bg-none z-5">ricerca</label>
                 </div>
             </form>
         </div>
 
         <div class="col-md-3 d-flex justify-content-end align-items-center pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
-            <c:choose>
-            <c:when test="${sessionScope.user != null}">
-                <i class="bi bi-person-circle" style="cursor: pointer;" onclick="toggleLoginOverlay()"></i>
-            </c:when>
-                <c:otherwise>
-                    <h5 class="text" style="text-decoration : underline; cursor: pointer;"
-                        onclick="toggleLoginOverlay()">Login
-                    </h5>
-                    <h5 class="text">/</h5>
-                    <h5 class="text" style="text-decoration : underline; cursor: pointer"
-                        onclick="toggleSignupOverlay()">SignUp</h5>
-                </c:otherwise>
-            </c:choose>
+
         </div>
     </div>
 </nav>
