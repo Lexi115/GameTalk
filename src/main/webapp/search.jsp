@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -15,18 +17,19 @@
         <div class="container mt-5 mb-3 animate-2 a-delay-1 fadeIn">
             <div class="bg-card-light card p-3">
                 <div class="card-body">
-                    <form id="searchForm">
+                    <form id="searchForm" action="searchThread" method="get">
                         <div class="row my-2">
                             <div class="p-0 form-floating input-group">
                                 <input type="text" class="form-control bg-card" id="searchbar" name="query" aria-describedby="search" placeholder="">
-                                <button class="btn btn-secondary rounded-end px-4" type="button" id="search"><i class="bi bi-search"></i></button>
+                                <button class="btn btn-secondary rounded-end px-4" type="submit" id="search"><i class="bi bi-search"></i></button>
                                 <label for="searchbar" class="label-bg-none z-5">ricerca</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3 p-0 form-floating">
-                                <select name="category" class="form-select bg-card" id="category">
-                                    <option selected value="General">General</option>
+                                <select name="category" class="form-select bg-card" id="category" data-default-value="${category}">
+                                    <option value="">Any</option>
+                                    <option value="General">General</option>
                                     <option value="Welcome">Welcome</option>
                                     <option value="Help">Help</option>
                                     <option value="Bugs">Bugs</option>
@@ -37,7 +40,7 @@
                                 <label for="category" class="label-bg-none">category</label>
                             </div>
                             <div class="col-md-3 p-0 form-floating">
-                                <select name="order" class="form-select bg-card" id="order">
+                                <select name="order" class="form-select bg-card" id="order" data-default-value="${order}">
                                     <option selected value="Best">Best</option>
                                     <option value="Newest">Newest</option>
                                     <option value="Oldest">Oldest</option>
@@ -45,11 +48,11 @@
                                 <label for="order" class="label-bg-none">order</label>
                             </div>
                             <div class="col-md-3 p-0 form-floating">
-                                <input name="dateFrom" type="date" class="form-control bg-card" id="dateFrom">
+                                <input name="dateFrom" type="date" class="form-control bg-card" id="dateFrom" value="${dateFrom}">
                                 <label for="dateFrom" class="label-bg-none">select dateFrom</label>
                             </div>
                             <div class="col-md-3 p-0 form-floating">
-                                <input name="dateTo" type="date" class="form-control bg-card" id="dateTo">
+                                <input name="dateTo" type="date" class="form-control bg-card" id="dateTo" value="${dateTo}">
                                 <label for="dateTo" class="label-bg-none">select dateTo</label>
                             </div>
                         </div>
@@ -58,36 +61,59 @@
             </div>
         </div>
         <div class="container mt-5" id="threadsContainer">
-            <%
-                for (int i = 0; i < 10; i++) {
-            %>
+            <c:forEach var="thread" items="${requestScope.threads}">
             <div class="row">
-                <div class="card bg-card mb-3">
+                <div class="card bg-card mb-3" id="thread-${thread.id}">
                     <div class="card-header row">
-                        <div class="fs-4 col-7 col-md-8 fw-bolder">title</div>
+                        <div class="fs-4 col-7 col-md-8 fw-bolder">${thread.title}</div>
                         <div class="col-5 col-md-4 fs-5 d-flex justify-content-end px-0">
-                            <button class="btn btn-outline-danger btn-sm fs-6 me-1 me-md-4"><i class=" bi bi-caret-down-fill"></i></button>
-                            <div class="d-flex align-items-center" id="votes">255</div>
-                            <button class="btn btn-success btn-sm fs-6 ms-1 ms-md-4"><i class="bi bi-caret-up-fill"></i></button>
+                            <div class="d-flex align-items-center">${thread.votes}</div>
                         </div>
                     </div>
-                    <a class="text-decoration-none" href="thread.jsp">
+                    <a class="text-decoration-none" href="thread?threadId=${thread.id}">
                         <div class="card-body text-white">
-                            <p class="card-text text-truncate-3">With supporting text below as a natural lead-in to additional content.</p>
+                            <p class="card-text text-truncate-3">${thread.body}</p>
                         </div>
                         <div class="card-footer text-body-secondary row">
-                            <div class="col-6 text-start ps-4">username</div>
-                            <div class="col-6 text-end pe-4">date</div>
+                            <div class="col-6 text-start ps-4">${thread.username}</div>
+                            <div class="col-6 text-end pe-4">${thread.creationDate}</div>
                         </div>
                     </a>
                 </div>
-
             </div>
-            <%}%>
+            </c:forEach>
+        </div>
+        <div id="pagination">
+            <nav>
+                <ul class="pagination pagination-lg justify-content-center">
+                    <c:if test="${page == 1}">
+                        <li class="page-item disabled">
+                    </c:if>
+                    <c:if test="${page != 1}">
+                        <li class="page-item">
+                    </c:if>
+                        <c:set var="result" value="${fn:substringAfter(pageContext.request.queryString, '&')}" />
+                        <a class="page-link bg-card" href="searchThread?page=${page - 1}&${result}">Previous</a>
+                    </li>
+                    <c:if test="${page == maxPages}">
+                        <li class="page-item disabled">
+                    </c:if>
+                    <c:if test="${page != maxPages}">
+                        <li class="page-item">
+                    </c:if>
+                        <a class="page-link bg-card" href="searchThread?page=${page + 1}&${result}">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </main>
     <jsp:include page="footer.jsp"/>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script>
+        $("#category").ready(function (){$("#category").val($("#category").data("defaultValue"));});
+        $("#order").ready(function (){$("#order").val($("#order").data("defaultValue"));});
+    </script>
 </body>
 </html>
 

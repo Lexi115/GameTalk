@@ -26,11 +26,11 @@
         </div>
 
         <div class="col-md-6 col-12 order-2 order-md-1 mt-3 mt-md-0 fadeIn animate-2 a-delay-2">
-            <form id="searchbarForm">
+            <form id="searchbarForm" action="searchThread" method="get">
                 <div class="input-group form-floating">
-                    <input type="text" class="form-control bg-card" id="searchbar" aria-describedby="filter" placeholder="Ricerca">
+                    <input type="text" class="form-control bg-card" id="navSearchbar" aria-describedby="filter" placeholder="Ricerca" name="query">
                     <a href="searchThread" class="btn px-4 btn-secondary rounded-end text-center align-items-center justify-content-center d-inline-flex" type="button" id="filter">filtri</a>
-                    <label for="searchbar" class="label-bg-none z-5">ricerca</label>
+                    <label for="navSearchbar" class="label-bg-none z-5">ricerca</label>
                 </div>
             </form>
         </div>

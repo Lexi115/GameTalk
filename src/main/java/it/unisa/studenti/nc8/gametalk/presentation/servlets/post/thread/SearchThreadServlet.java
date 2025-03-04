@@ -96,6 +96,7 @@ public class SearchThreadServlet extends ThreadServlet {
                             queryParam, category, dateFrom, dateTo) / pageSize);
 
             req.setAttribute("threads", threads);
+            req.setAttribute("query", queryParam);
             req.setAttribute("category", category);
             req.setAttribute("dateFrom", dateFrom);
             req.setAttribute("dateTo", dateTo);
