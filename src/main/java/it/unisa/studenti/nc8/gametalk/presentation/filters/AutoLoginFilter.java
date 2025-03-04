@@ -7,6 +7,7 @@ import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelperImpl;
+import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -51,6 +52,7 @@ public class AutoLoginFilter implements Filter {
         AuthenticationService authenticationService =
                 serviceFactory.createAuthenticationService();
         CookieHelper cookieHelper = new CookieHelperImpl();
+        ErrorHandler errorHandler = (ErrorHandler) ctx.getAttribute("errorHandler");
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
@@ -70,6 +72,18 @@ public class AutoLoginFilter implements Filter {
                 try {
                     User loggedUser = authenticationService
                             .loginByToken(authTokenCookie.getValue());
+
+                    //Controllo se il login è avvenuto
+                    if (loggedUser == null) {
+                        errorHandler.handleError(req, res, HttpServletResponse.SC_UNAUTHORIZED, "Autenticazione fallita");
+                        return;
+                    }
+
+                    //Controllo se è bannato
+                    if (loggedUser.isBanned()) {
+                        errorHandler.handleError(req, res, HttpServletResponse.SC_FORBIDDEN, "Sei stato bandito dal forum.");
+                        return;
+                    }
 
                     //Controllo se è un admin
                     boolean isMod = loggedUser.getRole() == Role.Moderator;

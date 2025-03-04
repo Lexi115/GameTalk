@@ -21,7 +21,6 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import it.unisa.studenti.nc8.gametalk.business.utils.hashing.BCryptHasher;
 import it.unisa.studenti.nc8.gametalk.business.utils.hashing.Hasher;
 import it.unisa.studenti.nc8.gametalk.business.utils.hashing.SHA256Hasher;
 
@@ -59,7 +58,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
     @Override
     public AuthenticationService createAuthenticationService() {
         UserDAO userDAO = daoFactory.createUserDAO();
-        Hasher passwordHasher = new BCryptHasher();
+        Hasher passwordHasher = new SHA256Hasher();
         Hasher tokenHasher = new SHA256Hasher();
         return new AuthenticationServiceImpl(
                 database, userDAO, passwordHasher, tokenHasher);
@@ -73,7 +72,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
     @Override
     public UserService createUserService() {
         UserDAO userDAO = daoFactory.createUserDAO();
-        Hasher passwordHasher = new BCryptHasher();
+        Hasher passwordHasher = new SHA256Hasher();
         Validator<User> userValidator =
                 new UserValidator(new RegexMatcher());
         return new UserServiceImpl(

@@ -120,7 +120,8 @@ public class GetThreadCommentsServlet extends CommentServlet {
                     commentData.put("body", comment.getBody());
                     commentData.put("creationDate", comment.getCreationDate());
                     commentData.put("votes", comment.getVotes());
-                    commentData.put("personalRating", personalRatings.get(comment.getId()));
+                    int rating = personalRatings.getOrDefault(comment.getId(), 0);
+                    commentData.put("personalRating", rating);
                     loggedInComments.add(commentData);
                 }
             }

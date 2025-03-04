@@ -36,13 +36,13 @@
         <url-pattern>/mod/*</url-pattern>
     </filter-mapping>
 
-    <!-- Pagine di errore -->
+    <!-- Pagine di errore
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/views/errors/notFound.jsp</location>
     </error-page>
-<!--    <error-page>-->
-<!--        <error-code>500</error-code>-->
-<!--        <location>/WEB-INF/views/errors/error.jsp</location>-->
-<!--    </error-page>-->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/errors/error.jsp</location>
+    </error-page> -->
 </web-app>

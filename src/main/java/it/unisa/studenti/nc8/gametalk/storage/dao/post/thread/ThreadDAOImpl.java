@@ -11,6 +11,7 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMappe
 
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -470,14 +471,17 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         Database db = this.getDatabase();
         Connection connection = this.getConnection();
 
-        String query = "SELECT COUNT(*) FROM threads WHERE title LIKE ? AND category ? AND creation_date BETWEEN ? AND ?";
+        String query = "SELECT COUNT(*) FROM threads WHERE title LIKE ? AND category LIKE ? AND creation_date BETWEEN ? AND ?";
 
         String titleString = (title == null) ? "" : title.trim();
+        String categoryString = (category == null) ? "" : category.toString();
 
         try (QueryResult qr = db.executeQuery(
                 connection, query, "%" + titleString + "%",
-                category.toString(), startDate, endDate)) {
-            return qr.getResultSet().getInt(1);
+                "%" + categoryString + "%", startDate, endDate)) {
+            ResultSet res = qr.getResultSet();
+            res.next();
+            return res.getInt(1);
         } catch (SQLException e) {
             throw new DAOException("Errore ricerca threads", e);
         }
@@ -506,8 +510,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         try (QueryResult qr = db.executeQuery(
                 connection, isThreadVotedQuery, threadId,
                 username)) {
-            return qr.getResultSet().getInt(1);
-
+            ResultSet res = qr.getResultSet();
+            return (res.next()) ? qr.getResultSet().getInt(1) : 0;
         } catch (SQLException e) {
             throw new DAOException("Errore recupero valutazione personale al thread", e);
         }

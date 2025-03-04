@@ -43,7 +43,7 @@ public class RemoveCommentServlet extends CommentServlet {
         User user = (User) session.getAttribute("user");
         String usernameReq = user.getUsername();
 
-        String idCommentString = req.getParameter("idComment");
+        String idCommentString = req.getParameter("commentId");
 
         //Recupero informazioni commento
         Comment comment;

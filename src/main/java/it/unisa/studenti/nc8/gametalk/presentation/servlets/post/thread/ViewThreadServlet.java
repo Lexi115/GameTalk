@@ -35,7 +35,7 @@ public class ViewThreadServlet extends ThreadServlet {
     ) throws IOException, ServletException {
         ErrorHandler errorHandler = getErrorHandler();
         ThreadService threadService = getThreadService();
-        long idThread = Long.parseLong(req.getParameter("idThread"));
+        long idThread = Long.parseLong(req.getParameter("threadId"));
         HttpSession session = req.getSession();
         try {
             Thread recoveredThread = threadService.findThreadById(idThread);

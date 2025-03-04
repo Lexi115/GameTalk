@@ -40,7 +40,7 @@ public class RemoveThreadServlet extends ThreadServlet {
         //Recupero usernameReq dalla sessione
         User user = (User) session.getAttribute("user");
         String usernameReq = user.getUsername();
-        String idThreadString = req.getParameter("idThread");
+        String idThreadString = req.getParameter("threadId");
 
         //Recupero informazioni thread
         Thread thread;
