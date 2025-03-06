@@ -95,10 +95,10 @@
                         <c:set var="result" value="${fn:substringAfter(pageContext.request.queryString, '&')}" />
                         <a class="page-link bg-card" href="searchThread?page=${page - 1}&${result}">Previous</a>
                     </li>
-                    <c:if test="${page == maxPages}">
+                    <c:if test="${page >= maxPages}">
                         <li class="page-item disabled">
                     </c:if>
-                    <c:if test="${page != maxPages}">
+                    <c:if test="${page < maxPages}">
                         <li class="page-item">
                     </c:if>
                         <a class="page-link bg-card" href="searchThread?page=${page + 1}&${result}">Next</a>

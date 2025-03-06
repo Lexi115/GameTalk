@@ -87,7 +87,7 @@
             <div id="categories" class="row row-cols-2 row-cols-md-4 justify-content-center g-4 ps-3 pe-3">
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
-                        <a href="#" class="stretched-link text-decoration-none">
+                        <a href="searchThread?category=Welcome" class="stretched-link text-decoration-none">
                             <div class="card-body categoryCard-body justify-content-center">
                                 <h3 class="card-title categoryCard-title m-0">Welcome</h3>
                             </div>
@@ -96,7 +96,7 @@
                 </div>
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
-                        <a href="#" class="stretched-link text-decoration-none">
+                        <a href="searchThread?category=General" class="stretched-link text-decoration-none">
                             <div class="card-body categoryCard-body justify-content-center">
                                 <h3 class="card-title categoryCard-title m-0">General</h3>
                             </div>
@@ -105,7 +105,7 @@
                 </div>
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
-                        <a href="#" class="stretched-link text-decoration-none">
+                        <a href="searchThread?category=Help" class="stretched-link text-decoration-none">
                             <div class="card-body categoryCard-body justify-content-center">
                                 <h3 class="card-title categoryCard-title m-0">Help</h3>
                             </div>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
-                        <a href="#" class="stretched-link text-decoration-none">
+                        <a href="searchThread?category=Guides" class="stretched-link text-decoration-none">
                             <div class="card-body categoryCard-body justify-content-center">
                                 <h3 class="card-title categoryCard-title m-0">Guides</h3>
                             </div>
@@ -123,7 +123,7 @@
                 </div>
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
-                        <a href="#" class="stretched-link text-decoration-none">
+                        <a href="searchThread?category=Bugs" class="stretched-link text-decoration-none">
                             <div class="card-body categoryCard-body justify-content-center">
                                 <h3 class="card-title categoryCard-title m-0">Bugs</h3>
                             </div>
@@ -132,7 +132,7 @@
                 </div>
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
-                        <a href="#" class="stretched-link text-decoration-none">
+                        <a href="searchThread?category=Memes" class="stretched-link text-decoration-none">
                             <div class="card-body categoryCard-body justify-content-center">
                                 <h3 class="card-title categoryCard-title m-0">Memes</h3>
                             </div>
@@ -141,16 +141,16 @@
                 </div>
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
-                        <a href="#" class="stretched-link text-decoration-none">
+                        <a href="searchThread?category=Announcements" class="stretched-link text-decoration-none">
                             <div class="card-body categoryCard-body justify-content-center">
-                                <h3 class="card-title categoryCard-title m-0">News</h3>
+                                <h3 class="card-title categoryCard-title m-0">Announcements</h3>
                             </div>
                         </a>
                     </div>
                 </div>
                 <div class="col categoryCol">
                     <div class="card categoryCard text-center justify-content-center">
-                        <a href="#" class="stretched-link text-decoration-none">
+                        <a href="searchThread" class="stretched-link text-decoration-none">
                             <div class="card-body categoryCard-body justify-content-center">
                                 <h3 class="card-title categoryCard-title m-0">Other</h3>
                             </div>
