@@ -52,12 +52,13 @@ class AuthenticationServiceImplTest {
     @Test
     void testLoginValidCredentials() throws ServiceException, AuthenticationException, DAOException {
         String username = "marco";
-        String password = "password_marco";
+        String password = "PasswordMarco_10";
 
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordHasher.hash(password));
         when(userDAO.get(anyString())).thenReturn(user);
+        when(passwordHasher.verify(anyString(), anyString())).thenReturn(true);
 
         User loggedUser = authenticationService.login(username, password);
         assertNotNull(loggedUser);
@@ -65,11 +66,26 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
-    void testLoginInvalidCredentials() throws DAOException {
+    void testLoginInvalidUser() throws DAOException {
+        String username = "marco";
+        String password = "password";
+
+        when(userDAO.get(anyString())).thenReturn(null);
+        assertThrows(AuthenticationException.class,
+                () -> authenticationService.login(username, password));
+    }
+
+    @Test
+    void testLoginInvalidPassword() throws DAOException {
         String username = "marco";
         String password = "password_sbagliata";
 
-        when(userDAO.get(anyString())).thenReturn(null);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword("password_hash_corretta");
+        when(userDAO.get(anyString())).thenReturn(user);
+        when(passwordHasher.verify(anyString(), anyString())).thenReturn(false);
+
         assertThrows(AuthenticationException.class,
                 () -> authenticationService.login(username, password));
     }

@@ -8,6 +8,7 @@ import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServic
 import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServiceImpl;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserServiceImpl;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.BCryptHasher;
 import it.unisa.studenti.nc8.gametalk.business.utils.pattern.RegexMatcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.comment.CommentValidator;
@@ -58,7 +59,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
     @Override
     public AuthenticationService createAuthenticationService() {
         UserDAO userDAO = daoFactory.createUserDAO();
-        Hasher passwordHasher = new SHA256Hasher();
+        Hasher passwordHasher = new BCryptHasher();
         Hasher tokenHasher = new SHA256Hasher();
         return new AuthenticationServiceImpl(
                 database, userDAO, passwordHasher, tokenHasher);
@@ -72,7 +73,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
     @Override
     public UserService createUserService() {
         UserDAO userDAO = daoFactory.createUserDAO();
-        Hasher passwordHasher = new SHA256Hasher();
+        Hasher passwordHasher = new BCryptHasher();
         Validator<User> userValidator =
                 new UserValidator(new RegexMatcher());
         return new UserServiceImpl(
