@@ -95,6 +95,9 @@
                         <c:set var="result" value="${fn:substringAfter(pageContext.request.queryString, '&')}" />
                         <a class="page-link bg-card" href="searchThread?page=${page - 1}&${result}">Previous</a>
                     </li>
+                        <li class="page-item">
+                            <span class="page-link">${page}</span>
+                        </li>
                     <c:if test="${page >= maxPages}">
                         <li class="page-item disabled">
                     </c:if>

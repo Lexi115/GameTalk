@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,9 +23,15 @@
                 ${thread.body}
             </div>
             <div class="card-footer d-flex justify-content-end fs-5">
-                <button id="downVoteThread" class="btn btn-outline-danger fs-6 me-4 btn-vote" onclick="voteThread(${thread.id},-1)"><i class=" bi bi-caret-down-fill"></i></button>
-                <div class="d-flex align-items-center" id="vote">${thread.votes}</div>
-                <button id="upVoteThread" class="btn btn-outline-success fs-6 ms-4 btn-vote" onclick="voteThread(${thread.id},1)"><i class="bi bi-caret-up-fill"></i></button>
+                <c:if test="${not empty sessionScope.user}">
+                    <button id="downVoteThread" class="btn btn-outline-danger fs-6 me-4 btn-vote" onclick="voteThread(${thread.id},-1)"><i class=" bi bi-caret-down-fill"></i></button>
+                    <div class="d-flex align-items-center" id="vote">${thread.votes}</div>
+                    <button id="upVoteThread" class="btn btn-outline-success fs-6 ms-4 btn-vote" onclick="voteThread(${thread.id},1)"><i class="bi bi-caret-up-fill"></i></button>
+                </c:if>
+                <c:if test="${empty sessionScope.user}">
+                    <div class="d-flex align-items-center me-5" id="vote">${thread.votes}</div>
+                </c:if>
+
             </div>
         </div>
     </div>
@@ -43,10 +50,13 @@
         <div class="container" id="commentsArea">
 
         </div>
-        <nav id="pagination" data-page="1">
+        <nav id="pagination" data-bs-theme="dark">
             <ul class="pagination pagination-lg justify-content-center ">
                 <li class="page-item">
                     <a id="prevPage" class="page-link disabled bg-card" href="#commentsArea">Previous</a>
+                </li>
+                <li class="page-item">
+                    <span class="page-link" id="pageNumber">1</span>
                 </li>
                 <li class="page-item">
                     <a id="nextPage" class="page-link bg-card" href="#commentsArea">Next</a>
@@ -59,6 +69,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script src="js/thread.js"></script>
+<c:if test="${not empty sessionScope.user}">
+    <script>USERLOGGED = true</script>
+</c:if>
 </body>
 </html>
 </html>

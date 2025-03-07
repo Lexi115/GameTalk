@@ -1,10 +1,11 @@
+var USERLOGGED = false;
 function voteThread(id, vote){
     var currentVotes = parseInt($("#vote").html());
 
     $.ajax({
-        url: 'voteThread',  // The URL to send the request to
-        type: 'POST',              // HTTP method
-        data: {                    // Data to send in the request
+        url: 'voteThread',
+        type: 'POST',
+        data: {
             threadId: id,
             vote: vote
         },
@@ -28,7 +29,30 @@ function voteThread(id, vote){
 }
 
 function voteComment(id, vote){
-    console.log("doesn't work for now: "+id+" "+vote);
+    $.ajax({
+        url: 'voteThread',
+        type: 'POST',
+        data: {
+            threadId: id,
+            vote: vote
+        },
+        success: function(response) {  // Callback function on success
+            if (vote == 1){
+                $("#upVote-"+id).removeClass("btn-outline-success");
+                $("#upVote-"+id).addClass("btn-success popAnimation");
+            }
+            else if (vote == -1){
+                $("#downVote-"+id).removeClass("btn-outline-danger");
+                $("#downVote-"+id).addClass("btn-danger popAnimation");
+            }
+            $("#vote-"+id).html(currentVotes + vote);
+            $("#upVote-"+id).removeAttr("onclick");
+            $("#downVote-"+id).removeAttr("onclick");
+        },
+        error: function(xhr, status, error) {  // Callback function on error
+            console.log('Error:', error);
+        }
+    });
 }
 
 function createComment(comment) {
@@ -37,12 +61,12 @@ function createComment(comment) {
     let cardHeader = $("<div></div>",{class: "card-header row"});
     let username = $("<div></div>",{class: "fs-4 col-7 col-md-8 fw-bolder"});
     let votesdiv = $("<div></div>",{class: "col-5 col-md-4 fs-5 d-flex justify-content-end px-0"});
-    let downvote = $("<button></button>", {class: "btn btn-outline-danger btn-sm fs-6 me-1 me-md-4"});
-    let vote = $("<div></div>", {class: "d-flex align-items-center", id: "vote-"+comment.id});
-    let upvote = $("<button></button>", {class: "btn btn-outline-success btn-sm fs-6 ms-1 ms-md-4"});
+    let vote = $("<div></div>", {class: "d-flex align-items-center "+ (USERLOGGED)?"me-4":"", id: "vote-"+comment.id});
     let cardBody = $("<div></div>", {class: "card-body"});
     let body = $("<p></p>", {class: "card-text"});
     let cardFooter = $("<div></div>", {class: "card-footer"});
+    let downvote = null;
+    let upvote = null;
 
     //insert correct data
     username.html(comment.username);
@@ -50,18 +74,25 @@ function createComment(comment) {
     body.html(comment.body);
     cardFooter.html(comment.creationDate);
 
-    //insert icons
-    downvote.html("<i class=' bi bi-caret-down-fill'></i>");
-    upvote.html("<i class=' bi bi-caret-up-fill'></i>")
+    //insert buttons
+    if (USERLOGGED){
+        downvote = $("<button></button>", {class: "btn btn-outline-danger btn-sm fs-6 me-1 me-md-4", id:"downVote-"+comment.id});
+        upvote = $("<button></button>", {class: "btn btn-outline-success btn-sm fs-6 ms-1 ms-md-4", id: "upVote-"+comment.id});
+        downvote.html("<i class=' bi bi-caret-down-fill'></i>");
+        upvote.html("<i class=' bi bi-caret-up-fill'></i>");
 
-    //add eventListener
-    downvote.on("click", function (){voteComment(comment.id,-1)});
-    upvote.on("click", function (){voteComment(comment.id,1)});
+        //add eventListener
+        downvote.on("click", function (){voteComment(comment.id,-1)});
+        upvote.on("click", function (){voteComment(comment.id,1)});
+    }
+
 
     //form the element
-    votesdiv.append(downvote);
+    if(USERLOGGED)
+        votesdiv.append(downvote);
     votesdiv.append(vote);
-    votesdiv.append(upvote);
+    if (USERLOGGED)
+        votesdiv.append(upvote);
 
     cardHeader.append(username);
     cardHeader.append(votesdiv);
@@ -80,9 +111,9 @@ var firstTime = true;
 function getComment(id,page){
 
     $.ajax({
-        url: 'getThreadComments',  // The URL to send the request to
-        type: 'GET',              // HTTP method
-        data: {                    // Data to send in the request
+        url: 'getThreadComments',
+        type: 'GET',
+        data: {
             threadId: id,
             page: page
         },
@@ -128,6 +159,7 @@ function nextPage(id, page, totalPages) {
         $("#nextPage").off("click");
     }else
         $("#nextPage").on("click", function (){nextPage(id,page+1,totalPages)});
+    $("#pageNumber").html(page);
 }
 
 function prevPage(id, page, totalPages){
@@ -147,6 +179,7 @@ function prevPage(id, page, totalPages){
         $("#prevPage").off("click");
     }else
         $("#prevPage").on("click", function (){prevPage(id,page-1,totalPages)});
+    $("#pageNumber").html(page);
 }
 
 function paginationInit(id, totalPages) {
