@@ -36,7 +36,6 @@ public class ThreadServiceImplTest {
         Database db = mock(Database.class);
         Connection connection = mock(Connection.class);
         when(db.connect()).thenReturn(connection);
-
         threadDAO = mock(ThreadDAO.class);
         userDAO = mock(UserDAO.class);
         threadValidator = mock(ThreadValidator.class);
