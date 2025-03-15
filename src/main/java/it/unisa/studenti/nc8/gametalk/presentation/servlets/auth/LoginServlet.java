@@ -5,9 +5,9 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.services.auth.AuthenticationService;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.cookies.CookieHelper;
-import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Servlet per gestire il login degli utenti.
@@ -22,6 +23,7 @@ import java.io.IOException;
  * e imposta un cookie di autenticazione.
  */
 @WebServlet("/login")
+@MultipartConfig
 public class LoginServlet extends AuthenticationServlet {
 
     /** Durata cookie di autenticazione. */
@@ -41,7 +43,10 @@ public class LoginServlet extends AuthenticationServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
-        ErrorHandler errorHandler = getErrorHandler();
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        Writer writer = resp.getWriter();
+
         AuthenticationService authenticationService =
                 getAuthenticationService();
         UserService userService = getUserService();
@@ -71,18 +76,17 @@ public class LoginServlet extends AuthenticationServlet {
             // Imposta utente nella sessione
             session.setAttribute("user", loggedUser);
             resp.addCookie(authTokenCookie);
-            resp.sendRedirect(req.getContextPath() + "/");
 
+            resp.setStatus(HttpServletResponse.SC_OK);
+            writer.write("{}");
         } catch (ServiceException e) {
             LOGGER.error("Errore con servizio di autenticazione", e);
-            errorHandler.handleError(
-                    req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    e.getMessage()
-            );
+            writer.write(
+                    "{\"error\": \"Errore durante il login.\"}");
 
         } catch (AuthenticationException | IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            req.setAttribute("error", e.getMessage());
+            writer.write("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
 }
