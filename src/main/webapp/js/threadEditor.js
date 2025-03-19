@@ -25,12 +25,23 @@ $(document).ready(function() {
             ['color', ['forecolor']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['table', ['table']],
-            ['insert', ['link','picture']],
-            ['custom', ['inImg']],
+            ['insert', ['link','inImg']],
             ['view', ['fullscreen', 'codeview', 'help']]
         ],
         buttons:{
             inImg: importImg
         }
     });
+});
+
+$("#sendButton").on("click", function() {
+    var title = $("#title").val();
+    var category = $("#category").val();
+    var body = $("#summernote").summernote('code');
+    $.post("addThread",
+        {
+            title:title,
+            category:category,
+            body: body
+        });
 });

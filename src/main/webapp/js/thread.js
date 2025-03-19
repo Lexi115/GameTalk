@@ -121,18 +121,32 @@ function getComment(id,page){
             //console.log(response);
             $("#commentsArea").empty();
 
+            if (response.totalPages<=1)
+                $("#pagination").addClass("d-none");
+            else
+                $("#pagination").removeClass("d-none");
+
+            $("#prevPage").addClass("disabled");
+            $("#prevPage").off("click");
+            $("#nextPage").addClass("disabled");
+            $("#nextPage").off("click");
+
+            if (page > 1){
+                $("#prevPage").removeClass("disabled");
+                $("#prevPage").on("click", function (){getComment(id,page-1)});
+            }
+            if (page < response.totalPages){
+                $("#nextPage").removeClass("disabled");
+                $("#nextPage").on("click", function (){getComment(id,page+1)});
+            }
+
+            $("#pageNumber").html(page);
+
             let comments = response.comments;
 
             for (var i = 0; i < comments.length; i++) {
                 $("#commentsArea").append(createComment(comments[i]));
             }
-
-            if (response.totalPages > 1 && firstTime) {
-                firstTime = false;
-                paginationInit(response.threadId, response.totalPages);
-            }
-            else if(firstTime)
-                $("#pagination").remove();
         },
         error: function(xhr, status, error) {  // Callback function on error
             console.log('Error:', error);
@@ -142,47 +156,25 @@ function getComment(id,page){
 
 $("#commentsArea").ready(function () {getComment($("#thread").data("id"), 1)});
 
-function nextPage(id, page, totalPages) {
-    //remove old eventListener
-    $("#nextPage").off("click");
-    $("#prevPage").off("click");
 
-    //unlock prev button
-    $("#prevPage").removeClass("disabled");
-    $("#prevPage").on("click", function (){prevPage(id,page-1,totalPages)});
+function newComment(){
+    let body = $("#comment").val();
+    let id = $("thread").data("id");
 
-    getComment(id,page);
-
-    //lock next button if you load the last page otherwise set the jump to the next page
-    if (page <= totalPages){
-        $("#nextPage").addClass("disabled");
-        $("#nextPage").off("click");
-    }else
-        $("#nextPage").on("click", function (){nextPage(id,page+1,totalPages)});
-    $("#pageNumber").html(page);
-}
-
-function prevPage(id, page, totalPages){
-    //remove old eventListener
-    $("#nextPage").off("click");
-    $("#prevPage").off("click");
-
-    //unlock next button
-    $("#nextPage").removeClass("disabled");
-    $("#nextPage").on("click", function (){nextPage(id,page+1,totalPages)});
-
-    getComment(id,page);
-
-    //lock prev button if you load the first page otherwise set the jump
-    if (page == 1){
-        $("#prevPage").addClass("disabled");
-        $("#prevPage").off("click");
-    }else
-        $("#prevPage").on("click", function (){prevPage(id,page-1,totalPages)});
-    $("#pageNumber").html(page);
-}
-
-function paginationInit(id, totalPages) {
-    $("#prevPage").addClass("disabled");
-    $("#nextPage").on("click", function (){nextPage(id,2,totalPages)});
+    $.ajax({
+        url: 'getThreadComments',
+        type: 'GET',
+        data: {
+            threadId: id,
+            body: body
+        },
+        success: function(response) {  // Callback function on success
+            if (response.status == "OK"){
+                getComment(id,1);
+            }
+        },
+        error: function(xhr, status, error) {  // Callback function on error
+            console.log('Error:', error);
+        }
+    });
 }

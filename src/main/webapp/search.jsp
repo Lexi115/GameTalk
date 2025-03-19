@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="col-md-3 p-0 form-floating">
                                 <select name="category" class="form-select bg-card" id="category" data-default-value="${category}">
-                                    <option value="">Any</option>
+                                    <option value="" selected>Any</option>
                                     <option value="General">General</option>
                                     <option value="Welcome">Welcome</option>
                                     <option value="Help">Help</option>
@@ -41,7 +41,7 @@
                             </div>
                             <div class="col-md-3 p-0 form-floating">
                                 <select name="order" class="form-select bg-card" id="order" data-default-value="${order}">
-                                    <option selected value="Best">Best</option>
+                                    <option value="Best" selected>Best</option>
                                     <option value="Newest">Newest</option>
                                     <option value="Oldest">Oldest</option>
                                 </select>

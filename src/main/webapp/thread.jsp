@@ -39,10 +39,10 @@
         <form action="#" method="post">
             <div class="row g-0">
                 <div class="col-md-11">
-                    <textarea type="text" name="comment" id="comment" class="form-control"></textarea>
+                    <textarea name="comment" id="comment" class="form-control"></textarea>
                 </div>
                 <div class="col-md-1 d-flex">
-                    <button class="btn btn-lg btn-secondary w-100"><i class="bi bi-caret-right-fill"></i></button>
+                    <button onclick="newComment()" class="btn btn-lg btn-secondary w-100"><i class="bi bi-caret-right-fill"></i></button>
                 </div>
             </div>
         </form>
