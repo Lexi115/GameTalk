@@ -38,7 +38,9 @@
             <div class="col-md-3 d-flex justify-content-end align-items-center pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
-                        <i class="bi bi-person-circle" style="cursor: pointer;" onclick="toggleLoginOverlay()"></i>
+                        <a href="user.jsp">
+                        <i  class="bi bi-person-circle" style="cursor: pointer;"></i>
+                        </a>
                     </c:when>
                     <c:otherwise>
                         <h5 class="text" style="text-decoration : underline; cursor: pointer;"
