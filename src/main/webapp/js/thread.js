@@ -29,11 +29,14 @@ function voteThread(id, vote){
 }
 
 function voteComment(id, vote){
+    var currentVotes = parseInt($("#vote-"+id).html());
+    var threadId = $("#thread").data("id");
     $.ajax({
-        url: 'voteThread',
+        url: 'voteComment',
         type: 'POST',
         data: {
-            threadId: id,
+            commentId: id,
+            threadId: threadId,
             vote: vote
         },
         success: function(response) {  // Callback function on success
@@ -69,7 +72,7 @@ function createComment(comment) {
     let upvote = null;
 
     //insert correct data
-    username.html(comment.username);
+    username.html(comment.author);
     vote.html(comment.votes);
     body.html(comment.body);
     cardFooter.html(comment.creationDate);
@@ -159,11 +162,11 @@ $("#commentsArea").ready(function () {getComment($("#thread").data("id"), 1)});
 
 function newComment(){
     let body = $("#comment").val();
-    let id = $("thread").data("id");
+    let id = $("#thread").data("id");
 
     $.ajax({
-        url: 'getThreadComments',
-        type: 'GET',
+        url: 'addComment',
+        type: 'POST',
         data: {
             threadId: id,
             body: body

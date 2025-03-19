@@ -36,16 +36,14 @@
         </div>
     </div>
     <div class="container mt-4" id="comments" data-bs-theme="light">
-        <form action="#" method="post">
-            <div class="row g-0">
-                <div class="col-md-11">
-                    <textarea name="comment" id="comment" class="form-control"></textarea>
-                </div>
-                <div class="col-md-1 d-flex">
-                    <button onclick="newComment()" class="btn btn-lg btn-secondary w-100"><i class="bi bi-caret-right-fill"></i></button>
-                </div>
+        <div class="row g-0">
+            <div class="col-md-11">
+                <textarea name="comment" id="comment" class="form-control"></textarea>
             </div>
-        </form>
+            <div class="col-md-1 d-flex">
+                <button onclick="newComment()" class="btn btn-lg btn-secondary w-100"><i class="bi bi-caret-right-fill"></i></button>
+            </div>
+        </div>
         <div class="fs-3 mb-3">Comments</div>
         <div class="container" id="commentsArea">
 

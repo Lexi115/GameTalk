@@ -70,7 +70,7 @@ public class AddThreadServlet extends ThreadServlet {
                     usernameOp, title, body, category);
 
             resp.sendRedirect(
-                    req.getContextPath() + "/thread?idThread=" + threadId);
+                    req.getContextPath() + "/thread?threadId=" + threadId);
 
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di creazione thread", e);

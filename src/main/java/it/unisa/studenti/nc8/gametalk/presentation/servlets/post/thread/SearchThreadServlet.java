@@ -28,7 +28,7 @@ public class SearchThreadServlet extends ThreadServlet {
     private static final int DEFAULT_PAGE = 1;
 
     /** Numero default di thread per pagina. */
-    private static final int DEFAULT_PAGE_SIZE = 1;
+    private static final int DEFAULT_PAGE_SIZE = 10;
 
     /**
      * Gestisce la richiesta GET per visualizzare la pagina di ricerca Thread.

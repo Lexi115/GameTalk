@@ -49,7 +49,7 @@ public class AddCommentServlet extends CommentServlet {
             commentService.addComment(threadId, usernameOp, body);
 
             resp.setStatus(HttpServletResponse.SC_OK);
-            writer.write("{\"status\": \"OK.\"}");
+            writer.write("{\"status\": \"OK\"}");
         } catch (ServiceException e) {
             LOGGER.error("Errore durante l'aggiunta del commento.", e);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
