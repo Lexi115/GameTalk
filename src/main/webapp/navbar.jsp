@@ -39,8 +39,11 @@
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
                         <a href="user.jsp">
-                        <i  class="bi bi-person-circle" style="cursor: pointer;"></i>
+                            <i  class="bi bi-person-circle" style="cursor: pointer;"></i>
                         </a>
+                        <h6 class="text" style="text-decoration: underline; cursor: pointer;">
+                            <a href="logout" style="text-decoration: none; color: inherit;">Logout</a>
+                        </h6>
                     </c:when>
                     <c:otherwise>
                         <h5 class="text" style="text-decoration : underline; cursor: pointer;"
