@@ -301,6 +301,10 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      * @param limit     Numero di Thread massimi per pagina.
      * @param order     Ordinamento della lista (più recenti,
      *                  più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate   La data di fine da cui cercare thread, può
+     *                  essere {@code null}
      * @return Lista di thread corrispondenti.
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
@@ -309,7 +313,9 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
             final String username,
             final int page,
             final int limit,
-            final Order order
+            final Order order,
+            final LocalDate startDate,
+            final LocalDate endDate
     ) throws DAOException {
         if (page < 1 || limit < 1) {
             throw new IllegalArgumentException(
@@ -321,11 +327,10 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         Database db = this.getDatabase();
         Connection connection = this.getConnection();
         String baseQuery = "SELECT * FROM threads WHERE username = ?";
-        //Compongo la query con ordine e paginazione
         String query = composeQuery(baseQuery, order);
 
         try (QueryResult qr = db.executeQuery(connection, query,
-                username, limit, offset)) {
+                username, startDate, endDate, limit, offset)) {
             return this.getMapper().map(qr.getResultSet());
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
@@ -438,7 +443,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
 
         //Concateno condizioni di data
         String finalQuery = baseQuery + " AND creation_date BETWEEN ? AND ?";
-        //Concatenazione oder by in base all'ordine scelto (default best)
+        //Concatenazione order by in base all'ordine scelto (default best)
         finalQuery += switch (realOrder) {
             case Oldest -> " ORDER BY creation_date ASC";
             case Newest -> " ORDER BY creation_date DESC";

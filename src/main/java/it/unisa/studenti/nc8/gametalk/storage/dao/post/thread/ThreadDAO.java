@@ -101,6 +101,10 @@ public interface ThreadDAO extends DAO<Thread, Long>, Bindable {
      * @param limit    Numero di Thread massimi per pagina.
      * @param order    Ordinamento della lista (più recenti,
      *                 più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate   La data di fine da cui cercare thread, può
+     *                  essere {@code null}
      * @return Lista di thread corrispondenti.
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
@@ -108,7 +112,9 @@ public interface ThreadDAO extends DAO<Thread, Long>, Bindable {
             String username,
             int page,
             int limit,
-            Order order
+            Order order,
+            LocalDate startDate,
+            LocalDate endDate
     ) throws DAOException;
 
     /**
