@@ -14,16 +14,16 @@
     <jsp:include page="navbar.jsp"/>
     <main>
         <div class="container mt-3">
-            <div class="card bg-card ">
-                <div class="card-header">Modify Thread</div>
+            <div id="thread" class="card bg-card" data-id="${thread.id}">
+                <div class="card-header">Create thread</div>
                 <div class="card-body">
                     <div class="row d-flex justify-content-around py-2 px-4">
                         <div class="col-md-5 form-floating">
-                            <input class="form-control" type="text" name="title" id="title" placeholder="">
+                            <input class="form-control" type="text" name="title" id="title" placeholder="" value="${thread.title}">
                             <label for="title" class="label-bg-none ms-2">Title</label>
                         </div>
                         <div class="col-md-5 form-floating">
-                            <select class="form-control" name="category" id="category">
+                            <select class="form-control" name="category" id="category" data-default-value="${thread.category}">
                                 <option value="" selected>No one</option>
                                 <option value="General">General</option>
                                 <option value="Welcome">Welcome</option>
@@ -33,13 +33,13 @@
                                 <option value="Memes">Memes</option>
                                 <option value="Announcements">Announcements</option>
                             </select>
-                            <label for="category" class="label-bg-none ms-2">category</label>
+                            <label for="category" class="label-bg-none ms-2">Category</label>
                         </div>
                     </div>
                     <div id="summernote" class="col-12"></div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <button id="sendButton" class="btn btn-success" type="button">Create</button>
+                    <button id="modifyButton" class="btn btn-success" type="button">Modify</button>
                 </div>
             </div>
         </div>
@@ -50,19 +50,23 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs5.min.js"></script>
     <script src="js/threadEditor.js"></script>
     <script>
-        $("#sendButton").on("click", function() {
+        $("#category").ready(function (){if($("#category").data("defaultValue") != "") $("#category").val($("#category").data("defaultValue"));});
+        $(document).ready(function (){
+            $('#summernote').summernote('code', '${thread.body}');
+        });
+
+        $("#modifyButton").on("click", function() {
+            var id = parseInt($("#thread").data("id"));
             var title = $("#title").val();
             var category = $("#category").val();
             var body = $("#summernote").summernote('code');
-            $.post("addThread",
+            $.post("editThread",
                 {
+                    threadId: id,
                     title:title,
                     category:category,
                     body: body
-                },
-            function (response){
-                window.location.href = "thread?"
-            });
+                });
         });
     </script>
 </body>

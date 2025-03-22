@@ -33,15 +33,3 @@ $(document).ready(function() {
         }
     });
 });
-
-$("#sendButton").on("click", function() {
-    var title = $("#title").val();
-    var category = $("#category").val();
-    var body = $("#summernote").summernote('code');
-    $.post("addThread",
-        {
-            title:title,
-            category:category,
-            body: body
-        });
-});

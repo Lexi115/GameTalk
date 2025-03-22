@@ -15,7 +15,7 @@ public class CommentValidator implements Validator<Comment> {
      * Può contenere qualsiasi carattere, con una lunghezza
      * massima di 1000 caratteri.
      */
-    public static final String REGEX_COMMENT_BODY = "^.{1,1000}$";
+    public static final String REGEX_COMMENT_BODY = "^[\\s\\S]{1,1000}$";
 
     /** Il matcher. */
     private final Matcher matcher;
