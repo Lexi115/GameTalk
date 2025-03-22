@@ -70,7 +70,7 @@ public class EditThreadServlet extends ThreadServlet {
         }
 
         //Thread esiste, controllo privilegi di modifica.
-        if (verifyPermission(thread, usernameReq, session)) {
+        if (!verifyPermission(thread, usernameReq, session)) {
             return;
         }
 
