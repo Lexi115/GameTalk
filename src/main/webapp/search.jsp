@@ -20,7 +20,7 @@
                     <form id="searchForm" action="searchThread" method="get">
                         <div class="row my-2">
                             <div class="p-0 form-floating input-group">
-                                <input type="text" class="form-control bg-card" id="searchbar" name="query" aria-describedby="search" placeholder="">
+                                <input type="text" class="form-control bg-card" id="searchbar" name="query" aria-describedby="search" placeholder="" value="${query}">
                                 <button class="btn btn-secondary rounded-end px-4" type="submit" id="search"><i class="bi bi-search"></i></button>
                                 <label for="searchbar" class="label-bg-none z-5">ricerca</label>
                             </div>
@@ -114,8 +114,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script>
-        $("#category").ready(function (){$("#category").val($("#category").data("defaultValue"));});
-        $("#order").ready(function (){$("#order").val($("#order").data("defaultValue"));});
+        $("#category").ready(function (){if($("#category").data("defaultValue") != "") $("#category").val($("#category").data("defaultValue"));});
+        $("#order").ready(function (){if($("#order").data("defaultValue") != "") $("#order").val($("#order").data("defaultValue"));});
     </script>
 </body>
 </html>

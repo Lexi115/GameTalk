@@ -30,6 +30,7 @@
         <url-pattern>/removeComment</url-pattern>
         <url-pattern>/voteThread</url-pattern>
         <url-pattern>/voteComment</url-pattern>
+        <url-pattern>/mod/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>ModFilter</filter-name>

@@ -20,7 +20,7 @@ import java.io.IOException;
 public class BanUserServlet extends UserServlet {
 
     /**
-     * Gestisce la richiesta POST per modificare un profilo.
+     * Gestisce la richiesta POST per bannare un profilo.
      *
      * @param req  l'oggetto HttpServletRequest contenente i
      *             parametri della richiesta

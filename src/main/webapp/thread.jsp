@@ -14,7 +14,7 @@
 <jsp:include page="navbar.jsp"/>
 <main>
     <div class="container mt-4">
-        <div id="thread" class="card bg-card" data-id="${thread.id}" data-presonalVote="${personalVote}">
+        <div id="thread" class="card bg-card" data-id="${thread.id}" data-presonalvote="${personalVote}">
             <div class="card-header row px-0 mx-0">
                 <div class="col-6 text-start ps-4">${thread.username}</div>
                 <div class="col-6 text-end pe-4">${thread.creationDate}</div>
@@ -36,14 +36,17 @@
         </div>
     </div>
     <div class="container mt-4" id="comments" data-bs-theme="light">
-        <div class="row g-0">
-            <div class="col-md-11">
-                <textarea name="comment" id="comment" class="form-control"></textarea>
+        <c:if test="${not empty sessionScope.user}">
+            <div class="row g-0">
+                <div class="col-md-11">
+                    <textarea name="comment" id="comment" class="form-control"></textarea>
+                </div>
+                <div class="col-md-1 d-flex">
+                    <button onclick="newComment()" class="btn btn-lg btn-secondary w-100"><i class="bi bi-caret-right-fill"></i></button>
+                </div>
             </div>
-            <div class="col-md-1 d-flex">
-                <button onclick="newComment()" class="btn btn-lg btn-secondary w-100"><i class="bi bi-caret-right-fill"></i></button>
-            </div>
-        </div>
+        </c:if>
+
         <div class="fs-3 mb-3">Comments</div>
         <div class="container" id="commentsArea">
 
