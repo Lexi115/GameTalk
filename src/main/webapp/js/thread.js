@@ -212,7 +212,7 @@ function newComment(){
 
 $("#thread").ready(function (){
     var id = $("#thread").data("id");
-    var personalVote = $("#thread").data("personalVote");
+    var personalVote = parseInt($("#thread").data("presonalvote"));
     if (personalVote){
         if (personalVote == 1){
             $("#upVoteThread").removeClass("btn-outline-success");
