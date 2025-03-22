@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profilo Utente</title>
 
-    <!-- Link per gli stili CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/viewProfile.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -25,7 +24,6 @@
 
 <main>
     <div class="container my-5">
-        <!-- Sezione del profilo utente -->
         <div class="d-flex justify-content-center align-items-center flex-column mt-5">
             <h1 class="text-center display-3">
                 <%= user != null ? user.getUsername() : "Username non disponibile" %><br>
@@ -34,7 +32,6 @@
             </h1>
         </div>
 
-        <!-- Sezione dei thread dell'utente -->
         <div class="favourites mt-5">
             <h2 id="text" class="text-center" style="cursor: pointer;">I TUOI THREAD</h2>
             <div class="row row-cols-1 row-cols-md-2 justify-content-center g-4 p-4" id="userThreads">
@@ -44,48 +41,51 @@
     </div>
 </main>
 
-<!-- Script JS per caricare i thread -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const username = "<%= user != null ? user.getUsername() : "" %>";
-        const threadsContainer = document.getElementById("userThreads");
+    $(document).ready(function () {
+        const username = "<%= user != null ? user.getUsername().replace("\"", "\\\"") : "" %>";
+        const threadsContainer = $("#userThreads");
 
-        // Verifica se il nome utente è disponibile
         if (username && username !== "Username non disponibile") {
-            fetch(`/getUserThreads?username=${username}`)
-                .then(response => response.json())
-                .then(data => {
+            $.ajax({
+                url: "/getUserThreads",
+                type: "GET",
+                data: { username: username, page: 1 },
+                dataType: "json",
+                success: function (data) {
                     if (data.threads && data.threads.length > 0) {
-                        threadsContainer.innerHTML = "";
+                        threadsContainer.empty();
                         data.threads.forEach(thread => {
-                            const threadHTML = `
-                                    <div class="col threadCol">
-                                        <div class="card threadCard">
-                                            <a href="thread.jsp?id=${thread.id}" class="stretched-link text-decoration-none">
-                                                <div class="card-body threadCard-body">
-                                                    <h5 class="card-title threadCard-title">${thread.title}</h5>
-                                                    <p class="card-text threadCard-text text-truncate">${thread.content}</p>
-                                                    <p class="card-text threadCard-text"><small class="text-body-secondary">Ultimo aggiornamento: ${thread.lastUpdated}</small></p>
-                                                </div>
-                                            </a>
-                                        </div>
+                            let threadHTML = `
+                                <div class="col threadCol">
+                                    <div class="card threadCard">
+                                        <a href="thread.jsp?id=` + thread.id + `" class="stretched-link
+                            text-decoration-none">
+                                            <div class="card-body threadCard-body">
+                                                <h5 class="card-title threadCard-title"> ` + thread.title + `</h5>
+                                                <p class="card-text threadCard-text text-truncate">` + thread.content + `</p>
+                                            </div>
+                                        </a>
                                     </div>
-                                `;
-                            threadsContainer.innerHTML += threadHTML;
+                                </div>
+                            `;
+                            threadsContainer.append(threadHTML);
                         });
                     } else {
-                        threadsContainer.innerHTML = "<p>Nessun thread trovato.</p>";
+                        threadsContainer.html("<p>Nessun thread trovato.</p>");
                     }
-                })
-                .catch(error => {
+                },
+                error: function (xhr, status, error) {
                     console.error("Errore nel caricamento dei thread:", error);
-                    threadsContainer.innerHTML = "<p>Errore nel recupero dei thread.</p>";
-                });
+                    threadsContainer.html("<p>Errore nel recupero dei thread.</p>");
+                }
+            });
         } else {
-            threadsContainer.innerHTML = "<p>Username non disponibile.</p>";
+            threadsContainer.html("<p>Username non disponibile.</p>");
         }
     });
 </script>
+
 
 </body>
 </html>
