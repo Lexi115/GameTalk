@@ -1,5 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.storage.entities.post.thread;
 
+import com.google.gson.annotations.Expose;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.Post;
 
@@ -11,6 +12,7 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.post.Post;
 public class Thread extends Post {
 
     /** Titolo del thread. */
+    @Expose
     private String title;
 
     /** Indica se il thread è archiviato. */

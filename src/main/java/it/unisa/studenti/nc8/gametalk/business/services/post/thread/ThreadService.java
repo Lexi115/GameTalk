@@ -116,6 +116,10 @@ public interface ThreadService {
      * @param pageSize Il numero di thread per pagina.
      * @param order Ordinamento della lista (più recenti,
      *              più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate La data di fine da cui cercare thread, può
+     *                essere {@code null}
      * @return Una lista di thread pubblicati dall'utente.
      * @throws IllegalArgumentException se lo <code>username</code>
      * è <code>null</code>, <code>page</code>
@@ -126,7 +130,9 @@ public interface ThreadService {
             String username,
             int page,
             int pageSize,
-            Order order
+            Order order,
+            LocalDate startDate,
+            LocalDate endDate
     ) throws ServiceException;
 
     /**

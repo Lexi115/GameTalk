@@ -183,7 +183,7 @@ class ThreadDAOImplTest {
         when(resultSet.getString("category")).thenReturn("Memes");
         when(resultSet.getDate("creation_date")).thenReturn(Date.valueOf(LocalDate.now()));
 
-        List<Thread> threads = threadDAO.getThreadsByUsername(username, 1, 10, Order.Best);
+        List<Thread> threads = threadDAO.getThreadsByUsername(username, 1, 10, Order.Best, null, null);
         assertEquals(1, threads.size());
         assertEquals(username, threads.getFirst().getUsername());
     }

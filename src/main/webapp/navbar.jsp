@@ -1,3 +1,4 @@
+<%@ page import="it.unisa.studenti.nc8.gametalk.storage.entities.user.User" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -38,9 +39,12 @@
             <div class="col-md-3 d-flex justify-content-end align-items-center pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
-                        <a href="user.jsp">
-                        <i  class="bi bi-person-circle" style="cursor: pointer;"></i>
+                        <a href="profile?username=<%= ((User) session.getAttribute("user")).getUsername() %>">
+                            <i class="bi bi-person-circle" style="cursor: pointer;"></i>
                         </a>
+                        <h6 class="text" style="text-decoration: underline; cursor: pointer;">
+                            <a href="logout" style="text-decoration: none; color: inherit;">Logout</a>
+                        </h6>
                     </c:when>
                     <c:otherwise>
                         <h5 class="text" style="text-decoration : underline; cursor: pointer;"
