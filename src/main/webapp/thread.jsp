@@ -14,7 +14,7 @@
 <jsp:include page="navbar.jsp"/>
 <main>
     <div class="container mt-4">
-        <div id="thread" class="card bg-card" data-id="${thread.id}">
+        <div id="thread" class="card bg-card" data-id="${thread.id}" data-presonalVote="${personalVote}">
             <div class="card-header row px-0 mx-0">
                 <div class="col-6 text-start ps-4">${thread.username}</div>
                 <div class="col-6 text-end pe-4">${thread.creationDate}</div>
@@ -24,9 +24,9 @@
             </div>
             <div class="card-footer d-flex justify-content-end fs-5">
                 <c:if test="${not empty sessionScope.user}">
-                    <button id="downVoteThread" class="btn btn-outline-danger fs-6 me-4 btn-vote" onclick="voteThread(${thread.id},-1)"><i class=" bi bi-caret-down-fill"></i></button>
+                    <button id="downVoteThread" class="btn btn-outline-danger fs-6 me-4 btn-vote"><i class=" bi bi-caret-down-fill"></i></button>
                     <div class="d-flex align-items-center" id="vote">${thread.votes}</div>
-                    <button id="upVoteThread" class="btn btn-outline-success fs-6 ms-4 btn-vote" onclick="voteThread(${thread.id},1)"><i class="bi bi-caret-up-fill"></i></button>
+                    <button id="upVoteThread" class="btn btn-outline-success fs-6 ms-4 btn-vote"><i class="bi bi-caret-up-fill"></i></button>
                 </c:if>
                 <c:if test="${empty sessionScope.user}">
                     <div class="d-flex align-items-center me-5" id="vote">${thread.votes}</div>

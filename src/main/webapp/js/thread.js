@@ -1,7 +1,6 @@
 var USERLOGGED = false;
-function voteThread(id, vote){
+function voteThread(id, vote, oldVote){
     var currentVotes = parseInt($("#vote").html());
-
     $.ajax({
         url: 'voteThread',
         type: 'POST',
@@ -18,9 +17,20 @@ function voteThread(id, vote){
                 $("#downVoteThread").removeClass("btn-outline-danger");
                 $("#downVoteThread").addClass("btn-danger popAnimation");
             }
-            $("#vote").html(currentVotes + vote);
-            $("#upVoteThread").removeAttr("onclick");
-            $("#downVoteThread").removeAttr("onclick");
+            if (oldVote == 1){
+                $("#upVoteThread").removeClass("btn-success popAnimation");
+                $("#upVoteThread").addClass("btn-outline-success");
+            }else if (oldVote == -1){
+                $("#downVoteThread").removeClass("btn-danger popAnimation");
+                $("#downVoteThread").addClass("btn-outline-danger");
+            }
+            if(!oldVote) oldVote=0;
+            $("#vote").html(currentVotes - oldVote + vote);
+            $("#upVoteThread").off("click");
+            $("#upVoteThread").on("click", function (){voteThread(id,(vote == 1)? 0:1,vote)});
+            $("#downVoteThread").off("click");
+            $("#downVoteThread").on("click",function (){voteThread(id,(vote == -1)? 0: -1,vote)});
+
         },
         error: function(xhr, status, error) {  // Callback function on error
             console.log('Error:', error);
@@ -28,7 +38,8 @@ function voteThread(id, vote){
     });
 }
 
-function voteComment(id, vote){
+function voteComment(id, vote, oldVote){
+    console.log(id + " " + vote + " " + oldVote);
     var currentVotes = parseInt($("#vote-"+id).html());
     var threadId = $("#thread").data("id");
     $.ajax({
@@ -48,9 +59,18 @@ function voteComment(id, vote){
                 $("#downVote-"+id).removeClass("btn-outline-danger");
                 $("#downVote-"+id).addClass("btn-danger popAnimation");
             }
-            $("#vote-"+id).html(currentVotes + vote);
-            $("#upVote-"+id).removeAttr("onclick");
-            $("#downVote-"+id).removeAttr("onclick");
+            if (oldVote == 1){
+                $("#upVote-"+id).removeClass("btn-success popAnimation");
+                $("#upVote-"+id).addClass("btn-outline-success");
+            }else if (oldVote == -1){
+                $("#downVote-"+id).removeClass("btn-danger popAnimation");
+                $("#downVote-"+id).addClass("btn-outline-danger");
+            }
+            $("#vote-"+id).html(currentVotes - oldVote + vote)
+            $("#upVote-"+id).off("click");
+            $("#upVote-"+id).on("click", function (){voteComment(id,(vote == 1)? 0 : 1, vote)});
+            $("#downVote-"+id).off("click");
+            $("#downVote-"+id).on("click",function (){voteComment(id,(vote == -1)? 0 : -1, vote)});
         },
         error: function(xhr, status, error) {  // Callback function on error
             console.log('Error:', error);
@@ -79,14 +99,22 @@ function createComment(comment) {
 
     //insert buttons
     if (USERLOGGED){
-        downvote = $("<button></button>", {class: "btn btn-outline-danger btn-sm fs-6 me-1 me-md-4", id:"downVote-"+comment.id});
-        upvote = $("<button></button>", {class: "btn btn-outline-success btn-sm fs-6 ms-1 ms-md-4", id: "upVote-"+comment.id});
+        if (comment.personalRating == -1)
+            downvote = $("<button></button>", {class: "btn btn-danger btn-sm fs-6 me-1 me-md-4", id:"downVote-"+comment.id});
+        else
+            downvote = $("<button></button>", {class: "btn btn-outline-danger btn-sm fs-6 me-1 me-md-4", id:"downVote-"+comment.id});
+        if (comment.personalRating == 1)
+            upvote = $("<button></button>", {class: "btn btn-success btn-sm fs-6 ms-1 ms-md-4", id: "upVote-"+comment.id});
+        else
+            upvote = $("<button></button>", {class: "btn btn-outline-success btn-sm fs-6 ms-1 ms-md-4", id: "upVote-"+comment.id});
         downvote.html("<i class=' bi bi-caret-down-fill'></i>");
         upvote.html("<i class=' bi bi-caret-up-fill'></i>");
 
+
+
         //add eventListener
-        downvote.on("click", function (){voteComment(comment.id,-1)});
-        upvote.on("click", function (){voteComment(comment.id,1)});
+        downvote.on("click", function (){voteComment(comment.id,(comment.personalRating == -1)? 0 : -1,comment.personalRating)});
+        upvote.on("click", function (){voteComment(comment.id,(comment.personalRating == 1)? 0 : 1,comment.personalRating)});
     }
 
 
@@ -121,7 +149,7 @@ function getComment(id,page){
             page: page
         },
         success: function(response) {  // Callback function on success
-            //console.log(response);
+            console.log(response);
             $("#commentsArea").empty();
 
             if (response.totalPages<=1)
@@ -181,3 +209,19 @@ function newComment(){
         }
     });
 }
+
+$("#thread").ready(function (){
+    var id = $("#thread").data("id");
+    var personalVote = $("#thread").data("personalVote");
+    if (personalVote){
+        if (personalVote == 1){
+            $("#upVoteThread").removeClass("btn-outline-success");
+            $("#upVoteThread").addClass("btn-success");
+        }else if(personalVote == -1){
+            $("#downVoteThread").removeClass("btn-outline-danger");
+            $("#downVoteThread").addClass("btn-danger");
+        }
+    }
+    $("#upVoteThread").on("click", function (){voteThread(id,(personalVote == 1)? 0 :1,personalVote)})
+    $("#downVoteThread").on("click", function (){voteThread(id,(personalVote == -1)? 0 :-1,personalVote)})
+});
