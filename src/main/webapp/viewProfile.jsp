@@ -40,7 +40,7 @@
         </div>
     </div>
 </main>
-
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
         const username = "<%= user != null ? user.getUsername().replace("\"", "\\\"") : "" %>";
@@ -50,8 +50,10 @@
             $.ajax({
                 url: "/getUserThreads",
                 type: "GET",
-                data: { username: username, page: 1 },
-                dataType: "json",
+                data: {
+                    username: username,
+                    page: 1
+                },
                 success: function (data) {
                     if (data.threads && data.threads.length > 0) {
                         threadsContainer.empty();

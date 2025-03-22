@@ -70,14 +70,14 @@ public class EditThreadServlet extends ThreadServlet {
         }
 
         //Thread esiste, controllo privilegi di modifica.
-        if (verifyPermission(thread, usernameReq, session)) {
+        if (!verifyPermission(thread, usernameReq, session)) {
             return;
         }
 
         //Può modificare il thread
         req.setAttribute("thread", thread);
         RequestDispatcher dispatcher = req.getRequestDispatcher(
-                "/createThread.jsp");
+                "/modifyThread.jsp");
         dispatcher.forward(req, resp);
     }
 
@@ -141,7 +141,7 @@ public class EditThreadServlet extends ThreadServlet {
             );
 
             resp.sendRedirect(
-                    req.getContextPath() + "/thread?idThread=" + idThread);
+                    req.getContextPath() + "/thread?threadId=" + idThread);
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di modifica thread", e);
             errorHandler.handleError(
