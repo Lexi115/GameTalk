@@ -48,7 +48,7 @@
 
         if (username && username !== "Username non disponibile") {
             $.ajax({
-                url: "/GameTalk_war_exploded/getUserThreads",
+                url: "getUserThreads",
                 type: "GET",
                 data: {
                     username: username,
