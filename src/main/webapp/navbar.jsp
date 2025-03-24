@@ -156,11 +156,27 @@
                         if (data.error) {
                             showError(data.error, "signupError");
                         } else {
-                            showError("Registrazione completata! Effettua il login.", "signupError");
+                            // Se la registrazione ha successo, effettua automaticamente il login
+                            let loginData = new FormData();
+                            loginData.append("username", formData.get("username"));
+                            loginData.append("password", formData.get("password"));
+
+                            return fetch("login", {
+                                method: "POST",
+                                body: loginData
+                            });
+                        }
+                    })
+                    .then(response => {
+                        if (response && response.ok) {
+                            window.location.reload();
+                        } else {
+                            showError("Registrazione completata, ma errore nel login.", "signupError");
                         }
                     })
                     .catch(error => showError("Errore di registrazione.", "signupError"));
             });
+
         });
 
     </script>

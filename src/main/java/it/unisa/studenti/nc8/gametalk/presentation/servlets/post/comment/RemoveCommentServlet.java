@@ -74,7 +74,7 @@ public class RemoveCommentServlet extends CommentServlet {
 
             resp.setStatus(HttpServletResponse.SC_OK);
             writer.write(
-                    "{\"status\": \"OK.\"}");
+                    "{\"status\": \"OK\"}");
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di eliminazione commento", e);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

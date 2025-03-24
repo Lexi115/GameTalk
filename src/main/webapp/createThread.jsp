@@ -61,7 +61,7 @@
                     body: body
                 },
             function (response){
-                window.location.href = "thread?"
+                window.location.href = "thread?threadId="+response.threadID;
             });
         });
     </script>

@@ -66,7 +66,11 @@
                     title:title,
                     category:category,
                     body: body
-                });
+                },
+                function (response){
+                    window.location.href = "thread?threadId="+id;
+                }
+            );
         });
     </script>
 </body>

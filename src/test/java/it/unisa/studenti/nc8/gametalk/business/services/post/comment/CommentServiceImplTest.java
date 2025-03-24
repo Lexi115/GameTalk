@@ -30,11 +30,12 @@ public class CommentServiceImplTest {
     private CommentDAO commentDAO;
     private ThreadDAO threadDAO;
     private UserDAO userDAO;
-    private Validator<Comment> commentValidator = new CommentValidator(new RegexMatcher());
+    private final Validator<Comment> commentValidator = new CommentValidator(new RegexMatcher());
+    private Database db;
 
     @BeforeEach
     void setUp() throws SQLException {
-        Database db = mock(Database.class);
+        db = mock(Database.class);
         Connection connection = mock(Connection.class);
         QueryResult queryResult = mock(QueryResult.class);
         ResultSet resultSet = mock(ResultSet.class);
@@ -104,6 +105,97 @@ public class CommentServiceImplTest {
         assertThrows(ServiceException.class, () -> commentService.deleteComment(1L));
     }
 
+    // TC_CS1 - Thread valido con utente loggato
+    @Test
+    void findComments_ValidThread_LoggedInUser() throws Exception {
+        long threadId = 1L;
+        String username = "user123";
+        int page = 1;
+        int pageSize = 10;
+
+        when(commentDAO.getCommentsByThreadId(threadId, username, page, pageSize))
+                .thenReturn(List.of(new Comment()));
+
+        List<Comment> result = commentService.findCommentsByThreadId(threadId, username, page, pageSize);
+        assertFalse(result.isEmpty());
+    }
+
+    // TC_CS2 - Thread valido con utente nullo
+    @Test
+    void findComments_ValidThread_NullUser() throws Exception {
+        long threadId = 1L;
+        int page = 1;
+        int pageSize = 10;
+
+        when(commentDAO.getCommentsByThreadId(threadId, "", page, pageSize))
+                .thenReturn(List.of(new Comment()));
+
+        List<Comment> result = commentService.findCommentsByThreadId(threadId, null, page, pageSize);
+        assertFalse(result.isEmpty());
+    }
+
+    // TC_CS3 - Thread valido con username vuoto
+    @Test
+    void findComments_ValidThread_EmptyUsername() throws Exception {
+        long threadId = 1L;
+        int page = 1;
+        int pageSize = 10;
+
+        when(commentDAO.getCommentsByThreadId(threadId, "", page, pageSize))
+                .thenReturn(List.of(new Comment()));
+
+        List<Comment> result = commentService.findCommentsByThreadId(threadId, "", page, pageSize);
+        assertFalse(result.isEmpty());
+    }
+
+    // TC_CS4 - Thread ID non valido
+    @Test
+    void findComments_InvalidThreadId() {
+        long threadId = 0;
+        assertThrows(IllegalArgumentException.class,
+                () -> commentService.findCommentsByThreadId(threadId, "user123", 1, 10));
+    }
+
+    // TC_CS5 - Pagina non valida
+    @Test
+    void findComments_InvalidPageNumber() {
+        long threadId = 1L;
+        assertThrows(IllegalArgumentException.class,
+                () -> commentService.findCommentsByThreadId(threadId, "user123", 0, 10));
+    }
+
+    // TC_CS6 - Dimensione pagina non valida
+    @Test
+    void findComments_InvalidPageSize() {
+        long threadId = 1L;
+        assertThrows(IllegalArgumentException.class,
+                () -> commentService.findCommentsByThreadId(threadId, "user123", 1, 0));
+    }
+
+    // TC_CS7 - Errore connessione DB
+    @Test
+    void findComments_DatabaseConnectionError() throws Exception {
+        long threadId = 1L;
+        int page = 1;
+        int pageSize = 10;
+
+        when(db.connect()).thenThrow(new SQLException("Errore connessione"));
+        assertThrows(ServiceException.class,
+                () -> commentService.findCommentsByThreadId(threadId, "user123", page, pageSize));
+    }
+
+    // TC_CS8 - Errore DAO
+    @Test
+    void findComments_DAOError() throws Exception {
+        long threadId = 1L;
+        int page = 1;
+        int pageSize = 10;
+
+        when(commentDAO.getCommentsByThreadId(anyLong(), anyString(), anyInt(), anyInt()))
+                .thenThrow(new DAOException("Errore DAO"));
+        assertThrows(ServiceException.class,
+                () -> commentService.findCommentsByThreadId(threadId, "user123", page, pageSize));
+    }
 
     @Test
     void findValidCommentById() throws ServiceException, DAOException {
