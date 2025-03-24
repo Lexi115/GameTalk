@@ -111,7 +111,9 @@ INSERT INTO `threads` (`id`, `username`, `title`, `body`, `votes`, `archived`, `
 (8, 'AlphaMaster', 'hatsune', 'rosse molto rosse', 0, 0, 'General', '2025-01-15'),
 (9, 'AlphaMaster', 'switch 2 reveal', 'rosse molto rosse', 0, 0, 'Memes', '2025-01-15'),
 (10, 'AlphaMaster', 'switch 2 reveal', 'rosse molto rosse', 0, 0, 'General', '2025-01-15'),
-(12, 'ApexLegends', 'Switch 2 Reveal', 'rosse molto rosse', 0, 0, 'General', '2025-01-17');
+(12, 'ApexLegends', 'Switch 2 Reveal', 'rosse molto rosse', 0, 0, 'General', '2025-01-17'),
+(13, 'Pippobaudo', 'Assassins Creed è sopravvalutato', 'Ho ragione', 0, 0, 'General', '2025-01-17');
+
 
 -- --------------------------------------------------------
 
