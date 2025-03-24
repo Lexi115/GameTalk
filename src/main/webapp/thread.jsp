@@ -16,22 +16,35 @@
     <div class="container mt-4">
         <div id="thread" class="card bg-card" data-id="${thread.id}" data-presonalvote="${personalVote}">
             <div class="card-header row px-0 mx-0">
-                <div class="col-6 text-start ps-4">${thread.username}</div>
+                <div class="col-6 text-start ps-4">${thread.title}</div>
                 <div class="col-6 text-end pe-4">${thread.creationDate}</div>
             </div>
             <div class="card-body">
                 ${thread.body}
             </div>
-            <div class="card-footer d-flex justify-content-end fs-5">
-                <c:if test="${not empty sessionScope.user}">
-                    <button id="downVoteThread" class="btn btn-outline-danger fs-6 me-4 btn-vote"><i class=" bi bi-caret-down-fill"></i></button>
-                    <div class="d-flex align-items-center" id="vote">${thread.votes}</div>
-                    <button id="upVoteThread" class="btn btn-outline-success fs-6 ms-4 btn-vote"><i class="bi bi-caret-up-fill"></i></button>
-                </c:if>
-                <c:if test="${empty sessionScope.user}">
-                    <div class="d-flex align-items-center me-5" id="vote">${thread.votes}</div>
-                </c:if>
 
+            <div class="card-footer fs-5">
+                <div class="row">
+                    <div class="col-6">
+                        <b>${thread.username}</b>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <c:if test="${not empty sessionScope.user}">
+                            <c:if test="${sessionScope.isModerator or thread.username == sessionScope.user.username}">
+                                <form action="removeThread" method="post">
+                                    <input type="hidden" name="threadId" value="${thread.id}">
+                                    <button type="submit" class="btn btn-danger fs-6 me-4"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </c:if>
+                            <button id="downVoteThread" class="btn btn-outline-danger fs-6 me-4 btn-vote"><i class=" bi bi-caret-down-fill"></i></button>
+                            <div class="d-flex align-items-center" id="vote">${thread.votes}</div>
+                            <button id="upVoteThread" class="btn btn-outline-success fs-6 ms-4 btn-vote"><i class="bi bi-caret-up-fill"></i></button>
+                        </c:if>
+                        <c:if test="${empty sessionScope.user}">
+                            <div class="d-flex align-items-center me-5" id="vote">${thread.votes}</div>
+                        </c:if>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -71,7 +84,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script src="js/thread.js"></script>
 <c:if test="${not empty sessionScope.user}">
-    <script>USERLOGGED = true</script>
+    <script>USERLOGGED = true; USERNAME = "${sessionScope.user.username}"; MODERATOR = (${sessionScope.isModerator})?true :false</script>
 </c:if>
 </body>
 </html>

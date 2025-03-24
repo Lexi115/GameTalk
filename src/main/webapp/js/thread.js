@@ -1,4 +1,6 @@
-var USERLOGGED = false;
+let USERLOGGED = false;
+let USERNAME = "";
+let MODERATOR = false
 function voteThread(id, vote, oldVote){
     var currentVotes = parseInt($("#vote").html());
     $.ajax({
@@ -90,6 +92,7 @@ function createComment(comment) {
     let cardFooter = $("<div></div>", {class: "card-footer"});
     let downvote = null;
     let upvote = null;
+    let delateBtn = null;
 
     //insert correct data
     username.html(comment.author);
@@ -110,7 +113,12 @@ function createComment(comment) {
         downvote.html("<i class=' bi bi-caret-down-fill'></i>");
         upvote.html("<i class=' bi bi-caret-up-fill'></i>");
 
+        if (comment.author == USERNAME || MODERATOR){
+            delateBtn = $("<button></button>",{class: "btn btn-danger btn-sm fs-6 me-1 me-md-4", id: "delateBtn-"+comment.id});
+            delateBtn.html("<i class=\"bi bi-trash\"></i>");
 
+            delateBtn.on("click", function (){delateComment(comment.id)});
+        }
 
         //add eventListener
         downvote.on("click", function (){voteComment(comment.id,(comment.personalRating == -1)? 0 : -1,comment.personalRating)});
@@ -119,8 +127,11 @@ function createComment(comment) {
 
 
     //form the element
-    if(USERLOGGED)
+    if(USERLOGGED) {
+        if (delateBtn)
+            votesdiv.append(delateBtn);
         votesdiv.append(downvote);
+    }
     votesdiv.append(vote);
     if (USERLOGGED)
         votesdiv.append(upvote);
@@ -225,3 +236,22 @@ $("#thread").ready(function (){
     $("#upVoteThread").on("click", function (){voteThread(id,(personalVote == 1)? 0 :1,personalVote)})
     $("#downVoteThread").on("click", function (){voteThread(id,(personalVote == -1)? 0 :-1,personalVote)})
 });
+
+function delateComment(id){
+    let threadId = parseInt($("#thread").data("id"));
+    $.ajax({
+        url: 'removeComment',
+        type: 'POST',
+        data: {
+            commentId: id,
+        },
+        success: function(response) {  // Callback function on success
+            if (response.status == "OK"){
+                getComment(threadId,1);
+            }
+        },
+        error: function(xhr, status, error) {  // Callback function on error
+            console.log('Error:', error);
+        }
+    });
+}

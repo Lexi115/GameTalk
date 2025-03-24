@@ -48,7 +48,7 @@
 
         if (username && username !== "Username non disponibile") {
             $.ajax({
-                url: "/getUserThreads",
+                url: "getUserThreads",
                 type: "GET",
                 data: {
                     username: username,
@@ -61,11 +61,11 @@
                             let threadHTML = `
                                 <div class="col threadCol">
                                     <div class="card threadCard">
-                                        <a href="thread.jsp?id=` + thread.id + `" class="stretched-link
-                            text-decoration-none">
+                                        <a href="thread?threadId=` + thread.id +
+                                `" class="stretched-link text-decoration-none">
                                             <div class="card-body threadCard-body">
                                                 <h5 class="card-title threadCard-title"> ` + thread.title + `</h5>
-                                                <p class="card-text threadCard-text text-truncate">` + thread.content + `</p>
+                                                <p class="card-text threadCard-text text-truncate">` + thread.body + `</p>
                                             </div>
                                         </a>
                                     </div>
