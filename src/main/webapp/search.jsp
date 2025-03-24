@@ -71,10 +71,10 @@
                         </div>
                     </div>
                     <a class="text-decoration-none" href="thread?threadId=${thread.id}">
-                        <div class="card-body text-white">
-                            <p class="card-text text-truncate-3">${thread.body}</p>
+                        <div class="card-body text-white maxHeight">
+                            <p class="card-text">${thread.body}</p>
                         </div>
-                        <div class="card-footer text-body-secondary row">
+                        <div class="card-footer text-body-secondary row upperShadow">
                             <div class="col-6 text-start ps-4">${thread.username}</div>
                             <div class="col-6 text-end pe-4">${thread.creationDate}</div>
                         </div>
