@@ -224,20 +224,25 @@ public class CommentServiceImpl implements CommentService {
             final int page,
             final int pageSize
     ) throws ServiceException {
-        int realPage = Math.max(page, 1);
-
         String realUserName = (userName == null) ? "" : userName;
+
         //Verifica id valido
         if (threadId <= 0) {
             throw new IllegalArgumentException(
                     "threadId deve essere maggiore di 0");
         }
 
+        // Verifica pagina
+        if (page <= 0 || pageSize <= 0) {
+            throw new IllegalArgumentException(
+                    "Numero pagina e/o dimensione deve essere maggiore di 0");
+        }
+
         //Recupero commenti dal thread
         try (Connection connection = db.connect()) {
             commentDAO.bind(connection);
             return commentDAO.getCommentsByThreadId(
-                    threadId, realUserName, realPage, pageSize);
+                    threadId, realUserName, page, pageSize);
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
                     "Errore durante il recupero dei "
