@@ -58,19 +58,17 @@
                     if (data.threads && data.threads.length > 0) {
                         threadsContainer.empty();
                         data.threads.forEach(thread => {
-                            let threadHTML = `
-                                <div class="col threadCol">
-                                    <div class="card threadCard">
-                                        <a href="thread?threadId=` + thread.id +
-                                `" class="stretched-link text-decoration-none">
-                                            <div class="card-body threadCard-body">
-                                                <h5 class="card-title threadCard-title"> ` + thread.title + `</h5>
-                                                <p class="card-text threadCard-text text-truncate">` + thread.body + `</p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            `;
+                            let threadHTML =
+                                '<div class="col threadCol">' +
+                                '<div class="card threadCard">' +
+                                '<a href="thread?threadId=' + thread.id + '" class="stretched-link text-decoration-none">' +
+                                '<div class="card-body threadCard-body">' +
+                                '<h5 class="card-title threadCard-title">' + thread.title + '</h5>' +
+                                '<p class="card-text threadCard-text text-truncate">' + thread.body + '</p>' +
+                                '</div>' +
+                                '</a>' +
+                                '</div>' +
+                                '</div>';
                             threadsContainer.append(threadHTML);
                         });
                     } else {
