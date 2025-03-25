@@ -7,8 +7,8 @@
     <title>GameTalk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body data-bs-theme="dark">
@@ -123,7 +123,7 @@
 <!--
 <ul class="list-group mb-5" id="threadsList">
     <li class="list-group-item">
-        <a href="#" class="text-decoration-none text-dark">
+        <a a href="#" class="text-decoration-none text-dark">
             <div class="row p-2 mt-2">
                 <div class="col-md-4">
                     <img src="..." class="img-fluid rounded-start" alt="...">

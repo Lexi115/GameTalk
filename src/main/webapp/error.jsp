@@ -3,8 +3,8 @@
 <html>
 <head>
     <title>Utente</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/viewProfile.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/viewProfile.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +16,7 @@
     <div class="container d-flex justify-content-center">
         <img class=" mt-5 md-3"
                  style="height: 350px"
-                 src="images/error.png">
+                 src="${pageContext.request.contextPath}/images/error.png">
     </div>
 
     <div class="container d-flex justify-content-center">

@@ -6,8 +6,8 @@
     <title>GameTalk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/thread.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/thread.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body data-bs-theme="dark">
@@ -82,7 +82,7 @@
 <jsp:include page="footer.jsp"/>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
-<script src="js/thread.js"></script>
+<script src="${pageContext.request.contextPath}/js/thread.js"></script>
 <c:if test="${not empty sessionScope.user}">
     <script>USERLOGGED = true; USERNAME = "${sessionScope.user.username}"; MODERATOR = (${sessionScope.isModerator})?true :false</script>
 </c:if>

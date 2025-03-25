@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<link rel="stylesheet" href="css/navbar.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css">
 
 <%
     String pageBase = "GameTalk_war_exploded";
@@ -18,11 +18,11 @@
         <%}%>
         <div class="container-fluid row p-0 m-0">
             <div class="col-md-3 col-6 order-0">
-                <a href="index.jsp">
+                <a href="${pageContext.request.contextPath}/index.jsp">
                     <img class="m-2 fs-3 ps-3 animate-2 fadeIn a-delay-1"
                          style="height: 25px"
                          alt="logo"
-                         src="images/logo.svg">
+                         src="${pageContext.request.contextPath}/images/logo.svg">
                 </a>
             </div>
 
@@ -30,7 +30,7 @@
                 <form id="searchbarForm" method="get" action="searchThread">
                     <div class="input-group form-floating">
                         <input type="text" class="form-control bg-card" id="searchbar" name="query" aria-describedby="filter" placeholder="Ricerca">
-                        <a href="searchThread" class="btn px-4 btn-secondary rounded-end text-center align-items-center justify-content-center d-inline-flex" type="button" id="filter">filtri</a>
+                        <a href="${pageContext.request.contextPath}/searchThread" class="btn px-4 btn-secondary rounded-end text-center align-items-center justify-content-center d-inline-flex" type="button" id="filter">filtri</a>
                         <label for="searchbar" class="label-bg-none z-5">ricerca</label>
                     </div>
                 </form>
@@ -39,11 +39,11 @@
             <div class="col-md-3 d-flex justify-content-end align-items-center pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
-                        <a href="profile?username=<%= ((User) session.getAttribute("user")).getUsername() %>">
+                        <a href="${pageContext.request.contextPath}/profile?username=<%= ((User) session.getAttribute("user")).getUsername() %>">
                             <i class="bi bi-person-circle" style="cursor: pointer;"></i>
                         </a>
                         <h6 class="text" style="text-decoration: underline; cursor: pointer;">
-                            <a href="logout" style="text-decoration: none; color: inherit;">Logout</a>
+                            <a href="${pageContext.request.contextPath}/logout" style="text-decoration: none; color: inherit;">Logout</a>
                         </h6>
                     </c:when>
                     <c:otherwise>
@@ -188,7 +188,7 @@
     <form id="searchbarForm">
     <div class="input-group form-floating">
     <input type="text" class="form-control" id="searchbar" placeholder="name@example.com" aria-describedby="button-addon2">
-    <a href="search.jsp" class="btn btn-secondary" type="button" id="button-addon2">Filtri</a>
+    <a href="${pageContext.request.contextPath}/search.jsp" class="btn btn-secondary" type="button" id="button-addon2">Filtri</a>
     <label for="searchbar">ricerca</label>
     </div>
     </form>

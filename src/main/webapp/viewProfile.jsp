@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profilo Utente</title>
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/viewProfile.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/viewProfile.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
@@ -61,7 +61,7 @@
                             let threadHTML =
                                 '<div class="col threadCol">' +
                                 '<div class="card threadCard">' +
-                                '<a href="thread?threadId=' + thread.id + '" class="stretched-link text-decoration-none">' +
+                                '<a href="${pageContext.request.contextPath}/thread?threadId=' + thread.id + '" class="stretched-link text-decoration-none">' +
                                 '<div class="card-body threadCard-body">' +
                                 '<h5 class="card-title threadCard-title">' + thread.title + '</h5>' +
                                 '<p class="card-text threadCard-text text-truncate">' + thread.body + '</p>' +
