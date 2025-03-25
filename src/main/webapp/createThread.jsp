@@ -24,8 +24,7 @@
                         </div>
                         <div class="col-md-5 form-floating">
                             <select class="form-control" name="category" id="category">
-                                <option value="" selected>No one</option>
-                                <option value="General">General</option>
+                                <option value="General" selected>General</option>
                                 <option value="Welcome">Welcome</option>
                                 <option value="Help">Help</option>
                                 <option value="Bugs">Bugs</option>

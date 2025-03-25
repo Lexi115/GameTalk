@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="it.unisa.studenti.nc8.gametalk.storage.entities.user.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="it">
@@ -23,7 +24,8 @@
 <jsp:include page="navbar.jsp"/>
 
 <main>
-    <div class="container my-5">
+
+     <div class="container my-5">
         <div class="d-flex justify-content-center align-items-center flex-column mt-5">
             <h1 class="text-center display-3">
                 <%= user != null ? user.getUsername() : "Username non disponibile" %><br>
