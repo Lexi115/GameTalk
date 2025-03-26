@@ -41,7 +41,7 @@
                             '<div class="card bg-dark text-light p-3">' +
                             '<div class="card-body">' +
                             '<h5 class="card-title">' + user.username + '</h5>' +
-                            ' <a href="${pageContext.request.contextPath}/" style="text-decoration: underline; color: inherit;">Unban</a>'
+                            ' <a href="${pageContext.request.contextPath}/profile?username='+ user.username + '">Vai al profilo</a>' +
                             '</div>' +
                             '</div>';
 

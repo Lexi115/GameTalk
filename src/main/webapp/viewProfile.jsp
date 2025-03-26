@@ -34,6 +34,31 @@
             </h1>
         </div>
 
+         <c:if test="${not empty sessionScope.user and sessionScope.user.role eq 'Moderator'}">
+             <div class="text-center mt-4">
+                 <c:choose>
+                     <c:when test="${not empty pageScope.viewedUser and pageScope.viewedUser.banned}">
+                         <form action="mod/banUser" method="post">
+                             <input type="hidden" name="username" value="${pageScope.viewedUser.username}" />
+                             <input type="hidden" name="banned" value="false" />
+                             <button type="submit" class="btn btn-success">
+                                 <i class="bi bi-person-check"></i> Sbanna Utente
+                             </button>
+                         </form>
+                     </c:when>
+                     <c:otherwise>
+                         <form action="mod/banUser" method="post">
+                             <input type="hidden" name="username" value="${pageScope.viewedUser.username}" />
+                             <input type="hidden" name="banned" value="true" />
+                             <button type="submit" class="btn btn-danger">
+                                 <i class="bi bi-person-x"></i> Banna Utente
+                             </button>
+                         </form>
+                     </c:otherwise>
+                 </c:choose>
+             </div>
+         </c:if>
+
         <div class="favourites mt-5">
             <h2 id="text" class="text-center" style="cursor: pointer;">I TUOI THREAD</h2>
             <div class="row row-cols-1 row-cols-md-2 justify-content-center g-4 p-4" id="userThreads">

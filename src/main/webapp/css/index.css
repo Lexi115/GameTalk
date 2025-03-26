@@ -7,6 +7,15 @@
     background: linear-gradient(135deg, #4055a2, #5b67b8);
 }
 
+
+.greyCard {
+    height: 8rem;
+    background: linear-gradient(135deg, #4e4f69, #44444e);
+}
+
+
+
+
 .categoryCard-title{
     color: white;
 }
@@ -16,21 +25,9 @@
 }
 
 @media (max-width: 576px) {
-    .categoryCard {
+    .categoryCard, .greyCard {
         height: 4rem;
     }
-}
 
-.threadCard{
-    background: linear-gradient(135deg, #22236D, #2d3784);
 }
-
-.threadCard-title{
-    color: white;
-}
-
-.threadCard-text{
-    color: white;
-}
-
 

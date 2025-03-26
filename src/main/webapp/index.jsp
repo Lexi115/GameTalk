@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -159,76 +160,39 @@
                 </div>
             </div>
             <div id="threads" class="row row-cols-1 row-cols-md-2 justify-content-center mt-4 g-4 p-3">
-                <div class="col threadCol order-0 order-md-0">
-                    <h3 class="threadTop mb-2">IMPORTANTE</h3>
-                    <div class="card threadCard">
-                        <a a href="#" class="stretched-link text-decoration-none">
-                            <div class="card-body threadCard-body">
-                                <h5 class="card-title threadCard-title">Importante 1</h5>
-                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
-                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col threadCol order-3 order-md-1">
-                    <h3 class="threadTop mb-2">NOVITA'</h3>
-                    <div class="card threadCard">
-                        <a a href="#" class="stretched-link text-decoration-none">
-                            <div class="card-body threadCard-body ">
-                                <h5 class="card-title threadCard-title">Novità 1</h5>
-                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
-                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col threadCol order-1 order-md-2">
-                    <div class="card threadCard">
-                        <a a href="#" class="stretched-link text-decoration-none">
-                            <div class="card-body threadCard-body ">
-                                <h5 class="card-title threadCard-title">Importante 2</h5>
-                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
-                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col threadCol order-4 order-md-3">
-                    <div class="card threadCard">
-                        <a a href="#" class="stretched-link text-decoration-none">
-                            <div class="card-body threadCard-body ">
-                                <h5 class="card-title threadCard-title">Novità 2</h5>
-                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
-                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col threadCol order-2 order-md-4">
-                    <div class="card threadCard">
-                        <a a href="#" class="stretched-link text-decoration-none">
-                            <div class="card-body threadCard-body ">
-                                <h5 class="card-title threadCard-title">Importante 3</h5>
-                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
-                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col threadCol order-5 order-md-5">
-                    <div class="card threadCard">
-                        <a a href="#" class="stretched-link text-decoration-none">
-                            <div class="card-body threadCard-body ">
-                                <h5 class="card-title threadCard-title">Novità 3</h5>
-                                <p class="card-text threadCard-text text-truncate-3">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur consequatur deleniti eos esse fugiat harum id incidunt laborum minus necessitatibus, nobis odit omnis possimus quibusdam, reiciendis, similique tempora. Non?</p>
-                                <p class="card-text threadCard-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                <c:choose>
+                    <c:when test="${sessionScope.user==null}">
+                        <div class="card greyCard text-center justify-content-center">
+                            <a class="stretched-link text-decoration-none">
+                                <div class="card-body categoryCard-body justify-content-center">
+                                    <h3 class="card-title categoryCard-title m-0">ACCEDI PER CREARE UN THREAD</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="card categoryCard text-center justify-content-center">
+                            <a href="${pageContext.request.contextPath}/addThread" class="stretched-link text-decoration-none">
+                                <div class="card-body categoryCard-body justify-content-center">
+                                    <h3 class="card-title categoryCard-title m-0">CREA UN THREAD</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
+        <c:if test="${not empty sessionScope.user and sessionScope.user.role eq 'Moderator'}">
+            <div class="text-center mt-4">
+                <form action="mod/bannedUsers" method="get">
+                    <input type="hidden" name="username" value="${pageScope.viewedUser.username}" />
+                    <input type="hidden" name="banned" value="true" />
+                    <button type="submit" class="btn">
+                        <i class="bi bi-person-x"></i> Gestione utenti bannati
+                    </button>
+                </form>
+            </div>
+        </c:if>
     </main>
     <jsp:include page="footer.jsp"/>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
