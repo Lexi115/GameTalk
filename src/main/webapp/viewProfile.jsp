@@ -32,7 +32,9 @@
             </h1>
         </div>
 
-         <c:if test="${not empty sessionScope.user and sessionScope.user.role eq 'Moderator'}">
+
+
+         <c:if test="${sessionScope.user.username ne user.username and sessionScope.user.role eq 'Moderator'}">
              <div class="text-center mt-4">
                  <c:choose>
                      <c:when test="${user.banned}">
@@ -63,6 +65,16 @@
                 <p>Caricamento thread...</p>
             </div>
         </div>
+         <c:if test="${sessionScope.user.username eq user.username}">
+             <div class="text-center mt-4">
+                 <form action="editProfile" method="get">
+                     <input type="hidden" name="username" value="${user.username}" />
+                     <button type="submit" class="btn">
+                         <i class="bi"></i> Modifica il tuo profilo
+                     </button>
+                 </form>
+             </div>
+         </c:if>
     </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>

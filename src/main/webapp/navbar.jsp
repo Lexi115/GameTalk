@@ -89,15 +89,24 @@
             <form id="signupForm">
                 <div class="mb-3">
                     <label for="usernameSignup" class="form-label">Username</label>
-                    <input type ="text" class="form-control" id="usernameSignup" name="username" required>
+                    <input type="text" class="form-control" id="usernameSignup" name="username" required>
                 </div>
-                <div class = "mb-3">
+                <div class="mb-3">
                     <label for="passwordSignup" class="form-label">Password</label>
                     <input type="password" class="form-control" id="passwordSignup" name="password" required>
                 </div>
+                <p id="signupPasswordError" style="color: red; display: none;">
+                    La password deve contenere almeno:
+                    <br>- 8 carattermi minimi
+                    <br>- Una lettera maiuscola
+                    <br>- Una lettera minuscola
+                    <br>- Un numero
+                    <br>- Un carattere speciale (!@#$%^&*)
+                </p>
                 <div id="signupError" class="text-danger mb-2"></div>
-                <button type="submit" class="btn btn-primary w-100">Sign-up</button>
+                <button type="submit" class="btn btn-primary w-100" id="signupButton" disabled>Sign-up</button>
             </form>
+
         </div>
     </div>
 
@@ -123,9 +132,32 @@
             }
         }
 
+
+
         function showError(message, elementId) {
             document.getElementById(elementId).textContent = message;
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const passwordSignup = document.getElementById("passwordSignup");
+            const signupPasswordError = document.getElementById("signupPasswordError");
+            const signupButton = document.getElementById("signupButton");
+
+            function validateSignupPassword() {
+                const password = passwordSignup.value;
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+                if (!passwordRegex.test(password)) {
+                    signupPasswordError.style.display = "block";
+                    signupButton.disabled = true;
+                } else {
+                    signupPasswordError.style.display = "none";
+                    signupButton.disabled = false;
+                }
+            }
+
+            passwordSignup.addEventListener("input", validateSignupPassword);
+        });
 
         document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("loginForm").addEventListener("submit", function (event) {

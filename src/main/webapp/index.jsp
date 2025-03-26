@@ -32,6 +32,8 @@
                             "bg-white" data-bs-slide-to="6" aria-label="Slide 7"></button>
                     <button type="button" data-bs-target="#gameCarousel" class=
                             "bg-white" data-bs-slide-to="7" aria-label="Slide 8"></button>
+                    <button type="button" data-bs-target="#gameCarousel" class=
+                            "bg-white" data-bs-slide-to="8" aria-label="Slide 9"></button>
 
                 </div>
                 <div class="carousel-inner">
@@ -72,6 +74,11 @@
                     </div>
                     <div class="carousel-item">
                         <img src="${pageContext.request.contextPath}/images/slide8.png" class="d-block w-100" alt="Slide 8">
+                        <div class="carousel-caption d-none d-md-block">
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="${pageContext.request.contextPath}/images/slide9.png" class="d-block w-100" alt="Slide 9">
                         <div class="carousel-caption d-none d-md-block">
                         </div>
                     </div>

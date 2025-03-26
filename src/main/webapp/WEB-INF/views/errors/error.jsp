@@ -20,11 +20,11 @@
     </div>
 
     <div class="container d-flex justify-content-center">
-        <h1 style="font-size: 100px"> Error 404 </h1>
+        <h1 style="font-size: 100px"> Error <%=response.getStatus() %></h1>
     </div>
 
     <div class="container d-flex justify-content-center">
-        <h2> Page not found </h2>
+        <h2> ${requestScope.errorMessage}</h2>
     </div>
 </main>
 </body>
