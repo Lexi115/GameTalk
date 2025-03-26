@@ -159,6 +159,7 @@ public class UserServiceImpl implements UserService {
 
                 user.setPassword(password);
                 userValidator.validate(user);
+                user.setPassword(passwordHasher.hash(password));
                 userDAO.update(user);
                 tx.commit();
             }
