@@ -185,8 +185,6 @@
         <c:if test="${not empty sessionScope.user and sessionScope.user.role eq 'Moderator'}">
             <div class="text-center mt-4">
                 <form action="mod/bannedUsers" method="get">
-                    <input type="hidden" name="username" value="${pageScope.viewedUser.username}" />
-                    <input type="hidden" name="banned" value="true" />
                     <button type="submit" class="btn">
                         <i class="bi bi-person-x"></i> Gestione utenti bannati
                     </button>

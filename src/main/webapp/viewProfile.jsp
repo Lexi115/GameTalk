@@ -16,8 +16,6 @@
 
     <%
         User user = (User) request.getAttribute("user");
-        String username = (user != null) ? user.getUsername() : "Username non disponibile";
-        String role = (user != null) ? user.getRole().toString() : "Ruolo non disponibile";
     %>
 </head>
 <body class="bg-main" data-bs-theme="dark">
@@ -37,9 +35,9 @@
          <c:if test="${not empty sessionScope.user and sessionScope.user.role eq 'Moderator'}">
              <div class="text-center mt-4">
                  <c:choose>
-                     <c:when test="${not empty pageScope.viewedUser and pageScope.viewedUser.banned}">
+                     <c:when test="${user.banned}">
                          <form action="mod/banUser" method="post">
-                             <input type="hidden" name="username" value="${pageScope.viewedUser.username}" />
+                             <input type="hidden" name="username" value="${user.username}" />
                              <input type="hidden" name="banned" value="false" />
                              <button type="submit" class="btn btn-success">
                                  <i class="bi bi-person-check"></i> Sbanna Utente
@@ -48,7 +46,7 @@
                      </c:when>
                      <c:otherwise>
                          <form action="mod/banUser" method="post">
-                             <input type="hidden" name="username" value="${pageScope.viewedUser.username}" />
+                             <input type="hidden" name="username" value="${user.username}" />
                              <input type="hidden" name="banned" value="true" />
                              <button type="submit" class="btn btn-danger">
                                  <i class="bi bi-person-x"></i> Banna Utente
