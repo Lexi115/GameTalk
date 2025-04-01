@@ -39,7 +39,7 @@ public class EditThreadServlet extends ThreadServlet {
         ThreadService threadService = getThreadService();
         HttpSession session = req.getSession();
 
-        String idThreadString = req.getParameter("idThread");
+        String idThreadString = req.getParameter("threadId");
         User user = (User) session.getAttribute("user");
         String usernameReq = user.getUsername();
 
@@ -70,14 +70,14 @@ public class EditThreadServlet extends ThreadServlet {
         }
 
         //Thread esiste, controllo privilegi di modifica.
-        if (verifyPermission(thread, usernameReq, session)) {
+        if (!verifyPermission(thread, usernameReq, session)) {
             return;
         }
 
         //Può modificare il thread
         req.setAttribute("thread", thread);
         RequestDispatcher dispatcher = req.getRequestDispatcher(
-                "/createThread.jsp");
+                "/modifyThread.jsp");
         dispatcher.forward(req, resp);
     }
 
@@ -103,7 +103,7 @@ public class EditThreadServlet extends ThreadServlet {
         User user = (User) session.getAttribute("user");
         String usernameReq = user.getUsername();
 
-        String idThreadString = req.getParameter("idThread");
+        String idThreadString = req.getParameter("threadId");
         String title = req.getParameter("title");
         String body = req.getParameter("body");
         String categoryString = req.getParameter("category");
@@ -141,7 +141,7 @@ public class EditThreadServlet extends ThreadServlet {
             );
 
             resp.sendRedirect(
-                    req.getContextPath() + "/thread?idThread=" + idThread);
+                    req.getContextPath() + "/thread?threadId=" + idThread);
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di modifica thread", e);
             errorHandler.handleError(

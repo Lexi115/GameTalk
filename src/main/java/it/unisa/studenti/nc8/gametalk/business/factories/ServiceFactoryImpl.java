@@ -8,6 +8,7 @@ import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServic
 import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadServiceImpl;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserServiceImpl;
+import it.unisa.studenti.nc8.gametalk.business.utils.hashing.BCryptHasher;
 import it.unisa.studenti.nc8.gametalk.business.utils.pattern.RegexMatcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.comment.CommentValidator;
@@ -21,7 +22,6 @@ import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import it.unisa.studenti.nc8.gametalk.storage.factories.DAOFactory;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
-import it.unisa.studenti.nc8.gametalk.business.utils.hashing.BCryptHasher;
 import it.unisa.studenti.nc8.gametalk.business.utils.hashing.Hasher;
 import it.unisa.studenti.nc8.gametalk.business.utils.hashing.SHA256Hasher;
 

@@ -11,6 +11,7 @@ import it.unisa.studenti.nc8.gametalk.storage.persistence.mappers.ResultSetMappe
 
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -300,6 +301,10 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
      * @param limit     Numero di Thread massimi per pagina.
      * @param order     Ordinamento della lista (più recenti,
      *                  più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate   La data di fine da cui cercare thread, può
+     *                  essere {@code null}
      * @return Lista di thread corrispondenti.
      * @throws DAOException In caso di errori durante l'esecuzione della query.
      */
@@ -308,7 +313,9 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
             final String username,
             final int page,
             final int limit,
-            final Order order
+            final Order order,
+            final LocalDate startDate,
+            final LocalDate endDate
     ) throws DAOException {
         if (page < 1 || limit < 1) {
             throw new IllegalArgumentException(
@@ -320,11 +327,10 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         Database db = this.getDatabase();
         Connection connection = this.getConnection();
         String baseQuery = "SELECT * FROM threads WHERE username = ?";
-        //Compongo la query con ordine e paginazione
         String query = composeQuery(baseQuery, order);
 
         try (QueryResult qr = db.executeQuery(connection, query,
-                username, limit, offset)) {
+                username, startDate, endDate, limit, offset)) {
             return this.getMapper().map(qr.getResultSet());
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
@@ -437,7 +443,7 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
 
         //Concateno condizioni di data
         String finalQuery = baseQuery + " AND creation_date BETWEEN ? AND ?";
-        //Concatenazione oder by in base all'ordine scelto (default best)
+        //Concatenazione order by in base all'ordine scelto (default best)
         finalQuery += switch (realOrder) {
             case Oldest -> " ORDER BY creation_date ASC";
             case Newest -> " ORDER BY creation_date DESC";
@@ -470,14 +476,17 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         Database db = this.getDatabase();
         Connection connection = this.getConnection();
 
-        String query = "SELECT COUNT(*) FROM threads WHERE title LIKE ? AND category ? AND creation_date BETWEEN ? AND ?";
+        String query = "SELECT COUNT(*) FROM threads WHERE title LIKE ? AND category LIKE ? AND creation_date BETWEEN ? AND ?";
 
         String titleString = (title == null) ? "" : title.trim();
+        String categoryString = (category == null) ? "" : category.toString();
 
         try (QueryResult qr = db.executeQuery(
                 connection, query, "%" + titleString + "%",
-                category.toString(), startDate, endDate)) {
-            return qr.getResultSet().getInt(1);
+                "%" + categoryString + "%", startDate, endDate)) {
+            ResultSet res = qr.getResultSet();
+            res.next();
+            return res.getInt(1);
         } catch (SQLException e) {
             throw new DAOException("Errore ricerca threads", e);
         }
@@ -506,8 +515,8 @@ public class ThreadDAOImpl extends DatabaseDAO<Thread> implements ThreadDAO {
         try (QueryResult qr = db.executeQuery(
                 connection, isThreadVotedQuery, threadId,
                 username)) {
-            return qr.getResultSet().getInt(1);
-
+            ResultSet res = qr.getResultSet();
+            return (res.next()) ? qr.getResultSet().getInt(1) : 0;
         } catch (SQLException e) {
             throw new DAOException("Errore recupero valutazione personale al thread", e);
         }

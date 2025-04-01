@@ -3,9 +3,9 @@ package it.unisa.studenti.nc8.gametalk.presentation.servlets;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.factories.ServiceFactory;
 import it.unisa.studenti.nc8.gametalk.business.services.user.UserService;
-import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,20 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Servlet per gestire la registrazione di un utente.
  * Riceve username e password.
  */
 @WebServlet("/signup")
+@MultipartConfig
 public class SignupServlet extends HttpServlet {
 
     /** Logger. **/
     private static final Logger LOGGER =
             LoggerFactory.getLogger(SignupServlet.class);
-
-    /** Error handler. */
-    private ErrorHandler errorHandler;
 
     /** La classe di servizio per creare l'utente. */
     private UserService userService;
@@ -40,8 +39,6 @@ public class SignupServlet extends HttpServlet {
         ServletContext ctx = getServletContext();
         ServiceFactory serviceFactory =
                 (ServiceFactory) ctx.getAttribute("serviceFactory");
-        errorHandler =
-                (ErrorHandler) ctx.getAttribute("errorHandler");
 
         this.userService = serviceFactory.createUserService();
     }
@@ -60,6 +57,10 @@ public class SignupServlet extends HttpServlet {
             final HttpServletRequest req,
             final HttpServletResponse resp
     ) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        Writer writer = resp.getWriter();
+
         // Parametri di registrazione (username e password)
         String username = req.getParameter("username");
         String password = req.getParameter("password");
@@ -68,18 +69,16 @@ public class SignupServlet extends HttpServlet {
             userService.createUser(username, password);
 
             // Reindirizza sulla pagina home dopo la creazione dell'utente
-            resp.sendRedirect(req.getContextPath() + "/");
-
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+            writer.write("{}");
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di registrazione", e);
-            errorHandler.handleError(
-                    req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    e.getMessage()
-            );
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            writer.write("{\"error\": \"Errore interno del server\"}");
 
         } catch (IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            req.setAttribute("error", e.getMessage());
+            writer.write("{\"error\": \"Parametri non validi\"}");
         }
     }
 }

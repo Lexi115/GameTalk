@@ -96,6 +96,7 @@ public class SearchThreadServlet extends ThreadServlet {
                             queryParam, category, dateFrom, dateTo) / pageSize);
 
             req.setAttribute("threads", threads);
+            req.setAttribute("query", queryParam);
             req.setAttribute("category", category);
             req.setAttribute("dateFrom", dateFrom);
             req.setAttribute("dateTo", dateTo);
@@ -103,7 +104,7 @@ public class SearchThreadServlet extends ThreadServlet {
             req.setAttribute("page", page);
             req.setAttribute("pageSize", pageSize);
             req.setAttribute("maxPages", maxPages);
-            RequestDispatcher rd = req.getRequestDispatcher("searchThread.jsp");
+            RequestDispatcher rd = req.getRequestDispatcher("search.jsp");
             rd.forward(req, resp);
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di ricerca thread", e);

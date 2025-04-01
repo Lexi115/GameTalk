@@ -25,8 +25,7 @@ $(document).ready(function() {
             ['color', ['forecolor']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['table', ['table']],
-            ['insert', ['link','picture']],
-            ['custom', ['inImg']],
+            ['insert', ['link','inImg']],
             ['view', ['fullscreen', 'codeview', 'help']]
         ],
         buttons:{

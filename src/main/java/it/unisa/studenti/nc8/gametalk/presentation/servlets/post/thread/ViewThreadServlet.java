@@ -4,6 +4,7 @@ import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
 import it.unisa.studenti.nc8.gametalk.business.services.post.thread.ThreadService;
 import it.unisa.studenti.nc8.gametalk.presentation.utils.handlers.ErrorHandler;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
+import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,7 +36,7 @@ public class ViewThreadServlet extends ThreadServlet {
     ) throws IOException, ServletException {
         ErrorHandler errorHandler = getErrorHandler();
         ThreadService threadService = getThreadService();
-        long idThread = Long.parseLong(req.getParameter("idThread"));
+        long idThread = Long.parseLong(req.getParameter("threadId"));
         HttpSession session = req.getSession();
         try {
             Thread recoveredThread = threadService.findThreadById(idThread);
@@ -49,10 +50,12 @@ public class ViewThreadServlet extends ThreadServlet {
 
             //Recupero la valutazione personale dell'utente se è loggato.
             if (session != null) {
-                String username = (String) session.getAttribute("username");
-                int personalVote = threadService.getPersonalVote(
-                        idThread, username);
-                req.setAttribute("personalVote", personalVote);
+                User loggedUser = (User) session.getAttribute("user");
+                if (loggedUser != null) {
+                    int personalVote = threadService.getPersonalVote(
+                            idThread, loggedUser.getUsername());
+                    req.setAttribute("personalVote", personalVote);
+                }
             }
 
             req.setAttribute("thread", recoveredThread);

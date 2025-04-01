@@ -3,6 +3,7 @@ package it.unisa.studenti.nc8.gametalk.business.services.post.thread;
 import it.unisa.studenti.nc8.gametalk.business.enums.Category;
 import it.unisa.studenti.nc8.gametalk.business.enums.Order;
 import it.unisa.studenti.nc8.gametalk.business.exceptions.ServiceException;
+import it.unisa.studenti.nc8.gametalk.business.exceptions.ValidationException;
 import it.unisa.studenti.nc8.gametalk.business.utils.pattern.RegexMatcher;
 import it.unisa.studenti.nc8.gametalk.business.validators.Validator;
 import it.unisa.studenti.nc8.gametalk.business.validators.post.thread.ThreadValidator;
@@ -10,6 +11,7 @@ import it.unisa.studenti.nc8.gametalk.storage.dao.post.thread.ThreadDAO;
 import it.unisa.studenti.nc8.gametalk.storage.dao.user.UserDAO;
 import it.unisa.studenti.nc8.gametalk.storage.entities.post.thread.Thread;
 import it.unisa.studenti.nc8.gametalk.storage.entities.user.User;
+import it.unisa.studenti.nc8.gametalk.storage.exceptions.DAOException;
 import it.unisa.studenti.nc8.gametalk.storage.persistence.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,13 +32,13 @@ public class ThreadServiceImplTest {
     private ThreadDAO threadDAO;
     private UserDAO userDAO;
     private Validator<Thread> threadValidator = new ThreadValidator(new RegexMatcher());
+    private Database db;
 
     @BeforeEach
     void setUp() throws SQLException {
-        Database db = mock(Database.class);
+        db = mock(Database.class);
         Connection connection = mock(Connection.class);
         when(db.connect()).thenReturn(connection);
-
         threadDAO = mock(ThreadDAO.class);
         userDAO = mock(UserDAO.class);
         threadValidator = mock(ThreadValidator.class);
@@ -44,8 +46,10 @@ public class ThreadServiceImplTest {
         threadService = new ThreadServiceImpl(db, threadDAO, userDAO, threadValidator);
     }
 
+    //Unit test di createThread con category partition
+
     @Test
-    void createValidThread() throws Exception {
+    void createValidThreadTS1() throws Exception {
         when(threadDAO.save(any(Thread.class))).thenReturn(1L);
 
         long result = threadService.createThread("user", "title", "body", Category.Announcements);
@@ -55,12 +59,62 @@ public class ThreadServiceImplTest {
     }
 
     @Test
-    void createThreadValidationFailed() {
-        doThrow(IllegalArgumentException.class).when(threadValidator).validate(any(Thread.class));
+    void createThreadValidationFailedTS2() {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                threadService.createThread("user", "title", "body", Category.General));
+        assertThrows(ValidationException.class, () ->
+                threadService.createThread(null, "title", "body", Category.General));
     }
+
+    @Test
+    void createThreadValidationFailedTS3() {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
+
+        assertThrows(ValidationException.class, () ->
+                threadService.createThread("title", null, "body", Category.General));
+    }
+
+    @Test
+    void createThreadValidationFailedTS4() {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
+
+        assertThrows(ValidationException.class, () ->
+                threadService.createThread("title", "title", null, Category.General));
+    }
+
+    @Test
+    void createThreadValidationFailedTS5() {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
+
+        assertThrows(ValidationException.class, () ->
+                threadService.createThread("title", "title", "body", null));
+    }
+
+    @Test
+    void createThreadValidationFailedTS6() {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
+
+        assertThrows(ValidationException.class, () ->
+                threadService.createThread("title", "title", "body", Category.General));
+    }
+
+    @Test
+    void createThreadSQLExceptionTS7() throws SQLException {
+        doThrow(SQLException.class).when(db).connect();
+
+        assertThrows(ServiceException.class, () ->
+                threadService.createThread("title", "title", "body", Category.General));
+    }
+
+    @Test
+    void createThreadDAOExceptionTS8() throws DAOException {
+        doThrow(DAOException.class).when(threadDAO).save(any(Thread.class));
+
+        assertThrows(ServiceException.class, () ->
+                threadService.createThread("title", "title", "body", Category.General));
+    }
+
+    //Fine unit test
 
     @Test
     void removeThreadValid() throws Exception {

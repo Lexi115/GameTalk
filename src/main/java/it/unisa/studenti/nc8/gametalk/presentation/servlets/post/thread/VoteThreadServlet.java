@@ -41,7 +41,6 @@ public class VoteThreadServlet extends ThreadServlet {
         String voteString = req.getParameter("vote");
         String threadIdString = req.getParameter("threadId");
         try {
-
             int vote = Integer.parseInt(voteString);
             long threadId = Long.parseLong(threadIdString);
             threadService.rateThread(threadId, usernameReq, vote);

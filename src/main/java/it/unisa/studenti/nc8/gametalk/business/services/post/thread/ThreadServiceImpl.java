@@ -326,6 +326,10 @@ public class ThreadServiceImpl implements ThreadService {
      * @param pageSize Il numero di thread per pagina.
      * @param order    Ordinamento della lista (più recenti,
      *                 più vecchi, più votati).
+     * @param startDate La data di inizio da cui cercare thread, può
+     *                  essere {@code null}
+     * @param endDate La data di fine da cui cercare thread, può
+     *                essere {@code null}
      * @return Una lista di thread pubblicati dall'utente.
      * @throws IllegalArgumentException se lo <code>username</code>
      *                                  è <code>null</code> o è vuoto.
@@ -336,7 +340,9 @@ public class ThreadServiceImpl implements ThreadService {
             final String username,
             final int page,
             final int pageSize,
-            final Order order
+            final Order order,
+            final LocalDate startDate,
+            final LocalDate endDate
     ) throws ServiceException {
         int realPage = Math.max(page, 1);
 
@@ -344,14 +350,27 @@ public class ThreadServiceImpl implements ThreadService {
             throw new IllegalArgumentException("Username non valido.");
         }
 
+        LocalDate actualStartDate = LocalDate.of(1000, 1, 1);
+        LocalDate actualEndDate = LocalDate.of(9999, 12, 31);
+
+        //Controllo data inizio
+        if (startDate != null && startDate.isAfter(actualStartDate)) {
+            actualStartDate = startDate;
+        }
+
+        if (endDate != null && endDate.isBefore(actualEndDate)) {
+            actualEndDate = endDate;
+        }
+
         //Username valido, recupero i thread.
         try (Connection connection = db.connect()) {
             threadDAO.bind(connection);
             return threadDAO.getThreadsByUsername(
-                    username, realPage, pageSize, order);
+                    username, realPage, pageSize, order,
+                    actualStartDate, actualEndDate);
         } catch (SQLException | DAOException e) {
             throw new ServiceException(
-                    "Errore durante la ricerca per titolo", e);
+                    "Errore durante la ricerca dei thread utente", e);
         }
     }
 

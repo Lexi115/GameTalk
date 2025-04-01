@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Creato il: Feb 20, 2025 alle 21:19
+-- Creato il: Mar 04, 2025 alle 12:38
 -- Versione del server: 11.4.3-MariaDB-ubu2404
 -- Versione PHP: 8.2.22
 
@@ -94,7 +94,7 @@ INSERT INTO `roles` (`name`) VALUES
 CREATE TABLE `threads` (
   `id` bigint(20) NOT NULL,
   `username` varchar(24) DEFAULT NULL,
-  `title` varchar(32) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `body` text NOT NULL,
   `votes` int(11) NOT NULL DEFAULT 0,
   `archived` tinyint(1) NOT NULL DEFAULT 0,
@@ -111,7 +111,9 @@ INSERT INTO `threads` (`id`, `username`, `title`, `body`, `votes`, `archived`, `
 (8, 'AlphaMaster', 'hatsune', 'rosse molto rosse', 0, 0, 'General', '2025-01-15'),
 (9, 'AlphaMaster', 'switch 2 reveal', 'rosse molto rosse', 0, 0, 'Memes', '2025-01-15'),
 (10, 'AlphaMaster', 'switch 2 reveal', 'rosse molto rosse', 0, 0, 'General', '2025-01-15'),
-(12, 'ApexLegends', 'Switch 2 Reveal', 'rosse molto rosse', 0, 0, 'General', '2025-01-17');
+(12, 'ApexLegends', 'Switch 2 Reveal', 'rosse molto rosse', 0, 0, 'General', '2025-01-17'),
+(13, 'Pippobaudo', 'Assassins Creed è sopravvalutato', 'Ho ragione', 0, 0, 'General', '2025-01-17');
+
 
 -- --------------------------------------------------------
 
@@ -149,7 +151,6 @@ INSERT INTO `users` (`username`, `password`, `creation_date`, `banned`, `role`, 
 ('GhostXPlayer', 'c6dfc53debb071a4e7a07c33377c07d8ef1fd512b85a141b299d1e856898628c', '2022-03-15', 0, 'Member', NULL),
 ('HyperPlays', '582f325c3bf05be84c171549c48c02137603fa6cb550aa34595dafd4137e1941', '2021-03-22', 0, 'Member', NULL),
 ('IronFist', '0c9ac04c42f3d5f2fac1d17216b202b503249ca57e1e72db824fca9548ebab60', '2022-01-06', 0, 'Member', NULL),
-('IronPlays', '264e2c285ffe85fe8a04a4648d26af9128283a0cac968926f753d1b1b4b015e5', '2021-02-12', 0, 'Member', NULL),
 ('LucaPlays', 'a2ef4aab9f5ab9cb02d1753b9a6ae33112b40e2b5d6c94aee3aa23d7f0b03aa9', '2021-07-22', 0, 'Member', NULL),
 ('MasterAce', '909597f57c40394d3844aef9f5a97defb9751a182be0d8561b8f8cb0140ea952', '2021-08-03', 0, 'Member', NULL),
 ('MaxPlays', '797d672dd9b4a0135cb2a038b81a200288ae3bd7b682e50c509b173890c55b78', '2021-09-06', 0, 'Member', NULL),
@@ -159,7 +160,6 @@ INSERT INTO `users` (`username`, `password`, `creation_date`, `banned`, `role`, 
 ('NightHawk', '7fcec9109f8ed80d9322e1a96009671d95cb1c319fbe8ec317abdf3ded4edb23', '2020-11-08', 0, 'Member', NULL),
 ('NinjaMike', '5c1ba440f65726eb9bb8d737230fcb44c7286ffcc84903115f0a316dbf705c84', '2020-11-23', 0, 'Member', NULL),
 ('PhoenixGamer', 'bf536bba7b97bea730cd3bf317ff9dbf945fa8fa2a54c490e6ec9bdc4bab6a9c', '2021-02-23', 0, 'Member', NULL),
-('Pippo1001', '023ad509335c9ae404ce15f177d296f0d8d0b854074884d9f340b0342b32c220', '2025-02-20', 0, 'Member', NULL),
 ('PixelMaster', '6a82426fd32fc6982115b61b2267040626206919851d728941468b4c96cdd521', '2021-09-13', 0, 'Member', NULL),
 ('PlayerOne', 'c957a5cd33151c98733827a7dd38e0f29ca9697886d5a5d4bfb671dc20c5f22c', '2022-02-07', 0, 'Member', NULL),
 ('RageGamer', '8b42c2f8caa36b728eabc2c85f21aef26762add17e867442a2431c1ff4964693', '2021-05-05', 0, 'Member', NULL),

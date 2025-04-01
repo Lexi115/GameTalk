@@ -21,9 +21,9 @@ public class ThreadValidator implements Validator<Thread> {
     /**
      * Regex per il corpo del thread.
      * Può contenere qualsiasi carattere, con una lunghezza
-     * massima di 2000 caratteri.
+     * massima di 65536 caratteri.
      */
-    public static final String REGEX_THREAD_BODY = "^.{1,2000}$";
+    public static final String REGEX_THREAD_BODY = "^[\\s\\S]{1,65536}$";
 
     /** Il matcher. */
     private final Matcher matcher;

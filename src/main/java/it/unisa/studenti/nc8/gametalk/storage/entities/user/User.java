@@ -1,5 +1,6 @@
 package it.unisa.studenti.nc8.gametalk.storage.entities.user;
 
+import com.google.gson.annotations.Expose;
 import it.unisa.studenti.nc8.gametalk.business.enums.Role;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 public class User {
 
     /** Nome utente scelto dall'utente. */
+    @Expose
     private String username;
 
     /** Password dell'utente. */
@@ -20,9 +22,11 @@ public class User {
     private LocalDate creationDate;
 
     /** Indica se l'utente è bannato. */
+    @Expose
     private boolean banned;
 
     /** Ruolo associato all'utente. */
+    @Expose
     private Role role;
 
     /** Token di autenticazione associato all'utente. */

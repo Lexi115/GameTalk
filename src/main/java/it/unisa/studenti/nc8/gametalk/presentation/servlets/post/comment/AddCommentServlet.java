@@ -41,15 +41,14 @@ public class AddCommentServlet extends CommentServlet {
         User user = (User) session.getAttribute("user");
         String usernameOp = user.getUsername();
 
-        long threadId = Long.parseLong(req.getParameter("idThread"));
-        String body = req.getParameter("body");
-
         CommentService commentService = getCommentService();
         try {
+            long threadId = Long.parseLong(req.getParameter("threadId"));
+            String body = req.getParameter("body");
             commentService.addComment(threadId, usernameOp, body);
 
             resp.setStatus(HttpServletResponse.SC_OK);
-            writer.write("{\"status\": \"OK.\"}");
+            writer.write("{\"status\": \"OK\"}");
         } catch (ServiceException e) {
             LOGGER.error("Errore durante l'aggiunta del commento.", e);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
