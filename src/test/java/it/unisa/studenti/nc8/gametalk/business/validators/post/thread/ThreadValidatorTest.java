@@ -91,7 +91,7 @@ class ThreadValidatorTest {
     void validateBodyTooLong() {
         Thread thread = new Thread();
         thread.setTitle("Valid Title");
-        thread.setBody("A".repeat(2001)); // Supera la lunghezza massima
+        thread.setBody("A".repeat(65537)); // Supera la lunghezza massima
 
         assertThrows(ValidationException.class, () -> validator.validate(thread));
     }
