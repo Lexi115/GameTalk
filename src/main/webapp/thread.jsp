@@ -16,7 +16,7 @@
     <div class="container mt-4">
         <div id="thread" class="card bg-card" data-id="${thread.id}" data-presonalvote="${personalVote}">
             <div class="card-header row px-0 mx-0">
-                <div class="col-6 text-start ps-4">${thread.title}</div>
+                <div class="col-6 text-start ps-3">${thread.title}</div>
                 <div class="col-6 text-end pe-4">${thread.creationDate}</div>
             </div>
             <div class="card-body">
@@ -26,7 +26,10 @@
             <div class="card-footer fs-5">
                 <div class="row">
                     <div class="col-6">
-                        <b>${thread.username}</b>
+                        <a href="${pageContext.request.contextPath}/profile?username=${thread.username}"
+                           class="btn p-0">
+                            <b>${thread.username}</b>
+                        </a>
                     </div>
                     <div class="col-6 d-flex justify-content-end">
                         <c:if test="${not empty sessionScope.user}">

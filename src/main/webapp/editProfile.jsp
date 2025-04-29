@@ -28,27 +28,39 @@
     <form id="editProfileForm" action="editProfile" method="post">
         <input type="hidden" name="username" value="${user.username}">
 
-        <label for="password">Nuova Password:</label>
-        <input type="password" id="password" name="password" required>
+        <div class="mt-3">
+            <label for="password">Nuova Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
 
-        <label for="confirmPassword">Conferma Password:</label>
-        <input type="password" id="confirmPassword" required>
+        <div class="mt-3">
+            <label for="confirmPassword">Conferma Password:</label>
+            <input type="password" id="confirmPassword" required>
+        </div>
 
-        <p id="passwordError" style="color: red; display: none;">
-            La password deve contenere almeno:
-            <br>- 8 carattermi minimi
-            <br>- Una lettera maiuscola
-            <br>- Una lettera minuscola
-            <br>- Un numero
-            <br>- Un carattere speciale (!@#$%^&*)
-        </p>
+        <div class="mt-4">
+            <p id="passwordError" style="color: red; display: none;">
+                La password deve contenere almeno:
+                <br>- 8 caratteri minimi
+                <br>- Una lettera maiuscola
+                <br>- Una lettera minuscola
+                <br>- Un numero
+                <br>- Un carattere speciale (!@#$%^&*)
+            </p>
+        </div>
 
-        <p id="confirmError" style="color: red; display: none;">
-            Le password non coincidono.
-        </p>
+        <div class="mt-4">
+            <p id="confirmError" style="color: red; display: none;">
+                Le password non coincidono.
+            </p>
+        </div>
 
-        <button type="submit" id="submitButton" disabled>Aggiorna Password</button>
+        <div class="mt-4">
+            <button type="submit" id="submitButton" disabled>Aggiorna Password</button>
+        </div>
     </form>
+
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -89,7 +101,7 @@
     </script>
 
 
-    <a href="profile?username=<%= user.getUsername() %>">Torna al profilo</a>
+    <a class="btn mt-5 p-0" href="profile?username=<%= user.getUsername() %>">Torna al profilo</a>
 </div>
 
 <script>
