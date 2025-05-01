@@ -126,7 +126,7 @@ public class EditThreadServlet extends ThreadServlet {
                 //Non può modificare il thread
                 errorHandler.handleError(
                         req, resp, HttpServletResponse.SC_UNAUTHORIZED,
-                        "Ma ddo t abbij....."); //todo: lo lasciamo così? lol
+                        "Accesso negato.");
                 return;
             }
 

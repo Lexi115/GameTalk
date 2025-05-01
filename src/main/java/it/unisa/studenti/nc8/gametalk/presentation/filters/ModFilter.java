@@ -49,7 +49,7 @@ public class ModFilter implements Filter {
         if (user.getRole() != Role.Moderator) {
             errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_FORBIDDEN,
-                    "Accesso negato!");
+                    "Accesso negato.");
             return;
         }
 
