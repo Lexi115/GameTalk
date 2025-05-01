@@ -49,7 +49,6 @@ public class ThreadServiceImplTest {
     }
 
     //Unit test di createThread con category partition
-
     @Test
     void createValidThreadTS1() throws Exception {
         when(threadDAO.save(any(Thread.class))).thenReturn(1L);
@@ -116,8 +115,132 @@ public class ThreadServiceImplTest {
                 threadService.createThread("title", "title", "body", Category.General));
     }
 
-    //Fine unit test
+    //Fine unit test Carmelo
+    /*
+        Inizio unit testing
+        updateThread()
 
+        Autore: Alessio Sica
+     */
+
+    /*
+        UTC_TS_U_1
+        Tutto valido
+     */
+    @Test
+    void updateThreadTSU1() throws Exception {
+        Thread expected = new Thread();
+        when(threadDAO.get(1L)).thenReturn(expected);
+
+        threadService.updateThread(1, "title", "body", Category.Announcements);
+        verify(threadDAO).update(any(Thread.class));
+    }
+
+    /*
+        UTC_TS_U_2
+        ID Thread non valido
+     */
+    @Test
+    void updateThreadTSU2() throws Exception {
+        when(threadDAO.get(5L)).thenReturn(null);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> threadService.updateThread(5, "title", "body", Category.Announcements));
+    }
+
+    /*
+        UTC_TS_U_3
+        Thread archiviato
+     */
+    @Test
+    void updateThreadTSU3() throws Exception {
+        Thread expected = new Thread();
+        expected.setArchived(true);
+        when(threadDAO.get(2L)).thenReturn(expected);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> threadService.updateThread(2, "title", "body", Category.Announcements));
+    }
+
+    /*
+        UTC_TS_U_4
+        Titolo nullo
+     */
+    @Test
+    void updateThreadTSU4() throws Exception {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
+        Thread expected = new Thread();
+        when(threadDAO.get(1L)).thenReturn(expected);
+        assertThrows(ValidationException.class,
+                () -> threadService.updateThread(1, null, "body", Category.Announcements));
+    }
+
+    /*
+        UTC_TS_U_5
+        Corpo nullo
+     */
+    @Test
+    void updateThreadTSU5() throws Exception {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
+        Thread expected = new Thread();
+        when(threadDAO.get(1L)).thenReturn(expected);
+        assertThrows(ValidationException.class,
+                () -> threadService.updateThread(1, "title", null, Category.Announcements));
+    }
+
+    /*
+        UTC_TS_U_6
+        Categoria nulla
+     */
+    @Test
+    void updateThreadTSU6() throws Exception {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
+        Thread expected = new Thread();
+        when(threadDAO.get(1L)).thenReturn(expected);
+        assertThrows(ValidationException.class,
+                () -> threadService.updateThread(1, "title", "body", null));
+    }
+
+    /*
+        UTC_TS_U_7
+        Uno o più campi non sono validi
+     */
+    @Test
+    void updateThreadTSU7() throws Exception {
+        doThrow(ValidationException.class).when(threadValidator).validate(any(Thread.class));
+        Thread expected = new Thread();
+        when(threadDAO.get(1L)).thenReturn(expected);
+        assertThrows(ValidationException.class,
+                () -> threadService.updateThread(1, "", "", null));
+    }
+
+    /*
+        UTC_TS_U_8
+        Tutto valido ma il database va in errore (SQLException)
+     */
+    @Test
+    void updateThreadTSU8() throws Exception {
+        doThrow(SQLException.class).when(db).connect();
+        Thread expected = new Thread();
+        when(threadDAO.get(1L)).thenReturn(expected);
+        assertThrows(ServiceException.class,
+                () -> threadService.updateThread(1, "title", "body", Category.Announcements));
+    }
+
+    /*
+        UTC_TS_U_9
+        Tutto valido ma il DAO va in errore (DAOException)
+     */
+    @Test
+    void updateThreadTSU9() throws Exception {
+        doThrow(DAOException.class).when(threadDAO).update(any(Thread.class));
+        Thread expected = new Thread();
+        when(threadDAO.get(1L)).thenReturn(expected);
+        assertThrows(ServiceException.class,
+                () -> threadService.updateThread(1, "title", "body", Category.Announcements));
+    }
+
+    // Fine unit test Alessio
     //unit test findThreadByUsername
 
     @Test
@@ -253,8 +376,7 @@ public class ThreadServiceImplTest {
                         LocalDate.parse("2022-12-31"));
         assertNotNull(result);
     }
-
-    //fine
+    //fine unit test Antonino
 
     @Test
     void removeThreadValid() throws Exception {
@@ -265,14 +387,6 @@ public class ThreadServiceImplTest {
     @Test
     void removeThreadInvalid() {
         assertThrows(IllegalArgumentException.class, () -> threadService.removeThread(0L));
-    }
-
-    @Test
-    void updateThreadThreadNotFound() throws Exception {
-        when(threadDAO.get(1L)).thenReturn(null);
-
-        assertThrows(IllegalArgumentException.class, () ->
-                threadService.updateThread(1L, "user", "newTitle", "newBody", Category.General));
     }
 
     @Test
