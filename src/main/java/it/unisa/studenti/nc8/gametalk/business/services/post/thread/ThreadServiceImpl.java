@@ -142,7 +142,6 @@ public class ThreadServiceImpl implements ThreadService {
      * Il thread viene validato prima di essere salvato nel database.
      *
      * @param id       L'ID del thread da aggiornare.
-     * @param username L'ID dell'utente che ha effettuato l'aggiornamento.
      * @param title    Il nuovo titolo del thread.
      * @param body     Il nuovo corpo del thread.
      * @param category La nuova categoria del thread.
@@ -153,7 +152,6 @@ public class ThreadServiceImpl implements ThreadService {
     @Override
     public void updateThread(
             final long id,
-            final String username,
             final String title,
             final String body,
             final Category category

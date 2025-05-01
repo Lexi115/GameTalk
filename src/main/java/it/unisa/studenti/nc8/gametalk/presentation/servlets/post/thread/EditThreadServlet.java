@@ -134,7 +134,6 @@ public class EditThreadServlet extends ThreadServlet {
             Category category = Category.valueOf(categoryString);
             threadService.updateThread(
                     idThread,
-                    usernameReq,
                     title,
                     body,
                     category

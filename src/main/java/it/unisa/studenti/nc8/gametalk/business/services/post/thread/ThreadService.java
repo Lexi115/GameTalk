@@ -49,7 +49,6 @@ public interface ThreadService {
      * Il thread viene validato prima di essere salvato nel database.
      *
      * @param id L'ID del thread da aggiornare.
-     * @param username L'ID dell'utente che ha effettuato l'aggiornamento.
      * @param title Il nuovo titolo del thread.
      * @param body Il nuovo corpo del thread.
      * @param category La nuova categoria del thread.
@@ -60,7 +59,6 @@ public interface ThreadService {
      */
     void updateThread(
             long id,
-            String username,
             String title,
             String body,
             Category category
