@@ -22,6 +22,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.time.format.DateTimeParseException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -113,8 +115,7 @@ public class ThreadServiceImplTest {
                 threadService.createThread("title", "title", "body", Category.General));
     }
 
-    //Fine unit test
-
+    //Fine unit test Carmelo
     /*
         Inizio unit testing
         updateThread()
@@ -239,7 +240,143 @@ public class ThreadServiceImplTest {
                 () -> threadService.updateThread(1, "title", "body", Category.Announcements));
     }
 
-    // Fine unit test
+    // Fine unit test Alessio
+    //unit test findThreadByUsername
+
+    @Test
+    public void test_TC01_Valido() throws Exception {
+        when(db.connect()).thenReturn(mock(Connection.class));
+        when(threadDAO.getThreadsByUsername(
+                eq("user123"), anyInt(), anyInt(), eq(Order.Best), any(), any()))
+                .thenReturn(List.of(new Thread()));
+
+        List<Thread> result = threadService.findThreadsByUsername(
+                "user123", 1, 10, Order.Best,
+                LocalDate.parse("2023-01-01"),
+                LocalDate.parse("2023-12-31"));
+
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC02_UsernameVuoto() {
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                threadService.findThreadsByUsername("", 1, 10, Order.Best,
+                        LocalDate.parse("2023-01-01"),
+                        LocalDate.parse("2023-12-31"))
+        );
+        assertEquals("Username non valido.", e.getMessage());
+    }
+
+    @Test
+    public void test_TC03_UsernameNull() {
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                threadService.findThreadsByUsername(null, 1, 10, Order.Best,
+                        LocalDate.parse("2023-01-01"),
+                        LocalDate.parse("2023-12-31"))
+        );
+        assertEquals("Username non valido.", e.getMessage());
+    }
+
+    @Test
+    public void test_TC04_PageZero() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername("user123", 0, 10, Order.Best,
+                        LocalDate.parse("2023-01-01"),
+                        LocalDate.parse("2023-12-31"));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC05_PageSizeZero() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername("user123", 1, 0, Order.Best,
+                LocalDate.parse("2023-01-01"),
+                LocalDate.parse("2023-12-31"));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC06_OrderNewest() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername(
+                "user123", 1, 10, Order.Newest,
+                LocalDate.parse("2023-01-01"),
+                LocalDate.parse("2023-12-31"));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC07_OrderOldest() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername(
+                "user123", 1, 10, Order.Oldest,
+                LocalDate.parse("2023-01-01"),
+                LocalDate.parse("2023-12-31"));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC08_OrderNonValido() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername("user123", 1, 10,
+                        null,
+                        LocalDate.parse("2023-01-01"),
+                        LocalDate.parse("2023-12-31"));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC09_OrderNull() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername("user123", 1, 10,
+                        null,
+                        LocalDate.parse("2023-01-01"),
+                        LocalDate.parse("2023-12-31"));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC10_StartAfterEndDate() throws ServiceException {
+        LocalDate start = LocalDate.parse("2024-12-31");
+        LocalDate end = LocalDate.parse("2023-01-01");
+        List<Thread> result = threadService.findThreadsByUsername("user123", 1, 10,
+                        Order.Best, start, end);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC11_StartDateNonValida() {
+        assertThrows(DateTimeParseException.class, () ->
+                LocalDate.parse("invalid-date")
+        );
+    }
+
+    @Test
+    public void test_TC12_StartDateNull() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername(
+                "user123", 1, 10, Order.Best,
+                null, LocalDate.parse("2023-12-31"));
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC13_EndDateNonValida() {
+        assertThrows(DateTimeParseException.class, () ->
+                LocalDate.parse("invalid-date")
+        );
+    }
+
+    @Test
+    public void test_TC14_EndDateNull() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername(
+                "user123", 1, 10, Order.Best,
+                LocalDate.parse("2023-01-01"), null);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void test_TC15_EndDatePrimaDiStartDate() throws ServiceException {
+        List<Thread> result = threadService.findThreadsByUsername("user123", 1, 10,
+                        Order.Best, LocalDate.parse("2023-01-01"),
+                        LocalDate.parse("2022-12-31"));
+        assertNotNull(result);
+    }
+    //fine unit test Antonino
 
     @Test
     void removeThreadValid() throws Exception {

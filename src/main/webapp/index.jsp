@@ -166,28 +166,6 @@
                     </div>
                 </div>
             </div>
-            <div id="threads" class="row row-cols-1 row-cols-md-2 justify-content-center mt-4 g-4 p-3">
-                <c:choose>
-                    <c:when test="${sessionScope.user==null}">
-                        <div class="card greyCard text-center justify-content-center">
-                            <a class="stretched-link text-decoration-none">
-                                <div class="card-body categoryCard-body justify-content-center">
-                                    <h3 class="card-title categoryCard-title m-0">ACCEDI PER CREARE UN THREAD</h3>
-                                </div>
-                            </a>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="card categoryCard text-center justify-content-center">
-                            <a href="${pageContext.request.contextPath}/addThread" class="stretched-link text-decoration-none">
-                                <div class="card-body categoryCard-body justify-content-center">
-                                    <h3 class="card-title categoryCard-title m-0">CREA UN THREAD</h3>
-                                </div>
-                            </a>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </div>
         </div>
         <c:if test="${not empty sessionScope.user and sessionScope.user.role eq 'Moderator'}">
             <div class="text-center mt-4">

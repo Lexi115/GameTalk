@@ -78,3 +78,25 @@ nav:not(.navDrop){
     cursor: pointer;
 }
 
+
+.createCard {
+    height: 2rem;
+    background: linear-gradient(135deg, #22236D, #2d3784);
+}
+
+.createCard:hover {
+    background: linear-gradient(135deg, #4055a2, #5b67b8);
+}
+
+.createCard-title{
+    color: white;
+}
+
+.createCol{
+    max-width: 20rem;
+}
+
+
+
+
+

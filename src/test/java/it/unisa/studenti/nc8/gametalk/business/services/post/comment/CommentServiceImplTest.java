@@ -279,36 +279,188 @@ public class CommentServiceImplTest {
         verify(commentDAO).removeVoteComment(anyLong(),anyString());
     }
 
+    // TC_CS1 - commentId null
     @Test
-    void rateInvalidComment() throws DAOException {
-        when(commentDAO.get(anyLong())).thenReturn(null);
-        when(threadDAO.get(anyLong())).thenReturn(new Thread());
-        when(userDAO.get(anyString())).thenReturn(new User());
-        doNothing().when(commentDAO).voteComment(anyLong(), anyString(), anyLong(), anyInt());
+    void rateComment_CommentIdNull() {
+        long commentId = 0L; // commentId non valido
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 1;
 
-        assertThrows(ServiceException.class, () -> commentService.rateComment(1L,"Marco",1L,0));
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
     }
 
+    // TC_CS2 - commentId <= 0
     @Test
-    void rateArchivedComment() throws DAOException {
-        Thread archivedThread = new Thread();
-        archivedThread.setArchived(true);
+    void rateComment_CommentIdLessThanZero() {
+        long commentId = -1L; // commentId non valido
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 1;
+
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS3 - username null
+    @Test
+    void rateComment_UsernameNull() {
+        long commentId = 1L;
+        String username = null; // username non valido
+        long threadId = 1L;
+        int vote = 1;
+
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS4 - username vuoto
+    @Test
+    void rateComment_UsernameEmpty() {
+        long commentId = 1L;
+        String username = ""; // username non valido
+        long threadId = 1L;
+        int vote = 1;
+
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS5 - threadId <= 0
+    @Test
+    void rateComment_ThreadIdLessThanZero() {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = -1L; // threadId non valido
+        int vote = 1;
+
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS6 - voto non valido (>=2 o < -1)
+    @Test
+    void rateComment_InvalidVoteGreaterThanOne() {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 2; // voto non valido
+
+        assertThrows(IllegalArgumentException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS7 - voto non valido (< -1)
+    @Test
+    void rateComment_InvalidVoteLessThanMinusOne() {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = -2; // voto non valido
+
+        assertThrows(IllegalArgumentException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS8 - voto 0 (rimozione del voto)
+    @Test
+    void rateComment_VoteZero() throws DAOException {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 0; // rimozione del voto
         when(commentDAO.get(anyLong())).thenReturn(new Comment());
-        when(threadDAO.get(anyLong())).thenReturn(archivedThread);
+        when(userDAO.get(anyString())).thenReturn(new User());
+        when(threadDAO.get(anyLong())).thenReturn(new Thread());
+
+        assertDoesNotThrow(() -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS9 - thread archiviato
+    @Test
+    void rateComment_ArchivedThread() throws DAOException {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 1;
+
+        Thread thread = mock(Thread.class);
+        when(threadDAO.get(anyLong())).thenReturn(thread);
+        when(thread.isArchived()).thenReturn(true);
+
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS10 - errore commentDAO
+    @Test
+    void rateComment_CommentDAOError() throws DAOException {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 1;
+
+        when(commentDAO.get(anyLong())).thenThrow(new DAOException("Errore nel DAO"));
+
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS11 - errore userDAO
+    @Test
+    void rateComment_UserDAOError() throws DAOException {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 1;
+
+        when(commentDAO.get(anyLong())).thenReturn(new Comment());
+        when(userDAO.get(anyString())).thenThrow(new DAOException("Errore nel DAO"));
+
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS12 - errore threadDAO
+    @Test
+    void rateComment_ThreadDAOError() throws DAOException {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 1;
+
+        when(commentDAO.get(anyLong())).thenReturn(new Comment());
+        when(userDAO.get(anyString())).thenReturn(new User());
+        when(threadDAO.get(anyLong())).thenThrow(new DAOException("Errore nel DAO"));
+
+        assertThrows(ServiceException.class, () -> commentService.rateComment(commentId, username, threadId, vote));
+    }
+
+    // TC_CS13 - voto positivo registrato
+    @Test
+    void rateComment_PositiveVote() throws DAOException {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = 1;
+
+        Comment comment = new Comment();
+        when(commentDAO.get(anyLong())).thenReturn(comment);
+        when(threadDAO.get(anyLong())).thenReturn(new Thread());
         when(userDAO.get(anyString())).thenReturn(new User());
         doNothing().when(commentDAO).voteComment(anyLong(), anyString(), anyLong(), anyInt());
 
-        assertThrows(ServiceException.class, () -> commentService.rateComment(1L,"Marco",1L,0));
+        assertDoesNotThrow(() -> commentService.rateComment(commentId, username, threadId, vote));
+        verify(commentDAO).voteComment(anyLong(), anyString(), anyLong(), anyInt());
     }
 
-
-
+    // TC_CS14 - voto negativo registrato
     @Test
-    void getValidPersonalVotes() throws DAOException {
-        when(threadDAO.get(anyLong())).thenReturn(new Thread());
-        when(commentDAO.getPersonalVotes(anyLong(),anyString())).thenReturn(new HashMap<>());
+    void rateComment_NegativeVote() throws DAOException {
+        long commentId = 1L;
+        String username = "user1";
+        long threadId = 1L;
+        int vote = -1;
 
-        Map<Long, Integer> votes = assertDoesNotThrow(() -> commentService.getPersonalVotes(1L,"Marco"));
-        assertNotNull(votes);
+        Comment comment = new Comment();
+        when(commentDAO.get(anyLong())).thenReturn(comment);
+        when(threadDAO.get(anyLong())).thenReturn(new Thread());
+        when(userDAO.get(anyString())).thenReturn(new User());
+        doNothing().when(commentDAO).voteComment(anyLong(), anyString(), anyLong(), anyInt());
+
+        assertDoesNotThrow(() -> commentService.rateComment(commentId, username, threadId, vote));
+        verify(commentDAO).voteComment(anyLong(), anyString(), anyLong(), anyInt());
     }
+
 }

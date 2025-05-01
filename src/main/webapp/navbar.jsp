@@ -38,13 +38,22 @@
 
             <div class="col-md-3 d-flex justify-content-end align-items-center pe-3 fs-3 col-6 order-1 order-md-2 fadeIn animate-2 a-delay-3">
                 <c:choose>
+                    <c:when test="${sessionScope.user==null}">
+                    </c:when>
+                    <c:otherwise>
+                        <div>
+                            <a href="${pageContext.request.contextPath}/addThread" class="btn">
+                                <h5 class="m-0"> Crea un thread </h5>
+                            </a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+
+                <c:choose>
                     <c:when test="${sessionScope.user != null}">
                         <a href="${pageContext.request.contextPath}/profile?username=<%= ((User) session.getAttribute("user")).getUsername() %>">
                             <i class="bi bi-person-circle" style="cursor: pointer;"></i>
                         </a>
-                        <h6 class="text" style="text-decoration: underline; cursor: pointer;">
-                            <a href="${pageContext.request.contextPath}/logout" style="text-decoration: none; color: inherit;">Logout</a>
-                        </h6>
                     </c:when>
                     <c:otherwise>
                         <h5 class="text" style="text-decoration : underline; cursor: pointer;"

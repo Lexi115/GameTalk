@@ -23,7 +23,7 @@
 
 <main>
 
-     <div class="container my-5">
+    <div class="container my-5">
         <div class="d-flex justify-content-center align-items-center flex-column mt-5">
             <h1 class="text-center display-3">
                 <%= user != null ? user.getUsername() : "Username non disponibile" %><br>
@@ -34,30 +34,30 @@
 
 
 
-         <c:if test="${sessionScope.user.username ne user.username and sessionScope.user.role eq 'Moderator'}">
-             <div class="text-center mt-4">
-                 <c:choose>
-                     <c:when test="${user.banned}">
-                         <form action="mod/banUser" method="post">
-                             <input type="hidden" name="username" value="${user.username}" />
-                             <input type="hidden" name="banned" value="false" />
-                             <button type="submit" class="btn btn-success">
-                                 <i class="bi bi-person-check"></i> Sbanna Utente
-                             </button>
-                         </form>
-                     </c:when>
-                     <c:otherwise>
-                         <form action="mod/banUser" method="post">
-                             <input type="hidden" name="username" value="${user.username}" />
-                             <input type="hidden" name="banned" value="true" />
-                             <button type="submit" class="btn btn-danger">
-                                 <i class="bi bi-person-x"></i> Banna Utente
-                             </button>
-                         </form>
-                     </c:otherwise>
-                 </c:choose>
-             </div>
-         </c:if>
+        <c:if test="${sessionScope.user.username ne user.username and sessionScope.user.role eq 'Moderator'}">
+            <div class="text-center mt-4">
+                <c:choose>
+                    <c:when test="${user.banned}">
+                        <form action="mod/banUser" method="post">
+                            <input type="hidden" name="username" value="${user.username}" />
+                            <input type="hidden" name="banned" value="false" />
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-person-check"></i> Sbanna Utente
+                            </button>
+                        </form>
+                    </c:when>
+                    <c:otherwise>
+                        <form action="mod/banUser" method="post">
+                            <input type="hidden" name="username" value="${user.username}" />
+                            <input type="hidden" name="banned" value="true" />
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-person-x"></i> Banna Utente
+                            </button>
+                        </form>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </c:if>
 
         <div class="favourites mt-5">
             <h2 id="text" class="text-center" style="cursor: pointer;">I TUOI THREAD</h2>
@@ -65,16 +65,18 @@
                 <p>Caricamento thread...</p>
             </div>
         </div>
-         <c:if test="${sessionScope.user.username eq user.username}">
-             <div class="text-center mt-4">
-                 <form action="editProfile" method="get">
-                     <input type="hidden" name="username" value="${user.username}" />
-                     <button type="submit" class="btn">
-                         <i class="bi"></i> Modifica il tuo profilo
-                     </button>
-                 </form>
-             </div>
-         </c:if>
+        <c:if test="${sessionScope.user.username eq user.username}">
+            <div class="text-center mt-4">
+                <form action="editProfile" method="get">
+                    <input type="hidden" name="username" value="${user.username}" />
+                    <button type="submit" class="btn">
+                        <i class="bi"></i> Modifica il tuo profilo
+                    </button>
+                </form>
+
+                <a href="${pageContext.request.contextPath}/logout" class="btn mt-1 p-0">Logout</a>
+            </div>
+        </c:if>
     </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>

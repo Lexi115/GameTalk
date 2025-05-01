@@ -15,7 +15,7 @@
     <main>
         <div class="container mt-3">
             <div class="card bg-card ">
-                <div class="card-header">Modify Thread</div>
+                <div class="card-header">Crea un Thread</div>
                 <div class="card-body">
                     <div class="row d-flex justify-content-around py-2 px-4">
                         <div class="col-md-5 form-floating">
