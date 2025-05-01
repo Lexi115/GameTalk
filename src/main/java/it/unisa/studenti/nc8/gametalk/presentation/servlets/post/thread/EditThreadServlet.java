@@ -146,7 +146,7 @@ public class EditThreadServlet extends ThreadServlet {
             errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     e.getMessage());
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             LOGGER.error("Parametri non validi", e);
             errorHandler.handleError(
                     req, resp, HttpServletResponse.SC_BAD_REQUEST,
