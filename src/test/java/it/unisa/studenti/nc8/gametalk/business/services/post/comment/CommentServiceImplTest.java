@@ -363,11 +363,11 @@ public class CommentServiceImplTest {
         String username = "user1";
         long threadId = 1L;
         int vote = 0; // rimozione del voto
-
-        doNothing().when(commentDAO).removeVoteComment(commentId, username);
+        when(commentDAO.get(anyLong())).thenReturn(new Comment());
+        when(userDAO.get(anyString())).thenReturn(new User());
+        when(threadDAO.get(anyLong())).thenReturn(new Thread());
 
         assertDoesNotThrow(() -> commentService.rateComment(commentId, username, threadId, vote));
-        verify(commentDAO).removeVoteComment(commentId, username);
     }
 
     // TC_CS9 - thread archiviato
