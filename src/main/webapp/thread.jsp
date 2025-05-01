@@ -34,6 +34,7 @@
                     <div class="col-6 d-flex justify-content-end">
                         <c:if test="${not empty sessionScope.user}">
                             <c:if test="${sessionScope.isModerator or thread.username == sessionScope.user.username}">
+                                <a class="btn btn-primary" href="editThread?id=${thread.id}"><i class="bi bi-pencil"></i></a>
                                 <form action="removeThread" method="post">
                                     <input type="hidden" name="threadId" value="${thread.id}">
                                     <button type="submit" class="btn btn-danger fs-6 me-4"><i class="bi bi-trash"></i></button>
