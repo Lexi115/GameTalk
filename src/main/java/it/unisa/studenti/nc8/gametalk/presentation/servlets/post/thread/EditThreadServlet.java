@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.IOException;
 
@@ -75,6 +76,7 @@ public class EditThreadServlet extends ThreadServlet {
         }
 
         //Può modificare il thread
+        thread.setBody(StringEscapeUtils.escapeEcmaScript(thread.getBody()));
         req.setAttribute("thread", thread);
         RequestDispatcher dispatcher = req.getRequestDispatcher(
                 "/modifyThread.jsp");

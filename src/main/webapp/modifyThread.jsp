@@ -15,7 +15,7 @@
     <main>
         <div class="container mt-3">
             <div id="thread" class="card bg-card" data-id="${thread.id}">
-                <div class="card-header">Create thread</div>
+                <div class="card-header">Modify thread</div>
                 <div class="card-body">
                     <div class="row d-flex justify-content-around py-2 px-4">
                         <div class="col-md-5 form-floating">
@@ -24,7 +24,6 @@
                         </div>
                         <div class="col-md-5 form-floating">
                             <select class="form-control" name="category" id="category" data-default-value="${thread.category}">
-                                <option value="" selected>No one</option>
                                 <option value="General">General</option>
                                 <option value="Welcome">Welcome</option>
                                 <option value="Help">Help</option>
