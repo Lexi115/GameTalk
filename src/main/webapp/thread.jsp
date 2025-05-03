@@ -34,7 +34,13 @@
                     <div class="col-6 d-flex justify-content-end">
                         <c:if test="${not empty sessionScope.user}">
                             <c:if test="${sessionScope.isModerator or thread.username == sessionScope.user.username}">
-                                <a class="btn btn-primary" href="editThread?threadId=${thread.id}"><i class="bi bi-pencil"></i></a>
+                                <c:if test="${not thread.archived}">
+                                    <form action="archiveThread" method="post">
+                                        <input type="hidden" value="${thread.id}" name="threadId">
+                                        <button class="btn btn-primary" type="submit"><i class='bi bi-lock'></i></button>
+                                    </form>
+                                </c:if>
+                                <a class="btn btn-warning" href="editThread?threadId=${thread.id}"><i class="bi bi-pencil"></i></a>
                                 <form action="removeThread" method="post">
                                     <input type="hidden" name="threadId" value="${thread.id}">
                                     <button type="submit" class="btn btn-danger fs-6 me-4"><i class="bi bi-trash"></i></button>
@@ -53,7 +59,7 @@
         </div>
     </div>
     <div class="container mt-4" id="comments" data-bs-theme="light">
-        <c:if test="${not empty sessionScope.user}">
+        <c:if test="${not empty sessionScope.user and not thread.archived}">
             <div class="row g-0">
                 <div class="col-md-11">
                     <textarea name="comment" id="comment" class="form-control"></textarea>
