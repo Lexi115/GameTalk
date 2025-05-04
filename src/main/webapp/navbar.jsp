@@ -43,7 +43,7 @@
                     <c:otherwise>
                         <div>
                             <a href="${pageContext.request.contextPath}/addThread" class="btn">
-                                <h5 class="m-0"> Crea un thread </h5>
+                                <h6 class="m-0"> Crea un Thread </h6>
                             </a>
                         </div>
                     </c:otherwise>
@@ -51,7 +51,8 @@
 
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
-                        <a href="${pageContext.request.contextPath}/profile?username=<%= ((User) session.getAttribute("user")).getUsername() %>">
+                        <a class="ms-1" href="${pageContext.request.contextPath}/profile?username=<%= ((User)
+                        session.getAttribute("user")).getUsername() %>">
                             <i class="bi bi-person-circle" style="cursor: pointer;"></i>
                         </a>
                     </c:when>

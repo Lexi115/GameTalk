@@ -1,0 +1,15 @@
+input {
+    background-color: #5b67b8;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.form-control{
+    background-color: #22236D;
+}
+
+a {
+    color: #22236D;
+}
+

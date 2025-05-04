@@ -14,106 +14,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifica Profilo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/editProfile.css">
 </head>
 <body data-bs-theme="dark">
+
 <jsp:include page="navbar.jsp"/>
-<div class="container">
-    <h2>Modifica Profilo</h2>
+
+<div class="container edit-profile-card p-4 rounded-4 mt-4">
+    <h2 class="mb-3">Modifica Profilo</h2>
     <p>Stai modificando il profilo di <strong><%= user.getUsername() %></strong></p>
 
-    <form id="editProfileForm" action="editProfile" method="post">
+    <form id="editProfileForm" action="editProfile" method="post" novalidate>
         <input type="hidden" name="username" value="${user.username}">
 
-        <div class="mt-3">
-            <label for="password">Nuova Password:</label>
-            <input type="password" id="password" name="password" required>
+        <div class="mb-3">
+            <label for="password" class="form-label">Nuova Password:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
         </div>
 
-        <div class="mt-3">
-            <label for="confirmPassword">Conferma Password:</label>
-            <input type="password" id="confirmPassword" required>
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Conferma Password:</label>
+            <input type="password" id="confirmPassword" class="form-control" required>
         </div>
 
-        <div class="mt-4">
-            <p id="passwordError" style="color: red; display: none;">
-                La password deve contenere almeno:
-                <br>- 8 caratteri minimi
-                <br>- Una lettera maiuscola
-                <br>- Una lettera minuscola
-                <br>- Un numero
-                <br>- Un carattere speciale (!@#$%^&*)
-            </p>
+        <div id="passwordError" class="text-danger mb-2" style="display: none;">
+            La password deve contenere almeno:
+            <ul class="mb-0">
+                <li>8 caratteri</li>
+                <li>1 lettera maiuscola</li>
+                <li>1 lettera minuscola</li>
+                <li>1 numero</li>
+                <li>1 carattere speciale (!@#$%^&*)</li>
+            </ul>
         </div>
 
-        <div class="mt-4">
-            <p id="confirmError" style="color: red; display: none;">
-                Le password non coincidono.
-            </p>
+        <div id="confirmError" class="text-danger mb-3" style="display: none;">
+            Le password non coincidono.
         </div>
 
-        <div class="mt-4">
-            <button type="submit" id="submitButton" disabled>Aggiorna Password</button>
-        </div>
+        <button type="submit" id="submitButton" class="btn btn-primary" style="background-color: #22236D; border: none"
+                disabled>Aggiorna
+            Password</button>
     </form>
 
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const passwordInput = document.getElementById("password");
-            const confirmPasswordInput = document.getElementById("confirmPassword");
-            const passwordError = document.getElementById("passwordError");
-            const confirmError = document.getElementById("confirmError");
-            const submitButton = document.getElementById("submitButton");
-
-            function validatePassword() {
-                const password = passwordInput.value;
-                const confirmPassword = confirmPasswordInput.value;
-
-                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-                if (!passwordRegex.test(password)) {
-                    passwordError.style.display = "block";
-                    submitButton.disabled = true;
-                } else {
-                    passwordError.style.display = "none";
-                }
-
-                if (confirmPassword && password !== confirmPassword) {
-                    confirmError.style.display = "block";
-                    submitButton.disabled = true;
-                } else {
-                    confirmError.style.display = "none";
-                }
-
-                if (passwordRegex.test(password) && password === confirmPassword) {
-                    submitButton.disabled = false;
-                }
-            }
-
-            passwordInput.addEventListener("input", validatePassword);
-            confirmPasswordInput.addEventListener("input", validatePassword);
-        });
-    </script>
-
-
-    <a class="btn mt-5 p-0" href="profile?username=<%= user.getUsername() %>">Torna al profilo</a>
+    <a class="btn mt-4" href="profile?username=<%= user.getUsername() %>">← Torna al profilo</a>
 </div>
 
 <script>
-    document.querySelector("form").addEventListener("submit", function(event) {
-        let password = document.getElementById("password").value;
-        let confirmPassword = document.getElementById("confirmPassword").value;
-        if (password !== confirmPassword) {
-            alert("Le password non coincidono!");
-            event.preventDefault();
+    document.addEventListener("DOMContentLoaded", function () {
+        const password = document.getElementById("password");
+        const confirmPassword = document.getElementById("confirmPassword");
+        const passwordError = document.getElementById("passwordError");
+        const confirmError = document.getElementById("confirmError");
+        const submitButton = document.getElementById("submitButton");
+
+        function validatePasswordRules(pw) {
+            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(pw);
         }
+
+        function updateValidation() {
+            const pw = password.value;
+            const cpw = confirmPassword.value;
+
+            const pwValid = validatePasswordRules(pw);
+            const match = pw === cpw;
+
+            passwordError.style.display = pwValid ? "none" : "block";
+            confirmError.style.display = (pwValid && !match) ? "block" : "none";
+
+            submitButton.disabled = !(pwValid && match);
+        }
+
+        password.addEventListener("input", updateValidation);
+        confirmPassword.addEventListener("input", updateValidation);
     });
 </script>
+
 <jsp:include page="footer.jsp"/>
 </body>
 </html>
