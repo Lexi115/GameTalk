@@ -94,10 +94,10 @@ public class AutoLoginFilter implements Filter {
                 session.setAttribute("isModerator", isMod);
 
             } catch (AuthenticationException e) {
-                res.sendRedirect(req.getContextPath() + "/error/401");
+                errorHandler.handleError(req, res, HttpServletResponse.SC_UNAUTHORIZED, "Non autorizzato.");
             } catch (ServiceException e) {
                 LOGGER.error("Errore con servizio di autenticazione", e);
-                res.sendRedirect(req.getContextPath() + "/error/500");
+                errorHandler.handleError(req, res, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore del server");
             }
         }
         chain.doFilter(req, res);
