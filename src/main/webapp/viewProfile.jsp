@@ -103,7 +103,6 @@
                                 '<a href="${pageContext.request.contextPath}/thread?threadId=' + thread.id + '" class="stretched-link text-decoration-none">' +
                                 '<div class="card-body threadCard-body">' +
                                 '<h5 class="card-title threadCard-title">' + thread.title + '</h5>' +
-                                '<p class="card-text threadCard-text text-truncate">' + thread.body + '</p>' +
                                 '</div>' +
                                 '</a>' +
                                 '</div>' +
