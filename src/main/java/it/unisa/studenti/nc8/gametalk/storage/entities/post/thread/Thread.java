@@ -16,6 +16,7 @@ public class Thread extends Post {
     private String title;
 
     /** Indica se il thread è archiviato. */
+    @Expose
     private boolean archived;
 
     /** Categoria a cui appartiene il thread. */
