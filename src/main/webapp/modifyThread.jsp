@@ -15,12 +15,12 @@
     <main>
         <div class="container mt-3">
             <div id="thread" class="card bg-card" data-id="${thread.id}">
-                <div class="card-header">Modify thread</div>
+                <div class="card-header">Modifica thread</div>
                 <div class="card-body">
                     <div class="row d-flex justify-content-around py-2 px-4">
                         <div class="col-md-5 form-floating">
                             <input class="form-control" type="text" name="title" id="title" placeholder="" value="${thread.title}">
-                            <label for="title" class="label-bg-none ms-2">Title</label>
+                            <label for="title" class="label-bg-none ms-2">Titolo</label>
                         </div>
                         <div class="col-md-5 form-floating">
                             <select class="form-control" name="category" id="category" data-default-value="${thread.category}">
@@ -32,13 +32,13 @@
                                 <option value="Memes">Memes</option>
                                 <option value="Announcements">Announcements</option>
                             </select>
-                            <label for="category" class="label-bg-none ms-2">Category</label>
+                            <label for="category" class="label-bg-none ms-2">Categoria</label>
                         </div>
                     </div>
                     <div id="summernote" class="col-12"></div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <button id="modifyButton" class="btn btn-success" type="button">Modify</button>
+                    <button id="modifyButton" class="btn btn-success" type="button">Modifica</button>
                 </div>
             </div>
         </div>

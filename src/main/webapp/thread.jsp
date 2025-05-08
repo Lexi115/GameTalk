@@ -39,8 +39,8 @@
                                         <input type="hidden" value="${thread.id}" name="threadId">
                                         <button class="btn btn-primary" type="submit"><i class='bi bi-lock'></i></button>
                                     </form>
+                                    <a class="btn btn-warning" href="editThread?threadId=${thread.id}"><i class="bi bi-pencil"></i></a>
                                 </c:if>
-                                <a class="btn btn-warning" href="editThread?threadId=${thread.id}"><i class="bi bi-pencil"></i></a>
                                 <form action="removeThread" method="post">
                                     <input type="hidden" name="threadId" value="${thread.id}">
                                     <button type="submit" class="btn btn-danger fs-6 me-4"><i class="bi bi-trash"></i></button>
@@ -51,7 +51,7 @@
                             <button id="upVoteThread" class="btn btn-outline-success fs-6 ms-4 btn-vote"><i class="bi bi-caret-up-fill"></i></button>
                         </c:if>
                         <c:if test="${empty sessionScope.user}">
-                            <div class="d-flex align-items-center me-5" id="vote">${thread.votes}</div>
+                            <div class="d-flex align-items-center" id="vote">${thread.votes}</div>
                         </c:if>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
         <c:if test="${not empty sessionScope.user and not thread.archived}">
             <div class="row g-0">
                 <div class="col-md-11">
-                    <textarea name="comment" id="comment" class="form-control"></textarea>
+                    <textarea name="comment" id="comment" class="form-control" placeholder="Scrivi un commento..."></textarea>
                 </div>
                 <div class="col-md-1 d-flex">
                     <button onclick="newComment()" class="btn btn-lg btn-secondary w-100"><i class="bi bi-caret-right-fill"></i></button>
@@ -70,20 +70,20 @@
             </div>
         </c:if>
 
-        <div class="fs-3 mb-3">Comments</div>
+        <div class="fs-3 mb-3">Commenti</div>
         <div class="container" id="commentsArea">
 
         </div>
         <nav id="pagination" data-bs-theme="dark">
             <ul class="pagination pagination-lg justify-content-center ">
                 <li class="page-item">
-                    <a id="prevPage" class="page-link disabled bg-card" href="#commentsArea">Previous</a>
+                    <a id="prevPage" class="page-link disabled bg-card" href="#commentsArea"><i class="bi bi-chevron-left"></i></a>
                 </li>
                 <li class="page-item">
                     <span class="page-link" id="pageNumber">1</span>
                 </li>
                 <li class="page-item">
-                    <a id="nextPage" class="page-link bg-card" href="#commentsArea">Next</a>
+                    <a id="nextPage" class="page-link bg-card" href="#commentsArea"><i class="bi bi-chevron-right"></i></a>
                 </li>
             </ul>
         </nav>

@@ -18,7 +18,7 @@
         <%}%>
         <div class="container-fluid row p-0 m-0">
             <div class="col-md-3 col-6 order-0">
-                <a href="${pageContext.request.contextPath}/index.jsp">
+                <a href="${pageContext.request.contextPath}/">
                     <img class="m-2 fs-3 ps-3 animate-2 fadeIn a-delay-1"
                          style="height: 25px"
                          alt="logo"
@@ -27,11 +27,11 @@
             </div>
 
             <div class="col-md-6 col-12 order-2 order-md-1 mt-3 mt-md-0 fadeIn animate-2 a-delay-2">
-                <form id="searchbarForm" method="get" action="searchThread">
+                <form id="searchbarForm" method="get" action="${pageContext.request.contextPath}/searchThread">
                     <div class="input-group form-floating">
                         <input type="text" class="form-control bg-card" id="searchbar" name="query" aria-describedby="filter" placeholder="Ricerca">
-                        <a href="${pageContext.request.contextPath}/searchThread" class="btn px-4 btn-secondary rounded-end text-center align-items-center justify-content-center d-inline-flex" type="button" id="filter">filtri</a>
-                        <label for="searchbar" class="label-bg-none z-5">ricerca</label>
+                        <a href="${pageContext.request.contextPath}/searchThread" class="btn px-4 btn-secondary rounded-end text-center align-items-center justify-content-center d-inline-flex" type="button" id="filter">Filtri</a>
+                        <label for="searchbar" class="label-bg-none z-5">Ricerca...</label>
                     </div>
                 </form>
             </div>
@@ -107,14 +107,14 @@
                 </div>
                 <p id="signupPasswordError" style="color: red; display: none;">
                     La password deve contenere almeno:
-                    <br>- 8 carattermi minimi
+                    <br>- Minimo 8 caratteri
                     <br>- Una lettera maiuscola
                     <br>- Una lettera minuscola
                     <br>- Un numero
                     <br>- Un carattere speciale (!@#$%^&*)
                 </p>
                 <div id="signupError" class="text-danger mb-2"></div>
-                <button type="submit" class="btn btn-primary w-100" id="signupButton" disabled>Sign-up</button>
+                <button type="submit" class="btn btn-primary w-100" id="signupButton" disabled>Iscriviti</button>
             </form>
 
         </div>

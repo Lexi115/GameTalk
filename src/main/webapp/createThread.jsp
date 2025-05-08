@@ -20,7 +20,7 @@
                     <div class="row d-flex justify-content-around py-2 px-4">
                         <div class="col-md-5 form-floating">
                             <input class="form-control" type="text" name="title" id="title" placeholder="">
-                            <label for="title" class="label-bg-none ms-2">Title</label>
+                            <label for="title" class="label-bg-none ms-2">Titolo</label>
                         </div>
                         <div class="col-md-5 form-floating">
                             <select class="form-control" name="category" id="category">
@@ -32,13 +32,13 @@
                                 <option value="Memes">Memes</option>
                                 <option value="Announcements">Announcements</option>
                             </select>
-                            <label for="category" class="label-bg-none ms-2">category</label>
+                            <label for="category" class="label-bg-none ms-2">Categoria</label>
                         </div>
                     </div>
                     <div id="summernote" class="col-12"></div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <button id="sendButton" class="btn btn-success" type="button">Create</button>
+                    <button id="sendButton" class="btn btn-success" type="button">Crea</button>
                 </div>
             </div>
         </div>

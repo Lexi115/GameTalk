@@ -86,7 +86,7 @@ function createComment(comment) {
     let cardHeader = $("<div></div>",{class: "card-header row"});
     let username = $("<div></div>",{class: "fs-4 col-7 col-md-8 fw-bolder"});
     let votesdiv = $("<div></div>",{class: "col-5 col-md-4 fs-5 d-flex justify-content-end px-0"});
-    let vote = $("<div></div>", {class: "d-flex align-items-center "+ (USERLOGGED)?"me-4":"", id: "vote-"+comment.id});
+    let vote = $("<div></div>", {class: (USERLOGGED)?"d-flex align-items-center":"me-4", id: "vote-"+comment.id});
     let cardBody = $("<div></div>", {class: "card-body"});
     let body = $("<p></p>", {class: "card-text"});
     let cardFooter = $("<div></div>", {class: "card-footer"});

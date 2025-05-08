@@ -3,9 +3,9 @@ function importImg(){
     console.log("import");
     var btn = ui.button({
         contents: '<i class="bi bi-image"/>',
-        tooltip: 'inserisci un immagine',
+        tooltip: 'Inserisci un immagine',
         click: function () {
-            let imageUrl = prompt("Enter the image URL:");
+            let imageUrl = prompt("Inserisci URL immagine:");
             if (imageUrl) {
                 $('#summernote').summernote('insertImage', imageUrl);
             }
@@ -16,8 +16,8 @@ function importImg(){
 
 $(document).ready(function() {
     $('#summernote').summernote({
-        placeholder: 'write here...',
-        height: 120,
+        placeholder: 'Scrivi qui...',
+        height: 200,
         toolbar: [
             ['style', ['style']],
             ['fontstyle', ['fontname', 'fontsize']],

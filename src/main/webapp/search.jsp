@@ -22,13 +22,13 @@
                             <div class="p-0 form-floating input-group">
                                 <input type="text" class="form-control bg-card" id="searchbar" name="query" aria-describedby="search" placeholder="" value="${query}">
                                 <button class="btn btn-secondary rounded-end px-4" type="submit" id="search"><i class="bi bi-search"></i></button>
-                                <label for="searchbar" class="label-bg-none z-5">ricerca</label>
+                                <label for="searchbar" class="label-bg-none z-5">Ricerca...</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3 p-0 form-floating">
                                 <select name="category" class="form-select bg-card" id="category" data-default-value="${category}">
-                                    <option value="" selected>Any</option>
+                                    <option value="" selected>Qualsiasi</option>
                                     <option value="General">General</option>
                                     <option value="Welcome">Welcome</option>
                                     <option value="Help">Help</option>
@@ -37,7 +37,7 @@
                                     <option value="Memes">Memes</option>
                                     <option value="Announcements">Announcements</option>
                                 </select>
-                                <label for="category" class="label-bg-none">category</label>
+                                <label for="category" class="label-bg-none">Categoria</label>
                             </div>
                             <div class="col-md-3 p-0 form-floating">
                                 <select name="order" class="form-select bg-card" id="order" data-default-value="${order}">
@@ -45,15 +45,15 @@
                                     <option value="Newest">Newest</option>
                                     <option value="Oldest">Oldest</option>
                                 </select>
-                                <label for="order" class="label-bg-none">order</label>
+                                <label for="order" class="label-bg-none">Ordine</label>
                             </div>
                             <div class="col-md-3 p-0 form-floating">
                                 <input name="dateFrom" type="date" class="form-control bg-card" id="dateFrom" value="${dateFrom}">
-                                <label for="dateFrom" class="label-bg-none">select dateFrom</label>
+                                <label for="dateFrom" class="label-bg-none">Dal giorno</label>
                             </div>
                             <div class="col-md-3 p-0 form-floating">
                                 <input name="dateTo" type="date" class="form-control bg-card" id="dateTo" value="${dateTo}">
-                                <label for="dateTo" class="label-bg-none">select dateTo</label>
+                                <label for="dateTo" class="label-bg-none">Al giorno</label>
                             </div>
                         </div>
                     </form>
@@ -93,7 +93,7 @@
                         <li class="page-item">
                     </c:if>
                         <c:set var="result" value="${fn:substringAfter(pageContext.request.queryString, '&')}" />
-                        <a class="page-link bg-card" href="searchThread?page=${page - 1}&${result}">Previous</a>
+                        <a class="page-link bg-card" href="searchThread?page=${page - 1}&${result}"><i class="bi bi-chevron-left"></i></a>
                     </li>
                         <li class="page-item">
                             <span class="page-link">${page}</span>
@@ -104,7 +104,7 @@
                     <c:if test="${page < maxPages}">
                         <li class="page-item">
                     </c:if>
-                        <a class="page-link bg-card" href="searchThread?page=${page + 1}&${result}">Next</a>
+                        <a class="page-link bg-card" href="searchThread?page=${page + 1}&${result}"><i class="bi bi-chevron-right"></i></a>
                     </li>
                 </ul>
             </nav>

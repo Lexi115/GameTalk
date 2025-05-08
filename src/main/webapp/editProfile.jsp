@@ -43,7 +43,7 @@
         <div id="passwordError" class="text-danger mb-2" style="display: none;">
             La password deve contenere almeno:
             <ul class="mb-0">
-                <li>8 caratteri</li>
+                <li>Minimo 8 caratteri</li>
                 <li>1 lettera maiuscola</li>
                 <li>1 lettera minuscola</li>
                 <li>1 numero</li>
