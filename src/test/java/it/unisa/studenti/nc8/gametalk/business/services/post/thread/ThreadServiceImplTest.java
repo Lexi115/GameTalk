@@ -313,7 +313,7 @@ public class ThreadServiceImplTest {
     }
 
     @Test
-    public void test_TC08_OrderNonValido() throws ServiceException {
+    public void test_TC08_OrderNull() throws ServiceException {
         List<Thread> result = threadService.findThreadsByUsername("user123", 1, 10,
                         null,
                         LocalDate.parse("2023-01-01"),
@@ -322,16 +322,7 @@ public class ThreadServiceImplTest {
     }
 
     @Test
-    public void test_TC09_OrderNull() throws ServiceException {
-        List<Thread> result = threadService.findThreadsByUsername("user123", 1, 10,
-                        null,
-                        LocalDate.parse("2023-01-01"),
-                        LocalDate.parse("2023-12-31"));
-        assertNotNull(result);
-    }
-
-    @Test
-    public void test_TC10_StartAfterEndDate() throws ServiceException {
+    public void test_TC09_StartAfterEndDate() throws ServiceException {
         LocalDate start = LocalDate.parse("2024-12-31");
         LocalDate end = LocalDate.parse("2023-01-01");
         List<Thread> result = threadService.findThreadsByUsername("user123", 1, 10,
@@ -340,14 +331,14 @@ public class ThreadServiceImplTest {
     }
 
     @Test
-    public void test_TC11_StartDateNonValida() {
+    public void test_TC10_StartDateNonValida() {
         assertThrows(DateTimeParseException.class, () ->
                 LocalDate.parse("invalid-date")
         );
     }
 
     @Test
-    public void test_TC12_StartDateNull() throws ServiceException {
+    public void test_TC11_StartDateNull() throws ServiceException {
         List<Thread> result = threadService.findThreadsByUsername(
                 "user123", 1, 10, Order.Best,
                 null, LocalDate.parse("2023-12-31"));
@@ -355,14 +346,14 @@ public class ThreadServiceImplTest {
     }
 
     @Test
-    public void test_TC13_EndDateNonValida() {
+    public void test_TC12_EndDateNonValida() {
         assertThrows(DateTimeParseException.class, () ->
                 LocalDate.parse("invalid-date")
         );
     }
 
     @Test
-    public void test_TC14_EndDateNull() throws ServiceException {
+    public void test_TC13_EndDateNull() throws ServiceException {
         List<Thread> result = threadService.findThreadsByUsername(
                 "user123", 1, 10, Order.Best,
                 LocalDate.parse("2023-01-01"), null);
@@ -370,7 +361,7 @@ public class ThreadServiceImplTest {
     }
 
     @Test
-    public void test_TC15_EndDatePrimaDiStartDate() throws ServiceException {
+    public void test_TC14_EndDatePrimaDiStartDate() throws ServiceException {
         List<Thread> result = threadService.findThreadsByUsername("user123", 1, 10,
                         Order.Best, LocalDate.parse("2023-01-01"),
                         LocalDate.parse("2022-12-31"));
