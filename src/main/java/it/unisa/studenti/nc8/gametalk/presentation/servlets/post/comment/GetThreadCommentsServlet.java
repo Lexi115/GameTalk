@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -117,7 +118,7 @@ public class GetThreadCommentsServlet extends CommentServlet {
                     Map<String, Object> commentData = new HashMap<>();
                     commentData.put("id", comment.getId());
                     commentData.put("author", comment.getUsername());
-                    commentData.put("body", comment.getBody());
+                    commentData.put("body", StringEscapeUtils.escapeEcmaScript(comment.getBody()));
                     commentData.put("creationDate", comment.getCreationDate());
                     commentData.put("votes", comment.getVotes());
                     int rating = personalRatings.getOrDefault(comment.getId(), 0);
