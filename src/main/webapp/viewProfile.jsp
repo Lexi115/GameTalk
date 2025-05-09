@@ -60,7 +60,7 @@
         </c:if>
 
         <div class="favourites mt-5">
-            <h2 id="text" class="text-center" style="cursor: pointer;">I TUOI THREAD</h2>
+            <h2 id="text" class="text-center" style="cursor: pointer;">THREADS</h2>
             <div class="row row-cols-1 row-cols-md-2 justify-content-center g-4 p-4" id="userThreads">
                 <p>Caricamento thread...</p>
             </div>
@@ -124,6 +124,6 @@
     });
 </script>
 
-
+<jsp:include page="footer.jsp"/>
 </body>
 </html>

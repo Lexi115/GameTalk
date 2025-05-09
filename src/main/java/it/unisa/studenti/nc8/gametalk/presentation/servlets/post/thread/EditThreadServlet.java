@@ -56,6 +56,13 @@ public class EditThreadServlet extends ThreadServlet {
                         "Thread non trovato");
                 return;
             }
+
+            if (thread.isArchived()) {
+                errorHandler.handleError(
+                        req, resp, HttpServletResponse.SC_BAD_REQUEST,
+                        "Thread archiviato!");
+                return;
+            }
         } catch (ServiceException e) {
             LOGGER.error("Errore con il servizio di modifica thread", e);
             errorHandler.handleError(
