@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: May 02, 2025 at 04:18 PM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- Host: db
+-- Creato il: Mag 09, 2025 alle 13:13
+-- Versione del server: 11.4.3-MariaDB-ubu2404
+-- Versione PHP: 8.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,15 +24,15 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `categories`
+-- Struttura della tabella `categories`
 --
 
 CREATE TABLE `categories` (
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `name` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `categories`
+-- Dump dei dati per la tabella `categories`
 --
 
 INSERT INTO `categories` (`name`) VALUES
@@ -48,39 +48,45 @@ INSERT INTO `categories` (`name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `comments`
+-- Struttura della tabella `comments`
 --
 
 CREATE TABLE `comments` (
-  `id` bigint NOT NULL,
-  `thread_id` bigint NOT NULL,
-  `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `votes` int NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `thread_id` bigint(20) NOT NULL,
+  `username` varchar(24) DEFAULT NULL,
+  `body` text NOT NULL,
+  `votes` int(11) NOT NULL DEFAULT 0,
   `creation_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `comments`
+-- Dump dei dati per la tabella `comments`
 --
 
 INSERT INTO `comments` (`id`, `thread_id`, `username`, `body`, `votes`, `creation_date`) VALUES
 (43, 55, 'LightHealer', 'Voglio registrarmi al torneo!', 0, '2025-04-26'),
 (44, 51, 'LightHealer', 'La puoi trovare al Forte Di Farron', 1, '2025-05-02'),
-(45, 53, 'LightHealer', 'io uso 80x80', 0, '2025-05-02');
+(45, 53, 'LightHealer', 'io uso 80x80', 0, '2025-05-02'),
+(47, 59, 'AlessioSica', 'Aggiungetemi su discord comunque: @Lexi115', 0, '2025-05-02'),
+(48, 60, 'AlessioSica', 'xd', 0, '2025-05-02'),
+(50, 58, 'AlessioSica', 'molto bello', 0, '2025-05-07'),
+(59, 61, NULL, 'cc', 0, '2025-05-08'),
+(68, 51, 'bingaDinga', 'test', 0, '2025-05-09'),
+(69, 55, 'Moderator1000!', 'Carino', 0, '2025-05-09');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Struttura della tabella `roles`
 --
 
 CREATE TABLE `roles` (
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `name` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `roles`
+-- Dump dei dati per la tabella `roles`
 --
 
 INSERT INTO `roles` (`name`) VALUES
@@ -90,52 +96,59 @@ INSERT INTO `roles` (`name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `threads`
+-- Struttura della tabella `threads`
 --
 
 CREATE TABLE `threads` (
-  `id` bigint NOT NULL,
-  `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `votes` int NOT NULL DEFAULT '0',
-  `archived` tinyint(1) NOT NULL DEFAULT '0',
-  `category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` bigint(20) NOT NULL,
+  `username` varchar(24) DEFAULT NULL,
+  `title` varchar(100) NOT NULL,
+  `body` text NOT NULL,
+  `votes` int(11) NOT NULL DEFAULT 0,
+  `archived` tinyint(1) NOT NULL DEFAULT 0,
+  `category` varchar(20) DEFAULT NULL,
   `creation_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `threads`
+-- Dump dei dati per la tabella `threads`
 --
 
 INSERT INTO `threads` (`id`, `username`, `title`, `body`, `votes`, `archived`, `category`, `creation_date`) VALUES
 (51, 'DarkSlayer', 'Titanite su Dark Souls 3', '<p>Ragazzi potete indicarmi dove trovare pezzi di titanite? non riesco a trovarne.</p><p>Ecco una foto dell\'oggetto che sto cercando</p><p><img src=\"https://darksouls3.wiki.fextralife.com/file/Dark-Souls-3/TitaniteShard.png\" style=\"width: 190px;\"></p><p>Grazie in anticipo</p>', 1, 0, 'Help', '2025-04-25'),
 (52, 'DarkSlayer', 'Shared progression lag su Lords of the Fallen', '<p>Salve ho riscontrato un problema di desync quando provo a giocare con un mio amico a Lords Of The Fallen, dopo la parte paludosa il giocatore non host soffre di severi problemi di desync e lag generale che rende l\'esperienza ingiocabile, qualcuno ha riscontrato lo stesso problema?</p>', 0, 0, 'Bugs', '2025-04-25'),
-(53, 'DarkSlayer', 'Area tavoletta grafica su osu!', '<p>Sono curioso di sapere <b>quale area utilizzano i giocatori nella community</b>, questa è la mia area attualmente <font color=\"#00ffff\">60x35</font></p><p><img src=\"https://media.discordapp.net/attachments/823601308464185386/1365290146273955870/image.png?ex=680cc508&amp;is=680b7388&amp;hm=6dc5d3c067763adc47ae7dc3b4810335301c48ae01ec658aa1dafa09c07debbd&amp;=&amp;format=webp&amp;quality=lossless\" style=\"width: 415.178px; height: 331.15px;\"><br></p>', 0, 0, 'General', '2025-04-25'),
-(55, 'DarkSlayer', 'Torneo di Bedwars (4v4)', '<p>Terrei ad annunciare un torneo di bedwars 4v4 che si terrà sul server Hypixel i premi sono i seguenti:</p><p>Gli iscritti al torneo che possiedono il rank <font color=\"#00ffff\" style=\"font-weight: bold;\">MVP</font><font color=\"#ff0000\" style=\"font-weight: bold;\">+&nbsp;</font>/&nbsp;<font color=\"#ff9c00\" style=\"font-weight: bold;\">MVP</font><font color=\"#ff0000\" style=\"font-weight: bold;\">++</font> avranno diritto ad un bonus di <font color=\"#00ff00\">50$</font> qualora si classificassero nella top 3 e un ulteriore premio di partecipazione di <font color=\"#00ff00\">10$</font></p><table class=\"table table-bordered\"><tbody><tr><td style=\"text-align: center; \">Posizione</td><td>Premio</td></tr><tr><td style=\"text-align: center; \"><font color=\"#efc631\"><b>1</b></font></td><td><p>Rank <font color=\"#ff9c00\" style=\"\">MVP</font><font color=\"#ff0000\" style=\"\">++</font> sul server Hypixel per <b>1 anno intero</b></p><p><font color=\"#00ff00\"><b>300$</b></font> <u>Divisi</u> tra i membri del team vincente</p></td></tr><tr><td style=\"text-align: center; \"><font color=\"#cec6ce\"><b>2</b></font></td><td><p>Rank <font color=\"#00ffff\" style=\"\">MVP</font>&nbsp;sul server Hypixel</p><p><font color=\"#00ff00\"><span style=\"font-weight: bolder;\">100$</span></font>&nbsp;<u>Divisi</u>&nbsp;tra i membri del team vincente</p></td></tr><tr><td style=\"text-align: center; \"><font color=\"#b56308\"><b>3</b></font></td><td><p>Rank <font color=\"#00ff00\">VIP</font> sul server Hypixel</p><p><font color=\"#00ff00\"><b>40$</b></font>&nbsp;<u>Divisi</u>&nbsp;tra i membri del team vincente</p></td></tr></tbody></table><p>Le iscrizioni sono aperte oggi e termineranno tra un mese, affrettatevi a registrarvi!</p><p>I match verranno <b>streammati sul canale ufficiale di Hypixel</b> su <b style=\"\"><font color=\"#9c00ff\">Twitch</font></b></p>', 2, 0, 'Announcements', '2025-04-25'),
+(53, 'DarkSlayer', 'Area tavoletta grafica su osu!', '<p>Sono curioso di sapere <b>quale area utilizzano i giocatori nella community</b>, questa è la mia area attualmente <font color=\"#00ffff\">60x35</font></p><p><img style=\"width: 1171px;\" src=\"https://i.imgur.com/liuywcS.png\"><br></p>', 0, 0, 'General', '2025-04-25'),
+(55, 'DarkSlayer', 'Torneo di Bedwars (4v4)', '<p>Terrei ad annunciare un torneo di bedwars 4v4 che si terrà sul server Hypixel i premi sono i seguenti:</p><p>Gli iscritti al torneo che possiedono il rank <font color=\"#00ffff\" style=\"font-weight: bold;\">MVP</font><font color=\"#ff0000\" style=\"font-weight: bold;\">+&nbsp;</font>/&nbsp;<font color=\"#ff9c00\" style=\"font-weight: bold;\">MVP</font><font color=\"#ff0000\" style=\"font-weight: bold;\">++</font> avranno diritto ad un bonus di <font color=\"#00ff00\">50$</font> qualora si classificassero nella top 3 e un ulteriore premio di partecipazione di <font color=\"#00ff00\">10$</font></p><table class=\"table table-bordered\"><tbody><tr><td style=\"text-align: center; \">Posizione</td><td>Premio</td></tr><tr><td style=\"text-align: center; \"><font color=\"#efc631\"><b>1</b></font></td><td><p>Rank <font color=\"#ff9c00\" style=\"\">MVP</font><font color=\"#ff0000\" style=\"\">++</font> sul server Hypixel per <b>1 anno intero</b></p><p><font color=\"#00ff00\"><b>300$</b></font> <u>Divisi</u> tra i membri del team vincente</p></td></tr><tr><td style=\"text-align: center; \"><font color=\"#cec6ce\"><b>2</b></font></td><td><p>Rank <font color=\"#00ffff\" style=\"\">MVP</font>&nbsp;sul server Hypixel</p><p><font color=\"#00ff00\"><span style=\"font-weight: bolder;\">100$</span></font>&nbsp;<u>Divisi</u>&nbsp;tra i membri del team vincente</p></td></tr><tr><td style=\"text-align: center; \"><font color=\"#b56308\"><b>3</b></font></td><td><p>Rank <font color=\"#00ff00\">VIP</font> sul server Hypixel</p><p><font color=\"#00ff00\"><b>40$</b></font>&nbsp;<u>Divisi</u>&nbsp;tra i membri del team vincente</p></td></tr></tbody></table><p>Le iscrizioni sono aperte oggi e termineranno tra un mese, affrettatevi a registrarvi!</p><p>I match verranno <b>streammati sul canale ufficiale di Hypixel</b> su <b style=\"\"><font color=\"#9c00ff\">Twitch</font></b></p>', 4, 0, 'Announcements', '2025-04-25'),
 (57, 'LightHealer', 'Easter egg revelations', '<p>Ho trovato un link di una guida utile per completare l\'easter egg di revelations su <font color=\"#ff9c00\">\"Call Of Duty\"</font></p><p><a href=\"https://www.uagna.it/videogiochi/guide-videogiochi/revelations-guida-completa-easter-egg-74850\" target=\"_blank\"><b><font color=\"#00ffff\">Link alla guida</font></b></a><br></p>', 0, 0, 'Guides', '2025-05-02'),
-(58, 'LightHealer', 'Oblivion remastered', '<p>Ragazzi che ne pensate del remaster di <b>Oblivion</b>? Già sento tante belle parole a riguardo, a me interessa tanto ma non sono sicuro se ne valga i soldi spesi, cosa dite?</p>', 1, 0, 'General', '2025-05-02');
+(58, 'LightHealer', 'Oblivion Remastered', '<p>Ragazzi che ne pensate del remaster di <b>Oblivion</b>? Già sento tante belle parole a riguardo, a me interessa tanto ma non sono sicuro se ne valga i soldi spesi, cosa dite?</p><p><img style=\"width: 616px;\" src=\"https://gaming-cdn.com/images/products/18367/616x353/the-elder-scrolls-iv-oblivion-remastered-pc-gioco-steam-cover.jpg?v=1745392020\"><br></p>', 3, 0, 'General', '2025-05-02'),
+(59, 'AlessioSica', 'Ciao ragazzi', '<p>Ciao a tutti ragazzi sono nuovo qui. Come va? :DDD<br></p><p><img style=\"width: 165px;\" src=\"https://media.tenor.com/-ufrqpl5cp0AAAAM/test.gif\"><br></p>', 0, 0, 'Welcome', '2025-05-02'),
+(60, 'AlessioSica', 'PS5 non ha giochi lol', '<p><img style=\"width: 708px;\" src=\"https://images.hothardware.com/contentimages/newsitem/61737/content/ps5-has-no-games.jpg\"><br></p>', 0, 0, 'Memes', '2025-05-02'),
+(61, 'AlessioSica', 'fun fact sui giapponesi', '<p>Il 20% dei giovani giapponesi spende così tanto sui <b>gacha</b> che non hanno abbastanza soldi per le spese quotidiane. </p><p><font color=\"#00ff00\"><b><span style=\"font-size: 24px;\">SAD</span></b></font></p><p><img style=\"width: 720px;\" src=\"https://www.yugatech.com/wp-content/uploads/2019/01/fgo.jpg\"><br></p>', 0, 0, 'Memes', '2025-05-02'),
+(66, 'bingaDinga', 'mio titolo', 'mio corpo', 0, 0, 'Announcements', '2025-05-06'),
+(67, 'bingaDinga', 'mio titolo', 'mio corpo', 0, 0, 'Announcements', '2025-05-06'),
+(80, 'Moderator1000!', 'Come moddare una wii - TUTORIAL', '<p data-start=\"232\" data-end=\"360\" class=\"\"><strong data-start=\"232\" data-end=\"246\">Disclaimer</strong>: Questo tutorial è solo a scopo informativo. Scaricare giochi che non possiedi è illegale. Procedi a tuo rischio.</p><hr data-start=\"362\" data-end=\"365\" class=\"\"><p data-start=\"367\" data-end=\"558\" class=\"\"><strong data-start=\"367\" data-end=\"405\">1. Controlla la versione della Wii</strong><br data-start=\"405\" data-end=\"408\">\nVai su <em data-start=\"415\" data-end=\"433\">Impostazioni Wii</em> e guarda in alto a destra: ti serve sapere se hai, ad esempio, 4.3E, 4.1U, ecc. È importante per scegliere il metodo giusto.</p><hr data-start=\"560\" data-end=\"563\" class=\"\"><p data-start=\"565\" data-end=\"595\" class=\"\"><strong data-start=\"565\" data-end=\"593\">2. Prepara una scheda SD</strong></p><ul data-start=\"596\" data-end=\"725\">\n<li data-start=\"596\" data-end=\"631\" class=\"\">\n<p data-start=\"598\" data-end=\"631\" class=\"\">Formatta la scheda SD in FAT32.</p>\n</li>\n<li data-start=\"632\" data-end=\"683\" class=\"\">\n<p data-start=\"634\" data-end=\"683\" class=\"\">Consiglio: usa una scheda da 2GB, massimo 32GB.</p>\n</li>\n<li data-start=\"684\" data-end=\"725\" class=\"\">\n<p data-start=\"686\" data-end=\"725\" class=\"\">Non usare SDHC per i metodi più vecchi.</p>\n</li>\n</ul><hr data-start=\"727\" data-end=\"730\" class=\"\"><p data-start=\"732\" data-end=\"778\" class=\"\"><strong data-start=\"732\" data-end=\"776\">3. Scarica LetterBomb (solo per Wii 4.3)</strong></p><ul data-start=\"779\" data-end=\"1011\">\n<li data-start=\"779\" data-end=\"838\" class=\"\">\n<p data-start=\"781\" data-end=\"838\" class=\"\">Vai su: <a data-start=\"789\" data-end=\"836\" rel=\"noopener\" target=\"_new\" class=\"cursor-pointer\">please.hackmii.com</a></p>\n</li>\n<li data-start=\"839\" data-end=\"921\" class=\"\">\n<p data-start=\"841\" data-end=\"921\" class=\"\">Inserisci il tuo MAC Address (lo trovi nelle impostazioni Internet della Wii).</p>\n</li>\n<li data-start=\"922\" data-end=\"948\" class=\"\">\n<p data-start=\"924\" data-end=\"948\" class=\"\">Scegli la tua regione.</p>\n</li>\n<li data-start=\"949\" data-end=\"1011\" class=\"\">\n<p data-start=\"951\" data-end=\"1011\" class=\"\">Riceverai un file ZIP: estrai tutto sulla root della tua SD.</p>\n</li>\n</ul><hr data-start=\"1013\" data-end=\"1016\" class=\"\"><p data-start=\"1018\" data-end=\"1052\" class=\"\"><strong data-start=\"1018\" data-end=\"1050\">4. Inserisci la SD nella Wii</strong></p><ul data-start=\"1053\" data-end=\"1211\">\n<li data-start=\"1053\" data-end=\"1119\" class=\"\">\n<p data-start=\"1055\" data-end=\"1119\" class=\"\">Vai sulla bacheca Wii, cerca il messaggio rosso con una bomba.</p>\n</li>\n<li data-start=\"1120\" data-end=\"1162\" class=\"\">\n<p data-start=\"1122\" data-end=\"1162\" class=\"\">Aprilo e partirà l’exploit LetterBomb.</p>\n</li>\n<li data-start=\"1163\" data-end=\"1211\" class=\"\">\n<p data-start=\"1165\" data-end=\"1211\" class=\"\">Dopo un po’, si aprirà l’installer di HackMii.</p>\n</li>\n</ul><hr data-start=\"1213\" data-end=\"1216\" class=\"\"><p data-start=\"1218\" data-end=\"1254\" class=\"\"><strong data-start=\"1218\" data-end=\"1252\">5. Installa l’Homebrew Channel</strong></p><ul data-start=\"1255\" data-end=\"1432\">\n<li data-start=\"1255\" data-end=\"1321\" class=\"\">\n<p data-start=\"1257\" data-end=\"1321\" class=\"\">Nell’HackMii Installer, scegli “Install the Homebrew Channel”.</p>\n</li>\n<li data-start=\"1322\" data-end=\"1381\" class=\"\">\n<p data-start=\"1324\" data-end=\"1381\" class=\"\">Se vuoi, puoi anche installare BootMii (se supportato).</p>\n</li>\n<li data-start=\"1382\" data-end=\"1432\" class=\"\">\n<p data-start=\"1384\" data-end=\"1432\" class=\"\">Riavvia: ora avrai l’Homebrew Channel sulla Wii.</p>\n</li>\n</ul><hr data-start=\"1434\" data-end=\"1437\" class=\"\"><p data-start=\"1439\" data-end=\"1489\" class=\"\"><strong data-start=\"1439\" data-end=\"1487\">6. Installa i cIOS (per i backup dei giochi)</strong></p><ul data-start=\"1490\" data-end=\"1699\">\n<li data-start=\"1490\" data-end=\"1536\" class=\"\">\n<p data-start=\"1492\" data-end=\"1536\" class=\"\">Scarica il programma “d2x cIOS Installer”.</p>\n</li>\n<li data-start=\"1537\" data-end=\"1580\" class=\"\">\n<p data-start=\"1539\" data-end=\"1580\" class=\"\">Copialo nella cartella <code data-start=\"1562\" data-end=\"1568\">apps</code> della SD.</p>\n</li>\n<li data-start=\"1581\" data-end=\"1616\" class=\"\">\n<p data-start=\"1583\" data-end=\"1616\" class=\"\">Avvialo dalla Homebrew Channel.</p>\n</li>\n<li data-start=\"1617\" data-end=\"1699\" class=\"\">\n<p data-start=\"1619\" data-end=\"1699\" class=\"\">Segui le istruzioni (di solito si installano i cIOS 249 e 250 con base 56 e 57).</p>\n</li>\n</ul><hr data-start=\"1701\" data-end=\"1704\" class=\"\"><p data-start=\"1706\" data-end=\"1730\" class=\"\"><strong data-start=\"1706\" data-end=\"1728\">7. Metti un loader</strong></p><ul data-start=\"1731\" data-end=\"1903\">\n<li data-start=\"1731\" data-end=\"1767\" class=\"\">\n<p data-start=\"1733\" data-end=\"1767\" class=\"\">Scarica USB Loader GX o WiiFlow.</p>\n</li>\n<li data-start=\"1768\" data-end=\"1806\" class=\"\">\n<p data-start=\"1770\" data-end=\"1806\" class=\"\">Inseriscilo nella cartella <code data-start=\"1797\" data-end=\"1803\">apps</code>.</p>\n</li>\n<li data-start=\"1807\" data-end=\"1903\" class=\"\">\n<p data-start=\"1809\" data-end=\"1903\" class=\"\">Ti servirà un hard disk USB o una chiavetta con i giochi nel formato giusto (cartella <code data-start=\"1895\" data-end=\"1901\">wbfs</code>).</p>\n</li>\n</ul><hr data-start=\"1905\" data-end=\"1908\" class=\"\"><p data-start=\"1910\" data-end=\"1933\" class=\"\"><strong data-start=\"1910\" data-end=\"1931\">8. Avvia i giochi</strong></p><p>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</p><ul data-start=\"1934\" data-end=\"2072\">\n<li data-start=\"1934\" data-end=\"1958\" class=\"\">\n<p data-start=\"1936\" data-end=\"1958\" class=\"\">Collega l’hard disk.</p>\n</li>\n<li data-start=\"1959\" data-end=\"2006\" class=\"\">\n<p data-start=\"1961\" data-end=\"2006\" class=\"\">Avvia USB Loader GX dalla Homebrew Channel.</p></li>\n<li data-start=\"2007\" data-end=\"2072\" class=\"\">\n<p data-start=\"2009\" data-end=\"2072\" class=\"\">Se tutto è stato fatto bene, vedrai i giochi e potrai avviarli.</p></li></ul>', 0, 1, 'Guides', '2025-05-06');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struttura della tabella `users`
 --
 
 CREATE TABLE `users` (
-  `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(24) NOT NULL,
+  `password` char(64) NOT NULL,
   `creation_date` date NOT NULL,
-  `banned` tinyint(1) NOT NULL DEFAULT '0',
-  `role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `auth_token` char(64) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `banned` tinyint(1) NOT NULL DEFAULT 0,
+  `role` varchar(20) NOT NULL,
+  `auth_token` char(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Dump dei dati per la tabella `users`
 --
 
 INSERT INTO `users` (`username`, `password`, `creation_date`, `banned`, `role`, `auth_token`) VALUES
+('AlessioSica', '$2a$12$MojvuoEbkkoZ7QzMKjzJJ.7fEqxuv0R4RuNl1SjUyf3DeNPji6YVy', '2025-05-02', 0, 'Member', '788b8749498dff94b40b9a52cb14dc703e44a077cd931a5401b3b5e275006265'),
 ('AlphaMaster', '280870c9eff2b07b4b1fb79fee8de7767304d2ebc7bdfb0a7fb07965bb50974e', '2020-08-19', 0, 'Member', NULL),
 ('ApexLegends', '04138ec675e0b4e5df579f53fe7adbb9455cbd095f0ee39fcd190b17125ba015', '2021-10-14', 0, 'Member', NULL),
 ('bingaDinga', '$2a$12$8KAov7Qwxi5YEpxypQ1.ZuvRUGO1u7qq2FmK810jEQaUVPuHNxxFe', '2025-03-15', 0, 'Member', 'f5c731a04803c226b7d0852c0d66bab9b174c5f0577da3783037458efd86dfe7'),
@@ -165,6 +178,7 @@ INSERT INTO `users` (`username`, `password`, `creation_date`, `banned`, `role`, 
 ('MaxPlays', '797d672dd9b4a0135cb2a038b81a200288ae3bd7b682e50c509b173890c55b78', '2021-09-06', 0, 'Member', NULL),
 ('MaxPower', '74a54e006cae9e25afefce98aacab80ab2bdd9dce97b11e696eaca0344d0b065', '2020-04-28', 0, 'Member', NULL),
 ('MightyRocco', '64dac4dc3995d3707fd124cc4fdaa43b9f2e0a02f171064ca34b357d50009fac', '2020-12-25', 0, 'Member', NULL),
+('Moderator1000!', '$2a$12$J9mEG1CubrpFU8AVBdh.euaqp4kMOcxJ/s6p4jaTdpmZwRZxcSyzq', '2025-05-09', 0, 'Moderator', '42b47ce253661d3884f6b004536d747c1f01369a2168a7a64403c9d3179d56f0'),
 ('NicolaTheKing', 'baeb143b4f9619d6e372ec42089657aaf8ac1ed0cb02bb830ff815ee3c0add79', '2020-08-30', 0, 'Member', NULL),
 ('NightHawk', '7fcec9109f8ed80d9322e1a96009671d95cb1c319fbe8ec317abdf3ded4edb23', '2020-11-08', 0, 'Member', NULL),
 ('NinjaMike', '5c1ba440f65726eb9bb8d737230fcb44c7286ffcc84903115f0a316dbf705c84', '2020-11-23', 0, 'Member', NULL),
@@ -184,6 +198,7 @@ INSERT INTO `users` (`username`, `password`, `creation_date`, `banned`, `role`, 
 ('TornadoPlayer', '6cf473c7206ed4a10a7d43d2afebb9a509d22137a5115de6e3a56956f974d7a8', '2022-04-10', 0, 'Member', NULL),
 ('TurboGamer', 'a74753784a37c1138532484dc70d8caa5f526e12be78a82ebbab24e657595155', '2020-06-11', 0, 'Member', NULL),
 ('UltraGamer', 'f3bec15f95ccc104cf197834eacc4c71bf57c73b9278a58c8c4205a8abb98d52', '2022-06-17', 0, 'Member', NULL),
+('UtenteGenerico1000!', '$2a$12$xwctZdq9j17sR5DYvnOENe4gIhJc87daUya4xpxcycjNYxwvrALvG', '2025-05-09', 0, 'Member', 'c157a90db7ae15d78463906a11b6340ab1e2b1bbc34f8d385a33e1dd2d9a7d4e'),
 ('ViperElite', 'cfd574e4ee5bf424e631c81e4ece6ea753160efd86d4ae62217be21ae89df00b', '2021-10-05', 0, 'Member', NULL),
 ('ViperPlays', '64ed25e20316b5f99d2abddb7fc1f9968067009908ba4eb5e258a2b90198e460', '2020-10-13', 0, 'Member', NULL),
 ('VortexGamer', '1512bfab62e9589e4e390545d9b6bc02f3d072ca493a38a98358cbf5f489ccfd', '2021-12-01', 0, 'Member', NULL),
@@ -196,18 +211,18 @@ INSERT INTO `users` (`username`, `password`, `creation_date`, `banned`, `role`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `votes_comments`
+-- Struttura della tabella `votes_comments`
 --
 
 CREATE TABLE `votes_comments` (
-  `username` varchar(24) COLLATE utf8mb4_general_ci NOT NULL,
-  `comment_id` bigint NOT NULL,
-  `thread_id` bigint NOT NULL,
-  `vote` tinyint NOT NULL DEFAULT '0'
+  `username` varchar(24) NOT NULL,
+  `comment_id` bigint(20) NOT NULL,
+  `thread_id` bigint(20) NOT NULL,
+  `vote` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `votes_comments`
+-- Dump dei dati per la tabella `votes_comments`
 --
 
 INSERT INTO `votes_comments` (`username`, `comment_id`, `thread_id`, `vote`) VALUES
@@ -216,37 +231,40 @@ INSERT INTO `votes_comments` (`username`, `comment_id`, `thread_id`, `vote`) VAL
 -- --------------------------------------------------------
 
 --
--- Table structure for table `votes_threads`
+-- Struttura della tabella `votes_threads`
 --
 
 CREATE TABLE `votes_threads` (
-  `username` varchar(24) COLLATE utf8mb4_general_ci NOT NULL,
-  `thread_id` bigint NOT NULL,
-  `vote` tinyint NOT NULL DEFAULT '0'
+  `username` varchar(24) NOT NULL,
+  `thread_id` bigint(20) NOT NULL,
+  `vote` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `votes_threads`
+-- Dump dei dati per la tabella `votes_threads`
 --
 
 INSERT INTO `votes_threads` (`username`, `thread_id`, `vote`) VALUES
+('AlessioSica', 55, 1),
+('AlessioSica', 58, 1),
 ('DarkSlayer', 55, 1),
 ('LightHealer', 51, 1),
 ('LightHealer', 55, 1),
-('LightHealer', 58, 1);
+('LightHealer', 58, 1),
+('Moderator1000!', 55, 1);
 
 --
--- Indexes for dumped tables
+-- Indici per le tabelle scaricate
 --
 
 --
--- Indexes for table `categories`
+-- Indici per le tabelle `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`name`);
 
 --
--- Indexes for table `comments`
+-- Indici per le tabelle `comments`
 --
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`),
@@ -254,13 +272,13 @@ ALTER TABLE `comments`
   ADD KEY `username` (`username`);
 
 --
--- Indexes for table `roles`
+-- Indici per le tabelle `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`name`);
 
 --
--- Indexes for table `threads`
+-- Indici per le tabelle `threads`
 --
 ALTER TABLE `threads`
   ADD PRIMARY KEY (`id`),
@@ -268,7 +286,7 @@ ALTER TABLE `threads`
   ADD KEY `username` (`username`);
 
 --
--- Indexes for table `users`
+-- Indici per le tabelle `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`username`),
@@ -276,68 +294,68 @@ ALTER TABLE `users`
   ADD KEY `role` (`role`);
 
 --
--- Indexes for table `votes_comments`
+-- Indici per le tabelle `votes_comments`
 --
 ALTER TABLE `votes_comments`
   ADD PRIMARY KEY (`username`,`comment_id`),
   ADD KEY `comment_id` (`comment_id`);
 
 --
--- Indexes for table `votes_threads`
+-- Indici per le tabelle `votes_threads`
 --
 ALTER TABLE `votes_threads`
   ADD PRIMARY KEY (`username`,`thread_id`),
   ADD KEY `thread_id` (`thread_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT per le tabelle scaricate
 --
 
 --
--- AUTO_INCREMENT for table `comments`
+-- AUTO_INCREMENT per la tabella `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
--- AUTO_INCREMENT for table `threads`
+-- AUTO_INCREMENT per la tabella `threads`
 --
 ALTER TABLE `threads`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
--- Constraints for dumped tables
+-- Limiti per le tabelle scaricate
 --
 
 --
--- Constraints for table `comments`
+-- Limiti per la tabella `comments`
 --
 ALTER TABLE `comments`
   ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`thread_id`) REFERENCES `threads` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `threads`
+-- Limiti per la tabella `threads`
 --
 ALTER TABLE `threads`
   ADD CONSTRAINT `threads_ibfk_2` FOREIGN KEY (`category`) REFERENCES `categories` (`name`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `threads_ibfk_3` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `users`
+-- Limiti per la tabella `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role`) REFERENCES `roles` (`name`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `votes_comments`
+-- Limiti per la tabella `votes_comments`
 --
 ALTER TABLE `votes_comments`
   ADD CONSTRAINT `votes_comments_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE,
   ADD CONSTRAINT `votes_comments_ibfk_2` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `votes_threads`
+-- Limiti per la tabella `votes_threads`
 --
 ALTER TABLE `votes_threads`
   ADD CONSTRAINT `votes_threads_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE,
